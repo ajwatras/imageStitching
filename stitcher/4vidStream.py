@@ -8,10 +8,10 @@ import time
  
 stitch = stitcher.Stitcher()
 
-vidcap1 = cv2.VideoCapture('../testVideo/output1.avi')
-vidcap2 = cv2.VideoCapture('../testVideo/output2.avi')
-vidcap3 = cv2.VideoCapture('../testVideo/output3.avi')
-vidcap4 = cv2.VideoCapture('../testVideo/output4.avi')
+vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
+vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
+vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
+vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
 
 
 # load the two images and resize them to have a width of 400 pixels
@@ -23,7 +23,7 @@ for k in range(0,5):
 	success4,image4 = vidcap4.read()
 
 while ((success1 & success2) & (success3 & success4)):
-	print "success \n"
+	#print "success \n"
 	
 
  
