@@ -6,7 +6,8 @@ import time
  
 class Stitcher:
 	def __init__(self):
-
+		# determine if we are using OpenCV v3.X
+		self.isv3 = imutils.is_cv3()
         def stitch(self, images, ratio=.75, reprojThresh=4.0,
 		showMatches=True):
 
