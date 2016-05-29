@@ -192,3 +192,42 @@ class Stitcher:
 		elapsed = time.time() - ti
 		print " \nWarping Viewpoint: %f Seconds \n " % elapsed
 		return output
+	def applyHomography(self,imageB,imageA,H):
+		# Detect The appropriate size for the resulting image. 
+		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
+			[imageA.shape[1],imageA.shape[0],1]]).T
+		
+		# print H, corners
+		img_bounds = np.dot(H,corners)
+		
+                x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
+		y_bound = np.divide(img_bounds[1,:],img_bounds[2,:])
+		x_shift = 0
+		y_shift = 0
+		if min(x_bound) < 0:
+			x_shift = -int(min(x_bound))
+		if min(y_bound) < 0:
+			y_shift = -int(min(y_bound))
+		
+		shift_H = np.array([[1,0,x_shift],[0,1,y_shift],[0,0,1]])
+		x_bound = int(max(max(x_bound),imageB.shape[1]))
+		y_bound = int(max(max(y_bound),imageB.shape[0]))
+		
+		
+		# Warp Image A and place it in frame.
+		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
+		result1 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
+			(x_bound+x_shift,y_bound+y_shift))
+		
+		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
+		
+		mask1 = (result1 > 0).astype('int')
+		mask2 = (result2 > 0).astype('int')
+		mask = mask1+mask2
+		mask = mask+(mask == 0).astype('int')
+			
+		result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
+
+		return result
+
+
