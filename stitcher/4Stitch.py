@@ -10,10 +10,14 @@ import numpy as np
  
 # load the two images and resize them to have a width of 400 pixels
 # (for faster processing)
-imageA = cv2.imread("../stitching_img2/image002.png") # top left
-imageB = cv2.imread("../stitching_img2/image003.png") # top right
-imageC = cv2.imread("../stitching_img2/image009.png") # bottom left
-imageD = cv2.imread("../stitching_img2/image005.png") # bottom right
+#imageA = cv2.imread("../data/stitching_img2/image002.png") # top left
+#imageB = cv2.imread("../data/stitching_img2/image003.png") # top right
+#imageC = cv2.imread("../data/stitching_img2/image009.png") # bottom left
+#imageD = cv2.imread("../data/stitching_img2/image005.png") # bottom right
+imageA = cv2.imread("../data/MeasTape/S1.jpg") # top right
+imageB = cv2.imread("../data/MeasTape/S2.jpg") # top Left
+imageC = cv2.imread("../data/MeasTape/S3.jpg") # bottom right
+imageD = cv2.imread("../data/MeasTape/S4.jpg") # bottom left
 imageA = imutils.resize(imageA, width=400)
 imageB = imutils.resize(imageB, width=400)
 imageC = imutils.resize(imageC, width=400)
@@ -55,24 +59,24 @@ result6 = stitch.changeView(R,t,result5)
 
 
 # show the images
-cv2.imshow("Image A", imageA)
-cv2.imshow("Image B", imageB)
-cv2.imshow("Image C", imageC)
-cv2.imshow("Image D", imageD)
+#cv2.imshow("Image A", imageA)
+#cv2.imshow("Image B", imageB)
+#cv2.imshow("Image C", imageC)
+#cv2.imshow("Image D", imageD)
 #cv2.imshow("Keypoint Matches:A,B", vis1)
 #cv2.imshow("Keypoint Matches:C,D", vis2)
 #cv2.imshow("Keypoint Matches:AB,C", vis3)
 #cv2.imshow("Keypoint Matches:ABC,D", vis4)
-cv2.imshow("Keypoint Matches:AB,CD", vis5)
+#cv2.imshow("Keypoint Matches:AB,CD", vis5)
 #cv2.imshow("Keypoint Matches:[A,B][C]", vis3)
 #cv2.imshow("Keypoint Matches:[A,B,C][D]", vis4)
 #cv2.imshow("Keypoint Matches:[A,B][C,D]", vis5)
 #cv2.imshow("Result1", result1)
-cv2.imshow("Result2", result2)
+#cv2.imshow("Result2", result2)
 #cv2.imshow("Result3", result3)
-cv2.imshow("Result4", result4)
+#cv2.imshow("Result4", result4)
 cv2.imshow("Result5", result5)
-cv2.imshow("Result6", result6)
+#cv2.imshow("Result6", result6)
 cv2.waitKey(0)
 
 cv2.imwrite('4Stitched.jpg',result5);
