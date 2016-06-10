@@ -10,6 +10,13 @@ import time
 
 stitch = stitcher.Stitcher()
 CALWINDOW = 5
+FOV = 45
+pix2Ang = np.linspace(-45,45,480)
+top_edge = (np.abs(pix2Ang-FOV)).argmin()
+bot_edge = (np.abs(pix2Ang+FOV)).argmin()
+print [top_edge,bot_edge]
+
+
 
 H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
