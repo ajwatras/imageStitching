@@ -10,7 +10,7 @@ import time
 
 stitch = stitcher.Stitcher()
 CALWINDOW = 5
-FOV = 45
+FOV = 20
 pix2Ang = np.linspace(-45,45,480)
 top_edge = (np.abs(pix2Ang-FOV)).argmin()
 bot_edge = (np.abs(pix2Ang+FOV)).argmin()
@@ -22,14 +22,17 @@ H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
 
-#vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
-#vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
-#vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
-#vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
-vidcap1 = cv2.VideoCapture(1)
-vidcap2 = cv2.VideoCapture(2)
-vidcap3 = cv2.VideoCapture(3)
-vidcap4 = cv2.VideoCapture(4)
+vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
+vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
+vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
+vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
+#vidcap1 = cv2.VideoCapture(1)
+#vidcap2 = cv2.VideoCapture(2)
+#vidcap3 = cv2.VideoCapture(3)
+#vidcap4 = cv2.VideoCapture(4)
+
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+
 
 # load the two images and resize them to have a width of 400 pixels
 # (for faster processing)
@@ -44,6 +47,11 @@ for k in range(0,CALWINDOW):
 	success3, image3 = vidcap3.read()
 	success4, image4 = vidcap4.read()
 
+	image1 = image1[bot_edge:top_edge,bot_edge:top_edge]
+	image2 = image2[bot_edge:top_edge,bot_edge:top_edge]
+	image3 = image3[bot_edge:top_edge,bot_edge:top_edge]
+	image4 = image4[bot_edge:top_edge,bot_edge:top_edge]
+
 	print "\n1:"
 	(result1, vis1,H) = stitch.stitch([image1, image2], showMatches=True)
 	#H1 = H1 + H/CALWINDOW
@@ -56,6 +64,9 @@ for k in range(0,CALWINDOW):
 	(result3, vis3,H) = stitch.stitch([result2, image4], showMatches=True)
 	#H3 = H3+H/CALWINDOW
 	H3 = H
+	height = result3.shape[0]
+	width = result3.shape[1]
+	out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (width,height))
 
 while ((success1 & success2) & (success3 & success4)):
  	
@@ -86,11 +97,14 @@ while ((success1 & success2) & (success3 & success4)):
 	result1 = stitch.applyHomography(image1,image2,H1)
 	result2 = stitch.applyHomography(result1,image3,H2)
 	result3 = stitch.applyHomography(result2,image4,H3)
+	print result3.shape
 
 
 	elapsed = time.time() - total
 	print "\n Total Time Elapsed: %f Seconds" % elapsed
 
+
+	out.write(result3)
 	# show the images
 	cv2.imshow("Result", result3)
 	if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -101,5 +115,17 @@ while ((success1 & success2) & (success3 & success4)):
 	success3,image3 = vidcap3.read()
 	success4,image4 = vidcap4.read()
 
+	image1 = image1[bot_edge:top_edge,bot_edge:top_edge]
+	image2 = image2[bot_edge:top_edge,bot_edge:top_edge]
+	image3 = image3[bot_edge:top_edge,bot_edge:top_edge]
+	image4 = image4[bot_edge:top_edge,bot_edge:top_edge]
+
 cv2.waitKey(0)
 cv2.imwrite('vidStitched.jpg',result3);
+
+out.release()
+
+vidcap1.release()
+vidcap2.release()
+vidcap3.release()
+vidcap4.release()
