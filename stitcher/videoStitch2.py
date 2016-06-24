@@ -11,6 +11,13 @@ import time
 stitch = stitcher.Stitcher()
 CALWINDOW = 5
 FOV = 45
+radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04459628])
+#radial_dst = [-0.37801445,  0.38328306, -0.01922729, -0.01341008, -0.60047771]
+mtx = np.array([[ 444.64628787,    0.,          309.40196271],[   0.,          501.63984347,  255.86111216],[   0.,            0.,            1.        ]])
+
+
+#mtx = [[ 457.59059782,    0.,          324.59076057],[   0.,          521.77053812,  294.85975196],[   0.,            0.,            1.,        ]]
+
 pix2Ang = np.linspace(-45,45,480)
 top_edge = (np.abs(pix2Ang-FOV)).argmin()
 bot_edge = (np.abs(pix2Ang+FOV)).argmin()
@@ -22,14 +29,14 @@ H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
 
-#vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
-#vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
-#vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
-#vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
-vidcap1 = cv2.VideoCapture(1)
-vidcap2 = cv2.VideoCapture(2)
-vidcap3 = cv2.VideoCapture(3)
-vidcap4 = cv2.VideoCapture(4)
+vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
+vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
+vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
+vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
+#vidcap1 = cv2.VideoCapture(1)
+#vidcap2 = cv2.VideoCapture(2)
+#vidcap3 = cv2.VideoCapture(3)
+#vidcap4 = cv2.VideoCapture(4)
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
@@ -41,6 +48,8 @@ for k in range(0,5):
 	success2, image2 = vidcap2.read()
 	success3, image3 = vidcap3.read()
 	success4, image4 = vidcap4.read()
+
+
 for k in range(0,CALWINDOW):
 	success1, image1 = vidcap1.read()
 	success2, image2 = vidcap2.read()
@@ -51,6 +60,11 @@ for k in range(0,CALWINDOW):
 	image2 = image2[bot_edge:top_edge,bot_edge:top_edge]
 	image3 = image3[bot_edge:top_edge,bot_edge:top_edge]
 	image4 = image4[bot_edge:top_edge,bot_edge:top_edge]
+
+	image1 = cv2.undistort(image1,mtx,radial_dst,None,mtx)
+	image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
+	image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
+	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 
 	print "\n1:"
 	(result1, vis1,H) = stitch.stitch([image1, image2], showMatches=True)
@@ -119,6 +133,11 @@ while ((success1 & success2) & (success3 & success4)):
 	image2 = image2[bot_edge:top_edge,bot_edge:top_edge]
 	image3 = image3[bot_edge:top_edge,bot_edge:top_edge]
 	image4 = image4[bot_edge:top_edge,bot_edge:top_edge]
+	if ((success1 & success2) & (success3 & success4)):
+		image1 = cv2.undistort(image1,mtx,radial_dst,None,mtx)
+		image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
+		image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
+		image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 
 cv2.waitKey(0)
 cv2.imwrite('vidStitched.jpg',result3);
