@@ -10,7 +10,7 @@ import time
 
 stitch = stitcher.Stitcher()
 CALWINDOW = 5
-FOV = 45
+FOV = 40
 radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04459628])
 #radial_dst = [-0.37801445,  0.38328306, -0.01922729, -0.01341008, -0.60047771]
 mtx = np.array([[ 444.64628787,    0.,          309.40196271],[   0.,          501.63984347,  255.86111216],[   0.,            0.,            1.        ]])
@@ -29,14 +29,14 @@ H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
 
-vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
-vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
-vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
-vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
-#vidcap1 = cv2.VideoCapture(1)
-#vidcap2 = cv2.VideoCapture(2)
-#vidcap3 = cv2.VideoCapture(3)
-#vidcap4 = cv2.VideoCapture(4)
+#vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
+#vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
+#vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
+#vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
+vidcap1 = cv2.VideoCapture(1)
+vidcap2 = cv2.VideoCapture(2)
+vidcap3 = cv2.VideoCapture(3)
+vidcap4 = cv2.VideoCapture(4)
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 

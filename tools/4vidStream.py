@@ -1,12 +1,10 @@
 # import the necessary packages
-import stitcher
 import argparse
 import imutils
 import cv2
 import numpy as np
 import time
  
-stitch = stitcher.Stitcher()
 
 #vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
 #vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
@@ -36,11 +34,11 @@ while ((success1 & success2) & (success3 & success4)):
 	result1 = np.concatenate((image1,image2),axis=1)
 	result2 =np.concatenate((image3,image4),axis=1)
 	result = np.concatenate((result1,result2),axis=0)
-	#descriptor = cv2.xfeatures2d.SURF_create()
-	#(kps, features) = descriptor.detectAndCompute(result, None)
+	descriptor = cv2.xfeatures2d.SURF_create()
+	(kps, features) = descriptor.detectAndCompute(result, None)
 	
 	
-	#cv2.drawKeypoints(result,kps,result)
+	cv2.drawKeypoints(result,kps,result)
 	
 	# show the images
 	cv2.imshow("Result", result)
