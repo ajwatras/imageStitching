@@ -2,7 +2,7 @@ import numpy as np
 import math
 import cv2
 
-vid1 = "../data/Calibration_vid4.avi"
+vid1 = "./output.avi"
 saveDest = "../data/vid2frame/"
 FrameLimit = 100000
 

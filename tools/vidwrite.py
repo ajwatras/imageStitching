@@ -20,10 +20,10 @@ while(cap1.isOpened()):
     ret3, frame3 = cap3.read()
     ret4, frame4 = cap4.read()
     if ret1==True:
-        frame1 = cv2.flip(frame1,1)
-        frame2 = cv2.flip(frame2,1)
-        frame3 = cv2.flip(frame3,1)
-        frame4 = cv2.flip(frame4,1)
+        #frame1 = cv2.flip(frame1,1)
+        #frame2 = cv2.flip(frame2,1)
+        #frame3 = cv2.flip(frame3,1)
+        #frame4 = cv2.flip(frame4,1)
 
         # write the flipped frame
         out1.write(frame1)
