@@ -3,6 +3,8 @@ import numpy as np
 import imutils
 import cv2
 import time
+
+BLEND_IMAGES = 0
  
 class Stitcher:
 	def __init__(self):
@@ -75,17 +77,19 @@ class Stitcher:
 		
 		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
 		
-		mask1 = (result1 > 0).astype('int')
-		mask2 = (result2 > 0).astype('int')
-		mask = mask1+mask2
-		mask = mask+(mask == 0).astype('int')
-		
-		
-
+		if BLEND_IMAGES == 1:
+			mask1 = (result1 > 0).astype('int')
+			mask2 = (result2 > 0).astype('int')
+			mask = mask1+mask2
+			mask = mask+(mask == 0).astype('int')	
+	
+			result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
 			
-		result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
-		elapsed = time.time() - t
+		else:
+			mask = (result1 == 0).astype('int')
+			result = result2*mask + result1
 
+		elapsed = time.time() - t
 		print "Applying transformation: %f Seconds" % elapsed
  
 		# check to see if the keypoint matches should be visualized
