@@ -8,12 +8,12 @@ import cv2
 import numpy as np
 import time
 
-stitch = stitcher.Stitcher()
-
+ 
 vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
 vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
 vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
 vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
+
 
 # load the two images and resize them to have a width of 400 pixels
 # (for faster processing)
@@ -45,8 +45,8 @@ while ((success1 & success2) & (success3 & success4)):
 	im1 = np.concatenate((image1,image2),axis=1)
 	im2 =np.concatenate((image3,image4),axis=1)
 	im3 = np.concatenate((im1,im2),axis=0)
-	#cv2.imshow("Frame",im3)
-	#cv2.waitKey(0)
+
+	cv2.imshow("Frame",im3)
 
 	print "\n1:"
 	(result1, vis1,H1) = stitch.stitch([image1, image2], showMatches=True)

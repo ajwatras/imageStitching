@@ -3,6 +3,8 @@ import numpy as np
 import imutils
 import cv2
 import time
+
+BLEND_IMAGES = 0
  
 class Stitcher:
 	def __init__(self):
@@ -62,15 +64,17 @@ class Stitcher:
 		
 		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
 		
-		mask1 = (result1 > 0).astype('int')
-		mask2 = (result2 > 0).astype('int')
-		mask = mask1+mask2
-		mask = mask+(mask == 0).astype('int')
-		
-		
-
+		if BLEND_IMAGES == 1:
+			mask1 = (result1 > 0).astype('int')
+			mask2 = (result2 > 0).astype('int')
+			mask = mask1+mask2
+			mask = mask+(mask == 0).astype('int')	
+	
+			result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
 			
-		result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
+		else:
+			mask = (result1 == 0).astype('int')
+			result = (result2*mask + result1).astype('uint8')
 		elapsed = time.time() - t
 
 		print "Applying transformation: %f Seconds" % elapsed
@@ -195,7 +199,6 @@ class Stitcher:
 		print " \nWarping Viewpoint: %f Seconds \n " % elapsed
 		return output
 
-
 	def applyHomography(self,imageB,imageA,H):
 		# Detect The appropriate size for the resulting image. 
 		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
@@ -225,12 +228,17 @@ class Stitcher:
 		
 		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
 		
-		mask1 = (result1 > 0).astype('int')
-		mask2 = (result2 > 0).astype('int')
-		mask = mask1+mask2
-		mask = mask+(mask == 0).astype('int')
+		if BLEND_IMAGES == 1:
+			mask1 = (result1 > 0).astype('int')
+			mask2 = (result2 > 0).astype('int')
+			mask = mask1+mask2
+			mask = mask+(mask == 0).astype('int')	
+	
+			result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
 			
-		result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
+		else:
+			mask = (result1 == 0).astype('int')
+			result = (result2*mask + result1).astype('uint8')
 
 		return result
 
