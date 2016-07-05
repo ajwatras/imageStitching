@@ -3,7 +3,10 @@ import cv2
 import time
 
 CALIBRATION_FRAMES = 10
-THRESHOLD = 10
+THRESHOLD = 20
+DILATION_KERNEL = np.ones([3,3])
+EROSION_LOOPS = 3
+DILATION_LOOPS = 5
 
 background_frame = np.zeros([480,640,3]) 
 radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04459628])
@@ -24,14 +27,33 @@ for x in range(0,CALIBRATION_FRAMES):
 background_frame = (background_frame/CALIBRATION_FRAMES).astype('uint8')
 background_gray = cv2.cvtColor(background_frame,cv2.COLOR_BGR2GRAY)
 
+
+
 while success:
 	gray_frame = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 
-	diff_img = np.abs(gray_frame - background_gray)
+	diff_img = (np.sum(np.abs(frame.astype('float') - background_frame.astype('float')),axis=2)/3).astype('uint8')
+	
+	T,fgMask = cv2.threshold(diff_img,THRESHOLD,255,cv2.THRESH_BINARY)
 
-	fgMask = (diff_img > THRESHOLD).astype('int')
-	print fgMask
-	cv2.imshow('video',256*fgMask)
+
+# We will attempt to denoise our binary image using dilation and erosion. 
+	# In order to attempt to fill in holes we dilate the object followed by an equivalent erosion. 
+	for k in range(0,DILATION_LOOPS):
+		fgMask = cv2.dilate(fgMask,DILATION_KERNEL)
+	for k in range(0,DILATION_LOOPS):
+		fgMask = cv2.erode(fgMask,DILATION_KERNEL)
+
+	# In order to remove noisy points in the image, we erode away the objects, then restore any remaining objects to their original size. Unfortunately, the dilation algorithm does not exactly undo the erosion algorithm. So some artifacts are introduced. 
+	for k in range(0,EROSION_LOOPS):
+    		fgMask = cv2.erode(fgMask,DILATION_KERNEL)
+	for k in range(0,EROSION_LOOPS):
+		fgMask = cv2.dilate(fgMask,DILATION_KERNEL)
+
+
+
+	print diff_img
+	cv2.imshow('video',fgMask)
 	cv2.waitKey(100)
 
 
