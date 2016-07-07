@@ -1,0 +1,5 @@
+Created Changelog.
+
+Added test.py file as a testing location before moving ideas to real scripts. 
+
+

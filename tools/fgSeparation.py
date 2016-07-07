@@ -14,7 +14,7 @@ radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04
 mtx = np.array([[ 444.64628787,    0.,          309.40196271],[   0.,          501.63984347,  255.86111216],[   0.,            0.,            1.        ]])
 
 
-vid = cv2.VideoCapture('../data/testVideo/office/output1.avi')
+vid = cv2.VideoCapture('../data/testVideo/FGsep4/output1.avi')
 #Throw out opening frames, they are usually garbage.
 for k in range(0,5):
 	success,frame = vid.read()
@@ -54,7 +54,7 @@ while success:
 
 	print diff_img
 	cv2.imshow('video',fgMask)
-	cv2.waitKey(100)
+	cv2.waitKey(40)
 
 
 	success,frame = vid.read()
