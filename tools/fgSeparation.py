@@ -14,51 +14,39 @@ radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04
 mtx = np.array([[ 444.64628787,    0.,          309.40196271],[   0.,          501.63984347,  255.86111216],[   0.,            0.,            1.        ]])
 
 
-vid = cv2.VideoCapture('../data/testVideo/FGsep4/output1.avi')
-#Throw out opening frames, they are usually garbage.
-for k in range(0,5):
-	success,frame = vid.read()
+vid = cv2.VideoCapture('../data/testVideo/FGsep2/output1.avi')
+fgbg = cv2.createBackgroundSubtractorMOG2()
+
+success,frame = vid.read()
 
 #We assume that only background is in the frame initially. So an average of the initial frames gives us an estimate of the background image. 
-for x in range(0,CALIBRATION_FRAMES):
-	success,frame = vid.read()
-	background_frame = background_frame + frame
-
-background_frame = (background_frame/CALIBRATION_FRAMES).astype('uint8')
-background_gray = cv2.cvtColor(background_frame,cv2.COLOR_BGR2GRAY)
-
-
-
 while success:
-	gray_frame = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+	fgmask = fgbg.apply(frame)
+	out_frame = np.zeros(fgmask.shape)
 
-	diff_img = (np.sum(np.abs(frame.astype('float') - background_frame.astype('float')),axis=2)/3).astype('uint8')
-	
-	T,fgMask = cv2.threshold(diff_img,THRESHOLD,255,cv2.THRESH_BINARY)
+	fgmask = cv2.erode(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS)
+	fgmask = cv2.dilate(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS)
+	fgmask = cv2.dilate(fgmask,DILATION_KERNEL,iterations=DILATION_LOOPS)
+
+	im2, contours, hierarchy = cv2.findContours(fgmask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+	for i in range(0,len(contours)):
+		if (i % 1 == 0):
+			cnt = contours[i]
+
+			x,y,w,h = cv2.boundingRect(cnt)
+			cv2.drawContours(fgmask,contours,-1,(255,255,0),3)
+			cv2.rectangle(fgmask,(x,y),(x+w,y+h),(255,0,0),2)
+			out_frame[y:y+h,x:x+w] = np.ones([h,w])
+			 
+
+	#cv2.drawContours(im2, contours, -1, (0,255,0), 3)
 
 
-# We will attempt to denoise our binary image using dilation and erosion. 
-	# In order to attempt to fill in holes we dilate the object followed by an equivalent erosion. 
-	for k in range(0,DILATION_LOOPS):
-		fgMask = cv2.dilate(fgMask,DILATION_KERNEL)
-	for k in range(0,DILATION_LOOPS):
-		fgMask = cv2.erode(fgMask,DILATION_KERNEL)
-
-	# In order to remove noisy points in the image, we erode away the objects, then restore any remaining objects to their original size. Unfortunately, the dilation algorithm does not exactly undo the erosion algorithm. So some artifacts are introduced. 
-	for k in range(0,EROSION_LOOPS):
-    		fgMask = cv2.erode(fgMask,DILATION_KERNEL)
-	for k in range(0,EROSION_LOOPS):
-		fgMask = cv2.dilate(fgMask,DILATION_KERNEL)
-
-
-
-	print diff_img
-	cv2.imshow('video',fgMask)
+	cv2.imshow('Video Feed',out_frame)
 	cv2.waitKey(40)
-
-
 	success,frame = vid.read()
-	
+
+
 cv2.imshow('frame',background_gray)
 cv2.waitKey(0)
 

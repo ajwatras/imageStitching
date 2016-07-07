@@ -9,40 +9,33 @@ radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04
 mtx = np.array([[ 444.64628787,    0.,          309.40196271],[   0.,          501.63984347,  255.86111216],[   0.,            0.,            1.        ]]) # Estimated Mobius Camera matrix
 
 ## Introduce any GLOBAL constants
+IMAGE_SIZE = [480,640]
+DILATION_KERNEL = np.ones([3,3])
+EDGE_WIN_SIZE = 40
+
+maskA = np.zeros(IMAGE_SIZE)
+maskB = np.zeros(IMAGE_SIZE)
+out_image = np.zeros(IMAGE_SIZE)
+
+
+
+maskA[100:200,100:200] = np.ones([100,100])
+maskB[150:250,150:250] = np.ones([100,100])
+
+
+cv2.imshow("frame",maskA)
+cv2.waitKey(0)
 
 ## Begin test
 
-# Testing Background subtractor.
-vid = cv2.VideoCapture('../data/testVideo/office/output1.avi')
-fgbg = cv2.createBackgroundSubtractorMOG2()
+contour_copy = np.zeros(maskA.shape).astype('uint8')
+contour_copy[:] = maskA[:]
+im2, contours, hierarchy = cv2.findContours(contour_copy,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+cv2.drawContours(out_image,contours,-1,(255,255,0),1)
+out_image = np.logical_and(out_image,maskB).astype('float')
+out_image = cv2.dilate(out_image,DILATION_KERNEL,iterations=EDGE_WIN_SIZE)
 
-success,frame = vid.read()
 
-while success:
-	fgmask = fgbg.apply(frame)
-	contour = cv2.findCountours(fgmask,cv2.CV_RETR_EXTERNAL,cv2.CV_CHAIN_APPROX_NONE)
-
-	cv2.imshow('Video Feed',fgmask)
-	cv2.waitKey(40)
-	success,frame = vid.read()
-
+cv2.imshow('original',maskA)
+cv2.imshow('frame',out_image - maskB)
 cv2.waitKey(0)
-
-cv2.destroyAllWindows()
-vid.release()
-
-# testing blob detector
-#vid = cv2.VideoCapture('../data/testVideo/office/output1.avi')
-#detector = cv2.SimpleBlobDetector()
-#
-#success,frame = vid.read()
-#while success:
-#	keypoints = detector.detect(frame)
-#
-#	im_with_keypoints = cv2.drawKeypoints(frame, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-#
-#	cv2.imshow("keypoints", im_with_keypoints)
-#	cv2.waitKey(40)
-#
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
