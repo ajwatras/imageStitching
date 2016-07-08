@@ -1,16 +1,20 @@
+## takes input video feed and separates out each frame into a jpg file.
+
 import numpy as np
 import math
 import cv2
 
-vid1 = "./output.avi"
-saveDest = "../data/vid2frame/"
-FrameLimit = 100000
+# input parameters
+vid1 = "./output.avi"			#Video to be split
+saveDest = "../data/vid2frame/"		#Location files should be saved 2
+FrameLimit = 100000			#Limit on length of the video (for filenaming)
 
+# Set up video capture environment
 cap1 = cv2.VideoCapture(vid1)
 cc = 0
 
 
-
+# Read frames and then save them until q is pressed or video is over
 ret1, frame1 = cap1.read()
 while(ret1 == 1):
     
@@ -29,5 +33,6 @@ while(ret1 == 1):
 
 
 
+#clean up environment
 cv2.destroyAllWindows()
 cap1.release()

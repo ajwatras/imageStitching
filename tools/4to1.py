@@ -1,6 +1,8 @@
+## This script will take four output video feeds and combine them into a single larger video feed. 
 import numpy as np
 import cv2
 
+# Begin reading from the desired videofeeds
 cap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
 cap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
 cap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
@@ -11,6 +13,7 @@ cap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 out = cv2.VideoWriter('./output.avi',fourcc, 20.0, (1280,960))
 
+#For each frame in the videofeeds, we combine the four feeds into a single one. 
 while(cap1.isOpened()):
     ret1, frame1 = cap1.read()
     ret2, frame2 = cap2.read()

@@ -1,3 +1,4 @@
+## This script can be used to generate the internal camera parameters of a camera
 import numpy as np
 import cv2
 import glob
@@ -48,7 +49,7 @@ for fname in images:
 
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints, gray.shape[::-1],None,None)
 
-print dist,mtx
+print dist,mtx  # outputs the radial distortion vector followed by the camera internal parameters.
 
 dst = cv2.undistort(img, mtx, dist, None, mtx)
 for fname in images:

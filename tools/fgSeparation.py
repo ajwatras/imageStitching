@@ -35,14 +35,14 @@ while success:
 
 			x,y,w,h = cv2.boundingRect(cnt)
 			cv2.drawContours(fgmask,contours,-1,(255,255,0),3)
-			cv2.rectangle(fgmask,(x,y),(x+w,y+h),(255,0,0),2)
+			cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
 			out_frame[y:y+h,x:x+w] = np.ones([h,w])
 			 
 
 	#cv2.drawContours(im2, contours, -1, (0,255,0), 3)
 
 
-	cv2.imshow('Video Feed',out_frame)
+	cv2.imshow('Video Feed',frame)
 	cv2.waitKey(40)
 	success,frame = vid.read()
 
