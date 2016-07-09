@@ -5,12 +5,16 @@ import cv2
 import time
 
 BLEND_IMAGES = 0
+EDGE_CORRECTION = 0
+DILATION_KERNEL = np.ones([3,3])
+EROSION_LOOPS = 1
+DILATION_LOOPS = 4
+EDGE_WIN_SIZE = 40
  
 class Stitcher:
 	def __init__(self):
 		# determine if we are using OpenCV v3.X
 		self.isv3 = imutils.is_cv3()
-
         def stitch(self, images, ratio=.75, reprojThresh=4.0,
 		showMatches=True):
 
@@ -18,31 +22,19 @@ class Stitcher:
 		# unpack the images, then detect keypoints and extract
 		# local invariant descriptors from them
 		t=time.time()
-		(imageD,imageC,imageB, imageA) = images
+		(imageB, imageA) = images
 		(kpsA, featuresA) = self.detectAndDescribe(imageA)
 		(kpsB, featuresB) = self.detectAndDescribe(imageB)
-		(kpsC, featuresC) = self.detectAndDescribe(imageC)
-		(kpsD, featuresD) = self.detectAndDescribe(imageD)
 		elapsed = time.time() - t
 		print "Detecting keypoints: %f Seconds" % elapsed 
 
 		# match features between the two images
-		M1 = self.matchKeypoints(kpsA, kpsB,
+		M = self.matchKeypoints(kpsA, kpsB,
 			featuresA, featuresB, ratio, reprojThresh)
-		M2 = self.matchKeypoints(kpsA, kpsC,
-			featuresA, featuresC, ratio, reprojThresh)
-		M3 = self.matchKeypoints(kpsA, kpsD,
-			featuresA, featuresD, ratio, reprojThresh)
 		# if the match is None, then there aren't enough matched
 		# keypoints to create a panorama
-		if M1 is None:
-			print 'Error: No Matching Features (M1)'
-			return None
-		if M2 is None:
-			print 'Error: No Matching Features (M2)'
-			return None
-		if M3 is None:
-			print 'Error: No Matching Features (M3)'
+		if M is None:
+			print 'Error: No Matching Features'
 			return None
 		# otherwise, apply a perspective warp to stitch the images
 		# together
@@ -76,10 +68,12 @@ class Stitcher:
 			(x_bound+x_shift,y_bound+y_shift))
 		
 		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
-		
+
+		mask1 = (result1 > 0).astype('int')
+		mask2 = (result2 > 0).astype('int')
+
 		if BLEND_IMAGES == 1:
-			mask1 = (result1 > 0).astype('int')
-			mask2 = (result2 > 0).astype('int')
+
 			mask = mask1+mask2
 			mask = mask+(mask == 0).astype('int')	
 	
@@ -87,9 +81,9 @@ class Stitcher:
 			
 		else:
 			mask = (result1 == 0).astype('int')
-			result = result2*mask + result1
-
+			result = (result2*mask + result1).astype('uint8')
 		elapsed = time.time() - t
+
 		print "Applying transformation: %f Seconds" % elapsed
  
 		# check to see if the keypoint matches should be visualized
@@ -108,23 +102,11 @@ class Stitcher:
 		# convert the image to grayscale
 		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
  
-		# check to see if we are using OpenCV 3.X
-		if self.isv3:
-			# detect and extract features from the image
-			#descriptor = cv2.xfeatures2d.SIFT_create()
-			descriptor = cv2.xfeatures2d.SURF_create()
-			
-			(kps, features) = descriptor.detectAndCompute(image, None)
- 
-		# otherwise, we are using OpenCV 2.4.X
-		else:
-			# detect keypoints in the image
-			detector = cv2.FeatureDetector_create("SIFT")
-			kps = detector.detect(gray)
- 
-			# extract features from the image
-			extractor = cv2.DescriptorExtractor_create("SIFT")
-			(kps, features) = extractor.compute(gray, kps)
+		# detect and extract features from the image
+		#descriptor = cv2.xfeatures2d.SIFT_create()
+		descriptor = cv2.xfeatures2d.SURF_create()
+		
+		(kps, features) = descriptor.detectAndCompute(image, None)
  
 		# convert the keypoints from KeyPoint objects to NumPy
 		# arrays
@@ -221,3 +203,58 @@ class Stitcher:
 		elapsed = time.time() - ti
 		print " \nWarping Viewpoint: %f Seconds \n " % elapsed
 		return output
+	def applyHomography(self,imageB,imageA,H):
+		# Detect The appropriate size for the resulting image. 
+		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
+			[imageA.shape[1],imageA.shape[0],1]]).T
+		
+		# print H, corners
+		img_bounds = np.dot(H,corners)
+		
+                x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
+		y_bound = np.divide(img_bounds[1,:],img_bounds[2,:])
+		x_shift = 0
+		y_shift = 0
+		if min(x_bound) < 0:
+			x_shift = -int(min(x_bound))
+		if min(y_bound) < 0:
+			y_shift = -int(min(y_bound))
+		
+		shift_H = np.array([[1,0,x_shift],[0,1,y_shift],[0,0,1]])
+		x_bound = int(max(max(x_bound),imageB.shape[1]))
+		y_bound = int(max(max(y_bound),imageB.shape[0]))
+		
+		
+		# Warp Image A and place it in frame.
+		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
+		result1 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
+			(x_bound+x_shift,y_bound+y_shift))
+		
+		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
+		
+		if BLEND_IMAGES == 1:
+			mask1 = (result1 > 0).astype('int')
+			mask2 = (result2 > 0).astype('int')
+			mask = mask1+mask2
+			mask = mask+(mask == 0).astype('int')	
+	
+			result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
+			
+		else:
+			mask = (result1 == 0).astype('int')
+			result = (result2*mask + result1).astype('uint8')
+
+		return result
+
+	def locateSeam(self, maskA, maskB):
+		out_mask = np.zeros(maskA.shape)
+		contour_copy = np.zeros(maskA.shape).astype('uint8')
+		contour_copy[:] = maskA[:]
+		im2, contours, hierarchy = cv2.findContours(contour_copy,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+		cv2.drawContours(out_mask,contours,-1,(255,255,0),1)
+		out_mask = np.logical_and(out_mask,maskB).astype('float')
+		out_mask = cv2.dilate(out_mask,DILATION_KERNEL,iterations=EDGE_WIN_SIZE)
+
+		return out_mask
+
+

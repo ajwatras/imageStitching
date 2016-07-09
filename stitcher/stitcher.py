@@ -5,6 +5,11 @@ import cv2
 import time
 
 BLEND_IMAGES = 0
+EDGE_CORRECTION = 0
+DILATION_KERNEL = np.ones([3,3])
+EROSION_LOOPS = 1
+DILATION_LOOPS = 4
+EDGE_WIN_SIZE = 40
  
 class Stitcher:
 	def __init__(self):
@@ -63,10 +68,12 @@ class Stitcher:
 			(x_bound+x_shift,y_bound+y_shift))
 		
 		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
-		
+
+		mask1 = (result1 > 0).astype('int')
+		mask2 = (result2 > 0).astype('int')
+
 		if BLEND_IMAGES == 1:
-			mask1 = (result1 > 0).astype('int')
-			mask2 = (result2 > 0).astype('int')
+
 			mask = mask1+mask2
 			mask = mask+(mask == 0).astype('int')	
 	
@@ -239,4 +246,14 @@ class Stitcher:
 
 		return result
 
+	def locateSeam(self, maskA, maskB):
+		out_mask = np.zeros(maskA.shape)
+		contour_copy = np.zeros(maskA.shape).astype('uint8')
+		contour_copy[:] = maskA[:]
+		im2, contours, hierarchy = cv2.findContours(contour_copy,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+		cv2.drawContours(out_mask,contours,-1,(255,255,0),1)
+		out_mask = np.logical_and(out_mask,maskB).astype('float')
+		out_mask = cv2.dilate(out_mask,DILATION_KERNEL,iterations=EDGE_WIN_SIZE)
+
+		return out_mask
 

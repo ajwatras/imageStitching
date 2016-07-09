@@ -4,4 +4,4 @@ Added test.py file as a testing location before moving ideas to real scripts.
 
 FGseparation now successfully finds bounding box of moving objects using background subtractor mog2.
 
-
+Created locateSeam function in stitcher to find regions around the seam of the two images.

@@ -1,5 +1,4 @@
 # Use this method to try and call the stitch function to stitch together all four images. (s1-s4)
-
 # import the necessary packages
 import stitcher
 import argparse
