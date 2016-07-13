@@ -6,15 +6,15 @@ import numpy as np
 import time
  
 
-#vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
-#vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
-#vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
-#vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
+vidcap1 = cv2.VideoCapture('../data/testVideo/July2/output2.avi')
+vidcap2 = cv2.VideoCapture('../data/testVideo/July2/output3.avi')
+vidcap3 = cv2.VideoCapture('../data/testVideo/July2/output4.avi')
+vidcap4 = cv2.VideoCapture('../data/testVideo/July2/output1.avi')
 
-vidcap1 = cv2.VideoCapture(1)
-vidcap2 = cv2.VideoCapture(2)
-vidcap3 = cv2.VideoCapture(3)
-vidcap4 = cv2.VideoCapture(4)
+#vidcap1 = cv2.VideoCapture(1)
+#vidcap2 = cv2.VideoCapture(2)
+#vidcap3 = cv2.VideoCapture(3)
+#vidcap4 = cv2.VideoCapture(4)
 
 
 # load the two images and resize them to have a width of 400 pixels

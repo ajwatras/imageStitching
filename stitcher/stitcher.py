@@ -253,7 +253,7 @@ class Stitcher:
 		im2, contours, hierarchy = cv2.findContours(contour_copy,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
 		cv2.drawContours(out_mask,contours,-1,(255,255,0),1)
 		out_mask = np.logical_and(out_mask,maskB).astype('float')
-		out_mask = cv2.dilate(out_mask,DILATION_KERNEL,iterations=EDGE_WIN_SIZE)
+		
 
 		return out_mask
 

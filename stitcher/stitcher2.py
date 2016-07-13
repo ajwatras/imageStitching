@@ -64,10 +64,10 @@ class Stitcher:
 		
 		# Warp Image A and place it in frame.
 		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
-		result1 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
+		result2 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
 			(x_bound+x_shift,y_bound+y_shift))
 		
-		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
+		result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
 
 		mask1 = (result1 > 0).astype('int')
 		mask2 = (result2 > 0).astype('int')
@@ -93,7 +93,8 @@ class Stitcher:
  
 			# return a tuple of the stitched image and the
 			# visualization
-			return (result, vis,H)
+			
+			return (result, vis,H,mask1,mask2)
  
 		# return the stitched image
 		return result
@@ -227,34 +228,23 @@ class Stitcher:
 		
 		# Warp Image A and place it in frame.
 		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
-		result1 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
+		result2 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
 			(x_bound+x_shift,y_bound+y_shift))
 		
-		result2 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
+		result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
 		
-		if BLEND_IMAGES == 1:
-			mask1 = (result1 > 0).astype('int')
-			mask2 = (result2 > 0).astype('int')
-			mask = mask1+mask2
-			mask = mask+(mask == 0).astype('int')	
-	
-			result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
-			
-		else:
-			mask = (result1 == 0).astype('int')
-			result = (result2*mask + result1).astype('uint8')
+		mask1 = (result1 > 0).astype('int')
+		mask2 = (result2 > 0).astype('int')
 
-		return result
+		return result1,result2,mask1,mask2
 
-	def locateSeam(self, maskA, maskB):
-		out_mask = np.zeros(maskA.shape)
+	def locateSeam(self, maskA, maskB):	
+		out_mask = np.zeros(maskA.shape).astype('uint8')
 		contour_copy = np.zeros(maskA.shape).astype('uint8')
-		contour_copy[:] = maskA[:]
+		contour_copy[:] = maskA[:].astype('uint8')
 		im2, contours, hierarchy = cv2.findContours(contour_copy,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
 		cv2.drawContours(out_mask,contours,-1,(255,255,0),1)
 		out_mask = np.logical_and(out_mask,maskB).astype('float')
-		out_mask = cv2.dilate(out_mask,DILATION_KERNEL,iterations=EDGE_WIN_SIZE)
-
 		return out_mask
 
 

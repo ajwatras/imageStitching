@@ -33,6 +33,6 @@ while(ret1 == 1):
 
 
 
-#clean up environment
+#clean up environmentchc 
 cv2.destroyAllWindows()
 cap1.release()

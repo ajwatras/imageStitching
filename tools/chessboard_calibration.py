@@ -5,7 +5,7 @@ import glob
 
 grid_x = 8
 grid_y = 6
-data_loc = '../data/calibration_images/radialDist/camera1/'
+data_loc = '../data/calibration_images/radialDist/camera2/'
 
 #termination criteria
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
