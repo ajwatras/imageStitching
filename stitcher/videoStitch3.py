@@ -165,11 +165,16 @@ while ((success1 & success2) & (success3 & success4)):
 
 	# If there are objects that cross the seam line, we attempt to re-stitch those objects.
 	if len(moving_objects) > 1:
-		base_im = result1[
+		
 		for i in range(1,len(moving_objects)):
 			
 			print "object %d in seam" % moving_objects[i]
-			print len(x),len(y),len(w),len(h)
+			print x,y,w,h
+                        print result1[seam1_bounds[0]:seam1_bounds[1],seam1_bounds[2]:seam1_bounds[3]].shape
+                        print result2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]].shape
+			
+			if (w[i-1] > 50) & (h[i-1] > 50):
+                            r1,r2,Htemp,m1,m2 = stitch.stitch([result1[seam1_bounds[0]:seam1_bounds[1],seam1_bounds[2]:seam1_bounds[3]],result2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True)
 				
 	
 	
@@ -196,12 +201,16 @@ while ((success1 & success2) & (success3 & success4)):
 	success2,image2 = vidcap2.read()
 	success3,image3 = vidcap3.read()
 	success4,image4 = vidcap4.read()
+	
+	
 
-	image1 = image1[bot_edge:top_edge,bot_edge:top_edge]
-	image2 = image2[bot_edge:top_edge,bot_edge:top_edge]
-	image3 = image3[bot_edge:top_edge,bot_edge:top_edge]
-	image4 = image4[bot_edge:top_edge,bot_edge:top_edge]
+
 	if ((success1 & success2) & (success3 & success4)):
+                image1 = image1[bot_edge:top_edge,bot_edge:top_edge]
+                image2 = image2[bot_edge:top_edge,bot_edge:top_edge]
+                image3 = image3[bot_edge:top_edge,bot_edge:top_edge]
+                image4 = image4[bot_edge:top_edge,bot_edge:top_edge]
+	
 		image1 = cv2.undistort(image1,mtx,radial_dst,None,mtx)
 		image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
 		image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)

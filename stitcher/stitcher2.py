@@ -35,7 +35,7 @@ class Stitcher:
 		# keypoints to create a panorama
 		if M is None:
 			print 'Error: No Matching Features'
-			return None
+			return [0,0,0,0,0]
 		# otherwise, apply a perspective warp to stitch the images
 		# together
 		t=time.time()
@@ -122,6 +122,8 @@ class Stitcher:
 		# matches
 		t=time.time()
 		matcher = cv2.DescriptorMatcher_create("BruteForce")
+		if (featuresA is None) or (featuresB is None):
+                    return ([],[],[])
 		rawMatches = matcher.knnMatch(featuresA, featuresB, 2)
 		elapsed = time.time() - t
 		print "Matching Feature Points: %f" % elapsed

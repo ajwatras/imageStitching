@@ -17,31 +17,32 @@ class Stitcher:
 		# local invariant descriptors from them
 		t=time.time()
 		(imageD,imageC,imageB, imageA) = images
+		(imageB,imageA) = images
 		(kpsA, featuresA) = self.detectAndDescribe(imageA)
 		(kpsB, featuresB) = self.detectAndDescribe(imageB)
-		(kpsC, featuresC) = self.detectAndDescribe(imageC)
-		(kpsD, featuresD) = self.detectAndDescribe(imageD)
+		#(kpsC, featuresC) = self.detectAndDescribe(imageC)
+		#(kpsD, featuresD) = self.detectAndDescribe(imageD)
 		elapsed = time.time() - t
 		print "Detecting keypoints: %f Seconds" % elapsed 
 
 		# match features between the two images
 		M1 = self.matchKeypoints(kpsA, kpsB,
 			featuresA, featuresB, ratio, reprojThresh)
-		M2 = self.matchKeypoints(kpsA, kpsC,
-			featuresA, featuresC, ratio, reprojThresh)
-		M3 = self.matchKeypoints(kpsA, kpsD,
-			featuresA, featuresD, ratio, reprojThresh)
+		#M2 = self.matchKeypoints(kpsA, kpsC,
+		#	featuresA, featuresC, ratio, reprojThresh)
+		#M3 = self.matchKeypoints(kpsA, kpsD,
+		#	featuresA, featuresD, ratio, reprojThresh)
 		# if the match is None, then there aren't enough matched
 		# keypoints to create a panorama
-		if M1 is None:
+		if (len(M1) < 1):
 			print 'Error: No Matching Features (M1)'
 			return None
-		if M2 is None:
-			print 'Error: No Matching Features (M1)'
-			return None
-		if M3 is None:
-			print 'Error: No Matching Features (M1)'
-			return None
+		#if M2 is None:
+		#	print 'Error: No Matching Features (M2)'
+		#	return None
+		#if M3 is None:
+		#	print 'Error: No Matching Features (M3)'
+		#	return None
 		# otherwise, apply a perspective warp to stitch the images
 		# together
 		t=time.time()
