@@ -40,12 +40,15 @@ class Stitcher:
 		# together
 		t=time.time()
 		(matches, H, status) = M
+		if H is None: 
+                    print "ERROR: no valid Homography"
+                    return [0,0,0,0,0]
 
-		# Detect The appropriate size for the resulting image. 
+		# Detect the appropriate size for the resulting image. 
 		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
 			[imageA.shape[1],imageA.shape[0],1]]).T
 		
-		# print H, corners
+                print H, corners
 		img_bounds = np.dot(H,corners)
 		
                 x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
@@ -85,7 +88,7 @@ class Stitcher:
 		elapsed = time.time() - t
 
 		print "Applying transformation: %f Seconds" % elapsed
- 
+                
 		# check to see if the keypoint matches should be visualized
 		if showMatches:
 			vis = self.drawMatches(imageA, imageB, kpsA, kpsB, matches,
@@ -97,7 +100,7 @@ class Stitcher:
 			return (result, vis,H,mask1,mask2)
  
 		# return the stitched image
-		return result
+		return (result,H,mask1,mask2)
 
         def detectAndDescribe(self, image):
 		# convert the image to grayscale
@@ -123,7 +126,8 @@ class Stitcher:
 		t=time.time()
 		matcher = cv2.DescriptorMatcher_create("BruteForce")
 		if (featuresA is None) or (featuresB is None):
-                    return ([],[],[])
+                    print "Need to provide two sets of features"
+                    return None
 		rawMatches = matcher.knnMatch(featuresA, featuresB, 2)
 		elapsed = time.time() - t
 		print "Matching Feature Points: %f" % elapsed

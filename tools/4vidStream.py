@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import time
  
+DISPLAY_KEYPOINTS = 1
 
 vidcap1 = cv2.VideoCapture('../data/testVideo/July2/output2.avi')
 vidcap2 = cv2.VideoCapture('../data/testVideo/July2/output3.avi')
@@ -15,6 +16,10 @@ vidcap4 = cv2.VideoCapture('../data/testVideo/July2/output1.avi')
 #vidcap2 = cv2.VideoCapture(2)
 #vidcap3 = cv2.VideoCapture(3)
 #vidcap4 = cv2.VideoCapture(4)
+
+if DISPLAY_KEYPOINTS:
+    descriptor = cv2.xfeatures2d.SURF_create()
+
 
 
 # load the two images and resize them to have a width of 400 pixels
@@ -34,11 +39,12 @@ while ((success1 & success2) & (success3 & success4)):
 	result1 = np.concatenate((image1,image2),axis=1)
 	result2 =np.concatenate((image3,image4),axis=1)
 	result = np.concatenate((result1,result2),axis=0)
-	descriptor = cv2.xfeatures2d.SURF_create()
-	(kps, features) = descriptor.detectAndCompute(result, None)
+
+        if DISPLAY_KEYPOINTS:
+            (kps, features) = descriptor.detectAndCompute(result, None)
 	
 	
-	cv2.drawKeypoints(result,kps,result)
+            cv2.drawKeypoints(result,kps,result)
 	
 	# show the images
 	cv2.imshow("Result", result)

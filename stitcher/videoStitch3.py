@@ -174,7 +174,11 @@ while ((success1 & success2) & (success3 & success4)):
                         print result2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]].shape
 			
 			if (w[i-1] > 50) & (h[i-1] > 50):
-                            r1,r2,Htemp,m1,m2 = stitch.stitch([result1[seam1_bounds[0]:seam1_bounds[1],seam1_bounds[2]:seam1_bounds[3]],result2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True)
+                            r1,vis_tmp,Htemp,m1,m2 = stitch.stitch([result1[seam1_bounds[0]:seam1_bounds[1],seam1_bounds[2]:seam1_bounds[3]],result2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True)
+                            
+                            if r1 is not 0:
+                                cv2.imshow('Stitched small', r1)
+                                cv2.waitKey(0)
 				
 	
 	
