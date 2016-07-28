@@ -11,7 +11,7 @@ import time
 # Global Constants
 CALWINDOW = 1
 DILATION_KERNEL = np.ones([3,3])
-EROSION_LOOPS = 2
+EROSION_LOOPS = 1
 DILATION_LOOPS = 4
 FOV = 45
 
@@ -40,11 +40,18 @@ H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
 
+im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so that the image doesn't get shifted
+
 # Video Sources
-vidcap1 = cv2.VideoCapture('../data/testVideo/July2/output1.avi')
-vidcap2 = cv2.VideoCapture('../data/testVideo/July2/output2.avi')
-vidcap3 = cv2.VideoCapture('../data/testVideo/July2/output3.avi')
-vidcap4 = cv2.VideoCapture('../data/testVideo/July2/output4.avi')
+#vidcap1 = cv2.VideoCapture('../data/testVideo/office/output1.avi')
+#vidcap2 = cv2.VideoCapture('../data/testVideo/office/output2.avi')
+#vidcap3 = cv2.VideoCapture('../data/testVideo/office/output3.avi')
+#vidcap4 = cv2.VideoCapture('../data/testVideo/office/output4.avi')
+
+vidcap1 = cv2.VideoCapture('../data/testVideo/July4/output1.avi')
+vidcap2 = cv2.VideoCapture('../data/testVideo/July4/output2.avi')
+vidcap3 = cv2.VideoCapture('../data/testVideo/July4/output3.avi')
+vidcap4 = cv2.VideoCapture('../data/testVideo/July4/output4.avi')
 
 #vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
 #vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
@@ -85,21 +92,25 @@ for k in range(0,CALWINDOW):
 	image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
 	image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
 	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
+	
+	# Pad the image to avoid image reshifting
+	image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+	image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+	image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+	image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
 
 	# Perform first stitch. Stitching together image 1 and image 2.
 	print "\n1:"
 	(result1, vis1,H,mask11,mask12) = stitch.stitch([image1, image2], showMatches=True)
 	H1 = H							# Store first Homography
 	seam1 = stitch.locateSeam(mask11[:,:,0],mask12[:,:,0]) 	# Locate the seam between the two images.
-	seam1_points = np.nonzero(seam1)			# Determine the point locations of the seam
-	seam1_bounds = np.min(seam1_points[0]),np.max(seam1_points[0]),np.min(seam1_points[1]),np.max(seam1_points[1])
-	
+
 	print "\n2:"
 	(result2, vis2,H,mask21,mask22) = stitch.stitch([result1, image3], showMatches=True)
 	H2 = H							# Store the second Homography
 	seam2 = stitch.locateSeam(mask21[:,:,0],mask22[:,:,0])	# Locate the seam between the two images.
 	print "\n3:"
-	(result3, vis3,H,mask31,mask32) = stitch.stitch([result2, image4], showMatches=True)
+	(result3, vis3,H,mask31,mask32) = stitch.stitch([result2,image4], showMatches=True)
 	#H3 = H3+H/CALWINDOW
 	H3 = H							# Store the third homography
 	seam3 = stitch.locateSeam(mask31[:,:,0],mask32[:,:,0])	# Locate the seam between the two images.
@@ -107,6 +118,7 @@ for k in range(0,CALWINDOW):
 	width = result3.shape[1]
 	out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (width,height))
 
+        
 
 # Streaming Step
 while ((success1 & success2) & (success3 & success4)):
@@ -137,59 +149,18 @@ while ((success1 & success2) & (success3 & success4)):
 
 	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image2,H1)
 	resultA = (result2*np.logical_not(mask1) + result1).astype('uint8')
-	#Foreground Re-Stitching
-	fgmask = fgbg1B.apply(result2)			# Apply Background Subtractor
-	out_frame = np.zeros(fgmask.shape)		# Generate correctly sized output_frame for foreground mask
-
-	# Denoise by erosion, then use dilation to fill in holes
-	fgmask = cv2.erode(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS)		
-	fgmask = cv2.dilate(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS+DILATION_LOOPS) 
-
-	# Find bounding rectangle of all moving contours.
-	im2, contours, hierarchy = cv2.findContours(fgmask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-
-
-	x = np.zeros(len(contours))
-	y = np.zeros(len(contours))
-	w = np.zeros(len(contours))
-	h = np.zeros(len(contours)) 
-	for i in range(0,len(contours)):
-		if (i % 1 == 0):
-			cnt = contours[i]
-
-			x[i],y[i],w[i],h[i] = cv2.boundingRect(cnt)
-			out_frame[y[i]:y[i]+h[i],x[i]:x[i]+w[i]] = (i+1)*np.ones([h[i],w[i]])
-
-	#Create list of moving objects that cross the seam line.
-	moving_objects = np.unique(out_frame*seam1)
-
-	# If there are objects that cross the seam line, we attempt to re-stitch those objects.
-	if len(moving_objects) > 1:
-		
-		for i in range(1,len(moving_objects)):
-			
-			print "object %d in seam" % moving_objects[i]
-			print x,y,w,h
-                        print result1[seam1_bounds[0]:seam1_bounds[1],seam1_bounds[2]:seam1_bounds[3]].shape
-                        print result2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]].shape
-			
-			if (w[i-1] > 50) & (h[i-1] > 50):
-                            r1,vis_tmp,Htemp,m1,m2 = stitch.stitch([result1[seam1_bounds[0]:seam1_bounds[1],seam1_bounds[2]:seam1_bounds[3]],result2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True)
-                            
-                            if r1 is not 0:
-                                cv2.imshow('Stitched small', r1)
-                                cv2.waitKey(0)
-				
-	
-	
-	
+        resultA,fgbg1B = stitch.reStitch(result1,result2,resultA,fgbg1B,seam1)
 
 	result1,result2,mask1,mask2 = stitch.applyHomography(resultA,image3,H2)
 	resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
+	seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
+	resultB,fgbg2B = stitch.reStitch(result1,result2,resultB,fgbg2B,seam2)
 
 	result1,result2,mask1,mask2 = stitch.applyHomography(resultB,image4,H3)
 	result3 = (result2*np.logical_not(mask1) + result1).astype('uint8')
-
+	seam3 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
+        result3,fgbg3B = stitch.reStitch(result1,result2,result3,fgbg3B,seam3)
+        
 
 	elapsed = time.time() - total
 	print "\n Total Time Elapsed: %f Seconds" % elapsed
@@ -198,6 +169,7 @@ while ((success1 & success2) & (success3 & success4)):
 	out.write(result3)
 	# show the images
 	cv2.imshow("Result", result3)
+	
 	if cv2.waitKey(1) & 0xFF == ord('q'):
         	break
 
@@ -219,6 +191,12 @@ while ((success1 & success2) & (success3 & success4)):
 		image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
 		image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
 		image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
+		
+                image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+                image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+                image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+                image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
+
 
 cv2.waitKey(0)
 cv2.imwrite('vidStitched.jpg',result3);

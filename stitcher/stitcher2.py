@@ -8,7 +8,7 @@ BLEND_IMAGES = 0
 EDGE_CORRECTION = 0
 DILATION_KERNEL = np.ones([3,3])
 EROSION_LOOPS = 1
-DILATION_LOOPS = 4
+DILATION_LOOPS = 6
 EDGE_WIN_SIZE = 40
  
 class Stitcher:
@@ -16,8 +16,10 @@ class Stitcher:
 		# determine if we are using OpenCV v3.X
 		self.isv3 = imutils.is_cv3()
         def stitch(self, images, ratio=.75, reprojThresh=4.0,
-		showMatches=True):
-
+		showMatches=True, reStitching = False):
+                if reStitching:
+                    print "Re stitching video"
+                    
 		result = None
 		# unpack the images, then detect keypoints and extract
 		# local invariant descriptors from them
@@ -35,20 +37,30 @@ class Stitcher:
 		# keypoints to create a panorama
 		if M is None:
 			print 'Error: No Matching Features'
+			
+                        if reStitching:
+                            return [0,0,0,0,0,0,0]
+                    
 			return [0,0,0,0,0]
+                    
+                    
 		# otherwise, apply a perspective warp to stitch the images
 		# together
 		t=time.time()
 		(matches, H, status) = M
 		if H is None: 
                     print "ERROR: no valid Homography"
+                    
+                    if reStitching:
+                        return [0,0,0,0,0,0,0]
+                    
                     return [0,0,0,0,0]
 
 		# Detect the appropriate size for the resulting image. 
 		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
 			[imageA.shape[1],imageA.shape[0],1]]).T
 		
-                print H, corners
+                #print H, corners
 		img_bounds = np.dot(H,corners)
 		
                 x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
@@ -63,6 +75,12 @@ class Stitcher:
 		shift_H = np.array([[1,0,x_shift],[0,1,y_shift],[0,0,1]])
 		x_bound = int(max(max(x_bound),imageB.shape[1]))
 		y_bound = int(max(max(y_bound),imageB.shape[0]))
+		
+		if (x_bound > 5000) or (y_bound > 5000):
+                    print "ERROR: Image Too Large"
+                    if reStitching:
+                        return [0,0,0,0,0,0,0]
+                    return [0,0,0,0,0]
 		
 		
 		# Warp Image A and place it in frame.
@@ -96,6 +114,8 @@ class Stitcher:
  
 			# return a tuple of the stitched image and the
 			# visualization
+			if reStitching:
+                                return (result, vis, H, mask1, mask2, x_shift,y_shift)
 			
 			return (result, vis,H,mask1,mask2)
  
@@ -252,5 +272,110 @@ class Stitcher:
 		cv2.drawContours(out_mask,contours,-1,(255,255,0),1)
 		out_mask = np.logical_and(out_mask,maskB).astype('float')
 		return out_mask
+
+
+        def reStitch(self, image1, image2,background_image,fgbg,seam):
+            
+                
+                seam_points = np.nonzero(seam)			# Determine the point locations of the seam
+                seam_bounds = np.min(seam_points[0]),np.max(seam_points[0]),np.min(seam_points[1]),np.max(seam_points[1])
+	
+                #Foreground Re-Stitching
+                fgmask = fgbg.apply(image2)			# Apply Background Subtractor
+                out_frame = np.zeros(fgmask.shape)		# Generate correctly sized output_frame for foreground mask
+                
+
+
+                # Denoise by erosion, then use dilation to fill in holes
+                fgmask = cv2.erode(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS)		
+                fgmask = cv2.dilate(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS+DILATION_LOOPS) 
+
+                
+                # Find bounding rectangle of all moving contours.
+                im2, contours, hierarchy = cv2.findContours(fgmask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+
+
+                x = np.zeros(len(contours))
+                y = np.zeros(len(contours))
+                w = np.zeros(len(contours))
+                h = np.zeros(len(contours)) 
+                for i in range(0,len(contours)):
+                        if (i % 1 == 0):
+                                cnt = contours[i]
+
+                                x[i],y[i],w[i],h[i] = cv2.boundingRect(cnt)
+                                out_frame[y[i]:y[i]+h[i],x[i]:x[i]+w[i]] = (i+1)*np.ones([h[i],w[i]])
+
+                #Create list of moving objects that cross the seam line.
+                moving_objects = np.unique(out_frame*seam)
+
+                # If there are objects that cross the seam line, we attempt to re-stitch those objects.
+                if len(moving_objects) > 1:
+                        #For each object that crosses the seam:
+                        for i in range(1,len(moving_objects)):
+                                
+			
+                                # Print statements to help with testing.
+                                #print "object %d in seam" % moving_objects[i]
+                                #print x[i-1],y[i-1],w[i-1],h[i-1]
+                                #cv2.imshow('image1',image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]])
+                                #cv2.imshow('image2',image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]])
+			
+                                # if the object is large enough for feature point detection to function appropriately.
+                                if (w[i-1] > 5) & (h[i-1] > 5):
+                            
+                                    #Stitch together seam area with object bounding box. 
+                                    r1,vis_tmp,Htemp,m1,m2,x_shift,y_shift  = self.stitch([image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]],image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True,reStitching=True)
+                            
+                                    #If the stitch was successful. 
+                                    if r1 is not 0:
+                                        print "Re-stitched"
+                                        #Show the stitched section. 
+                                        #cv2.imshow('Stitched small', r1)
+                                        #cv2.waitKey(0)
+                                
+                                        # pad the image to the right shape and coordinate system. 
+                                        npad = ((y_shift,0),(x_shift,0),(0,0))
+                                        tmp_result = np.pad(background_image,pad_width = npad, mode='constant',constant_values=0)
+                                        tmp_window = r1.shape
+                                        after_pad = np.array([seam_bounds[0]+tmp_window[0] - tmp_result.shape[0],seam_bounds[2]+tmp_window[1] - tmp_result.shape[1]])
+                                        
+                                        #cv2.imshow('tmp_result',tmp_result)
+                                        #cv2.imshow('r1',r1)
+                                        
+                                        
+                                        print tmp_window,tmp_result.shape,after_pad,seam_bounds[2],seam_bounds[0],w[i-1],h[i-1]
+                                        #print "After Padding:",  after_pad
+                                        after_pad = after_pad.clip(min=0)
+                                        after_pad = ((0,after_pad[0].astype('int')),(0,after_pad[1].astype('int')),(0,0))
+                                        tmp_result = np.pad(tmp_result, pad_width = after_pad,mode='constant', constant_values=0) 
+                                        
+                                        print "NPAD: ", npad, after_pad
+                                        
+                                
+                                        tmp_mask = (r1 == 0).astype('int')
+                                        #tmp_result = tmp_result[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:]
+                                
+                                        small_result = tmp_result[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:]*tmp_mask+r1
+                                        
+                                        tmp_result[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:] = small_result
+                                
+                                        #background_image = np.pad(background_image,pad_width = npad,    mode='constant',constant_values=0)
+                                        #background_image = np.pad(background_image,pad_width = after_pad, mode='constant',constant_values=0)
+                                                                                                
+                                        #if tmp_result.shape == background_image[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:].shape:
+                                        #    background_image[seam_bounds[0]:(seam_bounds[0]+tmp_result.shape[0]),seam_bounds[2]:(seam_bounds[2]+
+                                        #tmp_result.shape[1]),:] = tmp_result
+                                            
+                                        #background_image = background_image[y_shift:background_image.shape[0],x_shift:background_image.shape[1]]
+                                        
+                                        #cv2.imshow('re-stitched', tmp_result)
+                                        #cv2.waitKey(0)
+                                        
+                                        return tmp_result, fgbg
+                                            
+                                            
+                                        
+                return background_image, fgbg
 
 
