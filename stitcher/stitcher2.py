@@ -10,6 +10,9 @@ DILATION_KERNEL = np.ones([3,3])
 EROSION_LOOPS = 1
 DILATION_LOOPS = 6
 EDGE_WIN_SIZE = 40
+SEAM_PAD = 40
+
+SEAM_ADJ = [-SEAM_PAD,SEAM_PAD,-SEAM_PAD,SEAM_PAD]
  
 class Stitcher:
 	def __init__(self):
@@ -76,7 +79,7 @@ class Stitcher:
 		x_bound = int(max(max(x_bound),imageB.shape[1]))
 		y_bound = int(max(max(y_bound),imageB.shape[0]))
 		
-		if (x_bound > 5000) or (y_bound > 5000):
+		if (x_bound > 2000) or (y_bound > 1080):
                     print "ERROR: Image Too Large"
                     if reStitching:
                         return [0,0,0,0,0,0,0]
@@ -147,6 +150,11 @@ class Stitcher:
 		matcher = cv2.DescriptorMatcher_create("BruteForce")
 		if (featuresA is None) or (featuresB is None):
                     print "Need to provide two sets of features"
+                    if (featuresA is None):
+                        print "FeaturesA missing"
+                    if (featuresB is None):
+                        print "featureB missing"
+                    cv2.waitKey(0)
                     return None
 		rawMatches = matcher.knnMatch(featuresA, featuresB, 2)
 		elapsed = time.time() - t
@@ -160,8 +168,13 @@ class Stitcher:
 			# other (i.e. Lowe's ratio test)
 			if len(m) == 2 and m[0].distance < m[1].distance * ratio:
 				matches.append((m[0].trainIdx, m[0].queryIdx))
+                print len(featuresA)
+                print len(featuresB)
+                
+                print len(matches), "Matches found"
 		# computing a homography requires at least 4 matches
 		if len(matches) > 4:
+                        
 			# construct the two sets of points
 			ptsA = np.float32([kpsA[i] for (_, i) in matches])
 			ptsB = np.float32([kpsB[i] for (i, _) in matches])
@@ -169,7 +182,7 @@ class Stitcher:
 			# compute the homography between the two sets of points
 			(H, status) = cv2.findHomography(ptsA, ptsB, cv2.RANSAC,
 				reprojThresh)
-			if H == None:
+			if H is None:
 				print "Homography failed: %d matches \n" % len(matches) 
  
 			# return the matches along with the homograpy matrix
@@ -276,25 +289,34 @@ class Stitcher:
 
         def reStitch(self, image1, image2,background_image,fgbg,seam):
             
-                
+                #cv2.imshow("seam",np.seam)
+                tmp_result = background_image
                 seam_points = np.nonzero(seam)			# Determine the point locations of the seam
+                #print seam_points
                 seam_bounds = np.min(seam_points[0]),np.max(seam_points[0]),np.min(seam_points[1]),np.max(seam_points[1])
-	
+                #seam_bounds = seam_bounds - SEAM_ADJ
+                #seam_bounds = np.clip(min=0)
+                
                 #Foreground Re-Stitching
                 fgmask = fgbg.apply(image2)			# Apply Background Subtractor
                 out_frame = np.zeros(fgmask.shape)		# Generate correctly sized output_frame for foreground mask
                 
-
-
+                # DEBUGGING: show fgmask before dilation
+                cv2.imshow('fgmask',fgmask)
                 # Denoise by erosion, then use dilation to fill in holes
                 fgmask = cv2.erode(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS)		
                 fgmask = cv2.dilate(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS+DILATION_LOOPS) 
-
                 
                 # Find bounding rectangle of all moving contours.
                 im2, contours, hierarchy = cv2.findContours(fgmask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
+                #DEBUGGING: Show drawn contours.
+                #tmp_seam = 255*np.tile(seam[...,None],[1,1,3])
+                #print tmp_seam.shape
+                #tmp_show = cv2.drawContours(tmp_seam.astype('uint8'),contours,-1,(0,255,0),3)
+                #cv2.imshow('contours',tmp_show)
 
+                
                 x = np.zeros(len(contours))
                 y = np.zeros(len(contours))
                 w = np.zeros(len(contours))
@@ -306,27 +328,33 @@ class Stitcher:
                                 x[i],y[i],w[i],h[i] = cv2.boundingRect(cnt)
                                 out_frame[y[i]:y[i]+h[i],x[i]:x[i]+w[i]] = (i+1)*np.ones([h[i],w[i]])
 
+
+                #cv2.imshow("Moving Objects",out_frame)
                 #Create list of moving objects that cross the seam line.
                 moving_objects = np.unique(out_frame*seam)
+                
 
                 # If there are objects that cross the seam line, we attempt to re-stitch those objects.
                 if len(moving_objects) > 1:
+                        moving_objects = moving_objects[2:].astype('int')
                         #For each object that crosses the seam:
-                        for i in range(1,len(moving_objects)):
-                                
+                        for i in moving_objects:
+                                print i
 			
                                 # Print statements to help with testing.
                                 #print "object %d in seam" % moving_objects[i]
                                 #print x[i-1],y[i-1],w[i-1],h[i-1]
-                                #cv2.imshow('image1',image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]])
-                                #cv2.imshow('image2',image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]])
+                                cv2.imshow('image1',image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]])
+                                cv2.imshow('image2',image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]])
 			
                                 # if the object is large enough for feature point detection to function appropriately.
                                 if (w[i-1] > 5) & (h[i-1] > 5):
-                            
+                                    print x[i-1],y[i-1],w[i-1],h[i-1]
+                                    image2 = cv2.rectangle(image2,(x[i-1].astype('int'),y[i-1].astype('int')),(x[i-1].astype('int')+w[i-1].astype('int'),y[i-1].astype('int')+h[i-1].astype('int')),(0,255,0),2)
+                                    
                                     #Stitch together seam area with object bounding box. 
                                     r1,vis_tmp,Htemp,m1,m2,x_shift,y_shift  = self.stitch([image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]],image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True,reStitching=True)
-                            
+                                    
                                     #If the stitch was successful. 
                                     if r1 is not 0:
                                         print "Re-stitched"
@@ -336,7 +364,7 @@ class Stitcher:
                                 
                                         # pad the image to the right shape and coordinate system. 
                                         npad = ((y_shift,0),(x_shift,0),(0,0))
-                                        tmp_result = np.pad(background_image,pad_width = npad, mode='constant',constant_values=0)
+                                        tmp_result = np.pad(tmp_result,pad_width = npad, mode='constant',constant_values=0)
                                         tmp_window = r1.shape
                                         after_pad = np.array([seam_bounds[0]+tmp_window[0] - tmp_result.shape[0],seam_bounds[2]+tmp_window[1] - tmp_result.shape[1]])
                                         
@@ -369,13 +397,14 @@ class Stitcher:
                                             
                                         #background_image = background_image[y_shift:background_image.shape[0],x_shift:background_image.shape[1]]
                                         
-                                        #cv2.imshow('re-stitched', tmp_result)
+                                        #cv2.imshow('re-stitched', small_result.astype('uint8'))
                                         #cv2.waitKey(0)
                                         
-                                        return tmp_result, fgbg
+                                        #return tmp_result, fgbg
                                             
                                             
                                         
-                return background_image, fgbg
+                cv2.imshow('bounding boxes',image2)
+                return tmp_result, fgbg
 
 

@@ -48,15 +48,15 @@ im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so tha
 #vidcap3 = cv2.VideoCapture('../data/testVideo/office/output3.avi')
 #vidcap4 = cv2.VideoCapture('../data/testVideo/office/output4.avi')
 
-vidcap1 = cv2.VideoCapture('../data/testVideo/July4/output1.avi')
-vidcap2 = cv2.VideoCapture('../data/testVideo/July4/output2.avi')
-vidcap3 = cv2.VideoCapture('../data/testVideo/July4/output3.avi')
-vidcap4 = cv2.VideoCapture('../data/testVideo/July4/output4.avi')
+#vidcap1 = cv2.VideoCapture('../data/testVideo/July2/output1.avi')
+#vidcap2 = cv2.VideoCapture('../data/testVideo/July2/output2.avi')
+#vidcap3 = cv2.VideoCapture('../data/testVideo/July2/output3.avi')
+#vidcap4 = cv2.VideoCapture('../data/testVideo/July2/output4.avi')
 
-#vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
-#vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
-#vidcap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
-#vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
+vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
+vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
+vidcap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
+vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 
 #vidcap1 = cv2.VideoCapture(1)
 #vidcap2 = cv2.VideoCapture(2)
@@ -94,16 +94,24 @@ for k in range(0,CALWINDOW):
 	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 	
 	# Pad the image to avoid image reshifting
-	image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
-	image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
-	image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
-	image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
+	#image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+	#image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+	#image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+	#image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
 
 	# Perform first stitch. Stitching together image 1 and image 2.
 	print "\n1:"
 	(result1, vis1,H,mask11,mask12) = stitch.stitch([image1, image2], showMatches=True)
 	H1 = H							# Store first Homography
 	seam1 = stitch.locateSeam(mask11[:,:,0],mask12[:,:,0]) 	# Locate the seam between the two images.
+	
+        # Uncomment to Check quality of first calibration stitch
+        #cv2.imshow("result1", result1)
+        #cv2.imshow("image3",image3)
+        #cv2.waitKey(0)
+        
+        
+
 
 	print "\n2:"
 	(result2, vis2,H,mask21,mask22) = stitch.stitch([result1, image3], showMatches=True)
@@ -146,16 +154,18 @@ while ((success1 & success2) & (success3 & success4)):
 	#cv2.imshow("Frame",im3)
 	#cv2.waitKey(0)
 	
-
+        print "\nA:"
 	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image2,H1)
 	resultA = (result2*np.logical_not(mask1) + result1).astype('uint8')
         resultA,fgbg1B = stitch.reStitch(result1,result2,resultA,fgbg1B,seam1)
-
+        
+        print "\nB:"
 	result1,result2,mask1,mask2 = stitch.applyHomography(resultA,image3,H2)
 	resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
 	seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
 	resultB,fgbg2B = stitch.reStitch(result1,result2,resultB,fgbg2B,seam2)
 
+        print "\nC:"
 	result1,result2,mask1,mask2 = stitch.applyHomography(resultB,image4,H3)
 	result3 = (result2*np.logical_not(mask1) + result1).astype('uint8')
 	seam3 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
@@ -192,10 +202,10 @@ while ((success1 & success2) & (success3 & success4)):
 		image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
 		image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 		
-                image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
-                image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
-                image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
-                image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
+                #image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+                #image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+                #image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+                #image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
 
 
 cv2.waitKey(0)

@@ -142,7 +142,7 @@ class Stitcher:
 			# compute the homography between the two sets of points
 			(H, status) = cv2.findHomography(ptsA, ptsB, cv2.RANSAC,
 				reprojThresh)
-			if H == None:
+			if H is None:
 				print "Homography failed: %d matches \n" % len(matches) 
  
 			# return the matches along with the homograpy matrix
