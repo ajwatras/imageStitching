@@ -3,6 +3,8 @@ import numpy as np
 import imutils
 import cv2
 import time
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 BLEND_IMAGES = 0
 EDGE_CORRECTION = 0
@@ -154,7 +156,7 @@ class Stitcher:
                         print "FeaturesA missing"
                     if (featuresB is None):
                         print "featureB missing"
-                    cv2.waitKey(0)
+                    #cv2.waitKey(0)
                     return None
 		rawMatches = matcher.knnMatch(featuresA, featuresB, 2)
 		elapsed = time.time() - t
@@ -293,28 +295,31 @@ class Stitcher:
                 tmp_result = background_image
                 seam_points = np.nonzero(seam)			# Determine the point locations of the seam
                 #print seam_points
-                seam_bounds = np.min(seam_points[0]),np.max(seam_points[0]),np.min(seam_points[1]),np.max(seam_points[1])
-                #seam_bounds = seam_bounds - SEAM_ADJ
-                #seam_bounds = np.clip(min=0)
+                seam_bounds = [np.min(seam_points[0]) ,np.max(seam_points[0]),np.min(seam_points[1]),np.max(seam_points[1])]
                 
+                seam_bounds[0] = np.max([(seam_bounds[0] -SEAM_PAD),0])
+                seam_bounds[2] = np.max([seam_bounds[2] -SEAM_PAD,0])
+                seam_bounds[1] = np.min([seam_bounds[1] +SEAM_PAD,image1.shape[0]])
+                seam_bounds[3] = np.min([seam_bounds[3] +SEAM_PAD,image1.shape[1]])
+
                 #Foreground Re-Stitching
                 fgmask = fgbg.apply(image2)			# Apply Background Subtractor
                 out_frame = np.zeros(fgmask.shape)		# Generate correctly sized output_frame for foreground mask
                 
                 # DEBUGGING: show fgmask before dilation
-                cv2.imshow('fgmask',fgmask)
+                #cv2.imshow('fgmask',fgmask)
                 # Denoise by erosion, then use dilation to fill in holes
-                fgmask = cv2.erode(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS)		
-                fgmask = cv2.dilate(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS+DILATION_LOOPS) 
+                #fgmask = cv2.erode(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS)		
+                #fgmask = cv2.dilate(fgmask,DILATION_KERNEL,iterations=EROSION_LOOPS+DILATION_LOOPS) 
                 
                 # Find bounding rectangle of all moving contours.
                 im2, contours, hierarchy = cv2.findContours(fgmask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
                 #DEBUGGING: Show drawn contours.
-                #tmp_seam = 255*np.tile(seam[...,None],[1,1,3])
+                tmp_seam = 255*np.tile(seam[...,None],[1,1,3])
                 #print tmp_seam.shape
-                #tmp_show = cv2.drawContours(tmp_seam.astype('uint8'),contours,-1,(0,255,0),3)
-                #cv2.imshow('contours',tmp_show)
+                tmp_show = cv2.drawContours(tmp_seam.astype('uint8'),contours,-1,(0,255,0),3)
+                cv2.imshow('contours',tmp_show)
 
                 
                 x = np.zeros(len(contours))
@@ -332,14 +337,18 @@ class Stitcher:
                 #cv2.imshow("Moving Objects",out_frame)
                 #Create list of moving objects that cross the seam line.
                 moving_objects = np.unique(out_frame*seam)
-                
+                print "Moving Objects: ", moving_objects
 
                 # If there are objects that cross the seam line, we attempt to re-stitch those objects.
                 if len(moving_objects) > 1:
-                        moving_objects = moving_objects[2:].astype('int')
+                        
+                        moving_objects = moving_objects[1:].astype('int')
                         #For each object that crosses the seam:
                         for i in moving_objects:
-                                print i
+                                #DEBUGGING: output to check which objects were detected
+                                print "object ",i," detected"
+                                #cv2.imshow("Object Detected",(out_frame == i).astype('float'))
+                                
 			
                                 # Print statements to help with testing.
                                 #print "object %d in seam" % moving_objects[i]
@@ -348,9 +357,9 @@ class Stitcher:
                                 cv2.imshow('image2',image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]])
 			
                                 # if the object is large enough for feature point detection to function appropriately.
-                                if (w[i-1] > 5) & (h[i-1] > 5):
-                                    print x[i-1],y[i-1],w[i-1],h[i-1]
-                                    image2 = cv2.rectangle(image2,(x[i-1].astype('int'),y[i-1].astype('int')),(x[i-1].astype('int')+w[i-1].astype('int'),y[i-1].astype('int')+h[i-1].astype('int')),(0,255,0),2)
+                                if (w[i-1] > 25) & (h[i-1] > 25):
+                                    #print x[i-1],y[i-1],w[i-1],h[i-1]
+                                    #image2 = cv2.rectangle(image2,(x[i-1].astype('int'),y[i-1].astype('int')),(x[i-1].astype('int')+w[i-1].astype('int'),y[i-1].astype('int')+h[i-1].astype('int')),(0,255,0),2)
                                     
                                     #Stitch together seam area with object bounding box. 
                                     r1,vis_tmp,Htemp,m1,m2,x_shift,y_shift  = self.stitch([image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]],image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True,reStitching=True)
@@ -397,14 +406,14 @@ class Stitcher:
                                             
                                         #background_image = background_image[y_shift:background_image.shape[0],x_shift:background_image.shape[1]]
                                         
-                                        #cv2.imshow('re-stitched', small_result.astype('uint8'))
-                                        #cv2.waitKey(0)
+                                        cv2.imshow('re-stitched', small_result.astype('uint8'))
+                                        cv2.waitKey(0)
                                         
                                         #return tmp_result, fgbg
                                             
                                             
                                         
-                cv2.imshow('bounding boxes',image2)
+                #cv2.imshow('bounding boxes',image2)
                 return tmp_result, fgbg
 
 

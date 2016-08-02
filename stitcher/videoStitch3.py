@@ -40,6 +40,7 @@ H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
 
+
 im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so that the image doesn't get shifted
 
 # Video Sources
@@ -94,10 +95,10 @@ for k in range(0,CALWINDOW):
 	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 	
 	# Pad the image to avoid image reshifting
-	#image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
-	#image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
-	#image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
-	#image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
+	image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+	image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+	image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+	image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
 
 	# Perform first stitch. Stitching together image 1 and image 2.
 	print "\n1:"
@@ -109,24 +110,22 @@ for k in range(0,CALWINDOW):
         #cv2.imshow("result1", result1)
         #cv2.imshow("image3",image3)
         #cv2.waitKey(0)
-        
-        
-
 
 	print "\n2:"
-	(result2, vis2,H,mask21,mask22) = stitch.stitch([result1, image3], showMatches=True)
+	(result2, vis2,H,mask21,mask22) = stitch.stitch([image4, image3], showMatches=True)
 	H2 = H							# Store the second Homography
 	seam2 = stitch.locateSeam(mask21[:,:,0],mask22[:,:,0])	# Locate the seam between the two images.
 	print "\n3:"
-	(result3, vis3,H,mask31,mask32) = stitch.stitch([result2,image4], showMatches=True)
+	(result3, vis3,H,mask31,mask32) = stitch.stitch([result1,result2], showMatches=True)
 	#H3 = H3+H/CALWINDOW
 	H3 = H							# Store the third homography
 	seam3 = stitch.locateSeam(mask31[:,:,0],mask32[:,:,0])	# Locate the seam between the two images.
-	height = result3.shape[0]
-	width = result3.shape[1]
-	out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (width,height))
 
-        
+
+height = result3.shape[0]
+width = result3.shape[1]
+
+out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (width,height))
 
 # Streaming Step
 while ((success1 & success2) & (success3 & success4)):
@@ -160,16 +159,16 @@ while ((success1 & success2) & (success3 & success4)):
         resultA,fgbg1B = stitch.reStitch(result1,result2,resultA,fgbg1B,seam1)
         
         print "\nB:"
-	result1,result2,mask1,mask2 = stitch.applyHomography(resultA,image3,H2)
+	result1,result2,mask1,mask2 = stitch.applyHomography(image4,image3,H2)
 	resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
 	seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
-	resultB,fgbg2B = stitch.reStitch(result1,result2,resultB,fgbg2B,seam2)
+	#resultB,fgbg2B = stitch.reStitch(result1,result2,resultB,fgbg2B,seam2)
 
         print "\nC:"
-	result1,result2,mask1,mask2 = stitch.applyHomography(resultB,image4,H3)
+	result1,result2,mask1,mask2 = stitch.applyHomography(resultA,resultB,H3)
 	result3 = (result2*np.logical_not(mask1) + result1).astype('uint8')
 	seam3 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
-        result3,fgbg3B = stitch.reStitch(result1,result2,result3,fgbg3B,seam3)
+        #result3,fgbg3B = stitch.reStitch(result1,result2,result3,fgbg3B,seam3)
         
 
 	elapsed = time.time() - total
@@ -202,12 +201,13 @@ while ((success1 & success2) & (success3 & success4)):
 		image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
 		image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 		
-                #image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
-                #image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
-                #image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
-                #image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
+                image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+                image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+                image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+                image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
 
 
+print "Video Stream Complete, Press any Key"
 cv2.waitKey(0)
 cv2.imwrite('vidStitched.jpg',result3);
 
