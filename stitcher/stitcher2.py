@@ -6,14 +6,15 @@ import time
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
+# Variables used to change stitcher settings. ie. Tunable Parameters
 BLEND_IMAGES = 0
 EDGE_CORRECTION = 0
 DILATION_KERNEL = np.ones([3,3])
 EROSION_LOOPS = 1
 DILATION_LOOPS = 6
 EDGE_WIN_SIZE = 40
-SEAM_PAD = 40
-
+SEAM_PAD = 45
+SIZE_BOUNDS = [1080,1920]
 SEAM_ADJ = [-SEAM_PAD,SEAM_PAD,-SEAM_PAD,SEAM_PAD]
  
 class Stitcher:
@@ -81,7 +82,8 @@ class Stitcher:
 		x_bound = int(max(max(x_bound),imageB.shape[1]))
 		y_bound = int(max(max(y_bound),imageB.shape[0]))
 		
-		if (x_bound > 2000) or (y_bound > 1080):
+		if (x_bound > SIZE_BOUNDS[0]) or (y_bound > SIZE_BOUNDS[1]):
+                    print x_bound, y_bound
                     print "ERROR: Image Too Large"
                     if reStitching:
                         return [0,0,0,0,0,0,0]
@@ -106,6 +108,7 @@ class Stitcher:
 			result = np.divide(result1.astype(int)+result2.astype(int),mask).astype('uint8')
 			
 		else:
+                        #print result1.shape
 			mask = (result1 == 0).astype('int')
 			result = (result2*mask + result1).astype('uint8')
 		elapsed = time.time() - t
@@ -316,10 +319,10 @@ class Stitcher:
                 im2, contours, hierarchy = cv2.findContours(fgmask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
                 #DEBUGGING: Show drawn contours.
-                tmp_seam = 255*np.tile(seam[...,None],[1,1,3])
+                #tmp_seam = 255*np.tile(seam[...,None],[1,1,3])
                 #print tmp_seam.shape
-                tmp_show = cv2.drawContours(tmp_seam.astype('uint8'),contours,-1,(0,255,0),3)
-                cv2.imshow('contours',tmp_show)
+                #tmp_show = cv2.drawContours(tmp_seam.astype('uint8'),contours,-1,(0,255,0),3)
+                #cv2.imshow('contours',tmp_show)
 
                 
                 x = np.zeros(len(contours))
@@ -353,8 +356,8 @@ class Stitcher:
                                 # Print statements to help with testing.
                                 #print "object %d in seam" % moving_objects[i]
                                 #print x[i-1],y[i-1],w[i-1],h[i-1]
-                                cv2.imshow('image1',image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]])
-                                cv2.imshow('image2',image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]])
+                                #cv2.imshow('image1',image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]])
+                                #cv2.imshow('image2',image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]])
 			
                                 # if the object is large enough for feature point detection to function appropriately.
                                 if (w[i-1] > 25) & (h[i-1] > 25):
@@ -406,8 +409,8 @@ class Stitcher:
                                             
                                         #background_image = background_image[y_shift:background_image.shape[0],x_shift:background_image.shape[1]]
                                         
-                                        cv2.imshow('re-stitched', small_result.astype('uint8'))
-                                        cv2.waitKey(0)
+                                        #cv2.imshow('re-stitched', small_result.astype('uint8'))
+                                        #cv2.waitKey(0)
                                         
                                         #return tmp_result, fgbg
                                             

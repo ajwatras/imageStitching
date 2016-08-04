@@ -8,12 +8,13 @@ import cv2
 import numpy as np
 import time
 
-# Global Constants
+# Variables used to change stitcher settings. ie. Tunable Parameters
 CALWINDOW = 1
 DILATION_KERNEL = np.ones([3,3])
 EROSION_LOOPS = 1
 DILATION_LOOPS = 4
-FOV = 45
+FOV = 43
+OUTPUT_SIZE = [1080,1920,3]
 
 #Camera Coefficients
 radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04459628])
@@ -21,11 +22,16 @@ radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04
 mtx = np.array([[ 444.64628787,    0.,          309.40196271],[   0.,          501.63984347,  255.86111216],[   0.,            0.,            1.        ]])
 #mtx = [[ 457.59059782,    0.,          324.59076057],[   0.,          521.77053812,  294.85975196],[   0.,            0.,            1.,        ]]
 
+# Derived Parameters
 #FOV bounds
 pix2Ang = np.linspace(-45,45,480)
+pix2Ang2 = np.linspace(-45,45,640)
 top_edge = (np.abs(pix2Ang-FOV)).argmin()
 bot_edge = (np.abs(pix2Ang+FOV)).argmin()
-print [top_edge,bot_edge]
+left_edge = (np.abs(pix2Ang2 + FOV)).argmin()
+right_edge = (np.abs(pix2Ang2 - FOV)).argmin()
+print [top_edge,bot_edge,left_edge,right_edge]
+
 
 #Initializing Needed Processes and Variables
 stitch = stitcher2.Stitcher()
@@ -39,6 +45,8 @@ fgbg3B= cv2.createBackgroundSubtractorMOG2()
 H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
+output_template = np.zeros(OUTPUT_SIZE)
+output_center = np.array([OUTPUT_SIZE[0]/2,OUTPUT_SIZE[1]/2]).astype('int')
 
 
 im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so that the image doesn't get shifted
@@ -83,10 +91,10 @@ for k in range(0,CALWINDOW):
 	success4, image4 = vidcap4.read()
 
 	#Resize the images so that we have the correct field of view
-	image1 = image1[bot_edge:top_edge,bot_edge:top_edge]
-	image2 = image2[bot_edge:top_edge,bot_edge:top_edge]
-	image3 = image3[bot_edge:top_edge,bot_edge:top_edge]
-	image4 = image4[bot_edge:top_edge,bot_edge:top_edge]
+	image1 = image1[bot_edge:top_edge,left_edge:right_edge]
+	image2 = image2[bot_edge:top_edge,left_edge:right_edge]
+	image3 = image3[bot_edge:top_edge,left_edge:right_edge]
+	image4 = image4[bot_edge:top_edge,left_edge:right_edge]
 
 	# Remove radial distortion based on pre-calibrated camera values
 	image1 = cv2.undistort(image1,mtx,radial_dst,None,mtx)
@@ -95,10 +103,10 @@ for k in range(0,CALWINDOW):
 	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 	
 	# Pad the image to avoid image reshifting
-	image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
-	image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
-	image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
-	image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
+	#image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+	#image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+	#image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+	#image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
 
 	# Perform first stitch. Stitching together image 1 and image 2.
 	print "\n1:"
@@ -125,7 +133,7 @@ for k in range(0,CALWINDOW):
 height = result3.shape[0]
 width = result3.shape[1]
 
-out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (width,height))
+out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (OUTPUT_SIZE[1],OUTPUT_SIZE[0]))
 
 # Streaming Step
 while ((success1 & success2) & (success3 & success4)):
@@ -170,14 +178,18 @@ while ((success1 & success2) & (success3 & success4)):
 	seam3 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
         #result3,fgbg3B = stitch.reStitch(result1,result2,result3,fgbg3B,seam3)
         
+        result = np.zeros(OUTPUT_SIZE)
+        if (result3.shape[0] <= result.shape[0]) and (result3.shape[1] <= result.shape[1]):
+            result[0:result3.shape[0],0:result3.shape[1],:] = result3
+        result = result.astype('uint8')
 
 	elapsed = time.time() - total
 	print "\n Total Time Elapsed: %f Seconds" % elapsed
 
 
-	out.write(result3)
+	out.write(result)
 	# show the images
-	cv2.imshow("Result", result3)
+	cv2.imshow("Result", result)
 	
 	if cv2.waitKey(1) & 0xFF == ord('q'):
         	break
@@ -191,25 +203,25 @@ while ((success1 & success2) & (success3 & success4)):
 
 
 	if ((success1 & success2) & (success3 & success4)):
-                image1 = image1[bot_edge:top_edge,bot_edge:top_edge]
-                image2 = image2[bot_edge:top_edge,bot_edge:top_edge]
-                image3 = image3[bot_edge:top_edge,bot_edge:top_edge]
-                image4 = image4[bot_edge:top_edge,bot_edge:top_edge]
+                image1 = image1[bot_edge:top_edge,left_edge:right_edge]
+                image2 = image2[bot_edge:top_edge,left_edge:right_edge]
+                image3 = image3[bot_edge:top_edge,left_edge:right_edge]
+                image4 = image4[bot_edge:top_edge,left_edge:right_edge]
 	
 		image1 = cv2.undistort(image1,mtx,radial_dst,None,mtx)
 		image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
 		image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
 		image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 		
-                image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
-                image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
-                image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
-                image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
+                #image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+                #image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+                #image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+                #image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
 
 
 print "Video Stream Complete, Press any Key"
 cv2.waitKey(0)
-cv2.imwrite('vidStitched.jpg',result3);
+cv2.imwrite('vidStitched.jpg',result);
 
 out.release()
 

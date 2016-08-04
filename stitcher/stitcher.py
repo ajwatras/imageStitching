@@ -18,7 +18,7 @@ class Stitcher:
         def stitch(self, images, ratio=.75, reprojThresh=4.0,
 		showMatches=True):
 
-		result = None
+		result = (None,None,None)
 		# unpack the images, then detect keypoints and extract
 		# local invariant descriptors from them
 		t=time.time()
@@ -35,7 +35,7 @@ class Stitcher:
 		# keypoints to create a panorama
 		if M is None:
 			print 'Error: No Matching Features'
-			return None
+			return (None,None,None)
 		# otherwise, apply a perspective warp to stitch the images
 		# together
 		t=time.time()
