@@ -45,9 +45,9 @@ class Stitcher:
 			print 'Error: No Matching Features'
 			
                         if reStitching:
-                            return [0,0,0,0,0,0,0]
+                            return [0,0,0,0,0,(0,0)]
                     
-			return [0,0,0,0,0]
+			return [0,0,0,0,0,(0,0)]
                     
                     
 		# otherwise, apply a perspective warp to stitch the images
@@ -58,9 +58,9 @@ class Stitcher:
                     print "ERROR: no valid Homography"
                     
                     if reStitching:
-                        return [0,0,0,0,0,0,0]
+                        return [0,0,0,0,0,(0,0)]
                     
-                    return [0,0,0,0,0]
+                    return [0,0,0,0,0,(0,0)]
 
 		# Detect the appropriate size for the resulting image. 
 		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
@@ -77,7 +77,7 @@ class Stitcher:
 			x_shift = -int(min(x_bound))
 		if min(y_bound) < 0:
 			y_shift = -int(min(y_bound))
-		
+		coord_shift = np.array([y_shift,x_shift])
 		shift_H = np.array([[1,0,x_shift],[0,1,y_shift],[0,0,1]])
 		x_bound = int(max(max(x_bound),imageB.shape[1]))
 		y_bound = int(max(max(y_bound),imageB.shape[0]))
@@ -86,8 +86,8 @@ class Stitcher:
                     print x_bound, y_bound
                     print "ERROR: Image Too Large"
                     if reStitching:
-                        return [0,0,0,0,0,0,0]
-                    return [0,0,0,0,0]
+                        return [0,0,0,0,0,(0,0)]
+                    return [0,0,0,0,0,(0,0)]
 		
 		
 		# Warp Image A and place it in frame.
@@ -123,12 +123,12 @@ class Stitcher:
 			# return a tuple of the stitched image and the
 			# visualization
 			if reStitching:
-                                return (result, vis, H, mask1, mask2, x_shift,y_shift)
+                                return (result, vis, H, mask1, mask2, coord_shift)
 			
-			return (result, vis,H,mask1,mask2)
+			return (result, vis,H,mask1,mask2,coord_shift)
  
 		# return the stitched image
-		return (result,H,mask1,mask2)
+		return (result,H,mask1,mask2,coord_shift)
 
         def detectAndDescribe(self, image):
 		# convert the image to grayscale
@@ -269,7 +269,6 @@ class Stitcher:
 		x_bound = int(max(max(x_bound),imageB.shape[1]))
 		y_bound = int(max(max(y_bound),imageB.shape[0]))
 		
-		
 		# Warp Image A and place it in frame.
 		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
 		result2 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
@@ -365,8 +364,9 @@ class Stitcher:
                                     #image2 = cv2.rectangle(image2,(x[i-1].astype('int'),y[i-1].astype('int')),(x[i-1].astype('int')+w[i-1].astype('int'),y[i-1].astype('int')+h[i-1].astype('int')),(0,255,0),2)
                                     
                                     #Stitch together seam area with object bounding box. 
-                                    r1,vis_tmp,Htemp,m1,m2,x_shift,y_shift  = self.stitch([image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]],image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True,reStitching=True)
-                                    
+                                    r1,vis_tmp,Htemp,m1,m2,coord_shift  = self.stitch([image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]],image2[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]],showMatches=True,reStitching=True)
+                                    y_shift = coord_shift[0]
+                                    x_shift = coord_shift[1]
                                     #If the stitch was successful. 
                                     if r1 is not 0:
                                         print "Re-stitched"

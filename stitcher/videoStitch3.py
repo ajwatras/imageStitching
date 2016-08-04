@@ -110,7 +110,7 @@ for k in range(0,CALWINDOW):
 
 	# Perform first stitch. Stitching together image 1 and image 2.
 	print "\n1:"
-	(result1, vis1,H,mask11,mask12) = stitch.stitch([image1, image2], showMatches=True)
+	(result1, vis1,H,mask11,mask12,coord_shift1) = stitch.stitch([image1, image2], showMatches=True)
 	H1 = H							# Store first Homography
 	seam1 = stitch.locateSeam(mask11[:,:,0],mask12[:,:,0]) 	# Locate the seam between the two images.
 	
@@ -120,14 +120,15 @@ for k in range(0,CALWINDOW):
         #cv2.waitKey(0)
 
 	print "\n2:"
-	(result2, vis2,H,mask21,mask22) = stitch.stitch([image4, image3], showMatches=True)
+	(result2, vis2,H,mask21,mask22,coord_shift2) = stitch.stitch([image1, image3], showMatches=True)
 	H2 = H							# Store the second Homography
 	seam2 = stitch.locateSeam(mask21[:,:,0],mask22[:,:,0])	# Locate the seam between the two images.
 	print "\n3:"
-	(result3, vis3,H,mask31,mask32) = stitch.stitch([result1,result2], showMatches=True)
+	(result3, vis3,H,mask31,mask32,coord_shift3) = stitch.stitch([image1,image4], showMatches=True)
 	#H3 = H3+H/CALWINDOW
 	H3 = H							# Store the third homography
 	seam3 = stitch.locateSeam(mask31[:,:,0],mask32[:,:,0])	# Locate the seam between the two images.
+	out_pos = output_center - np.array(image1.shape[0:2])/2
 
 
 height = result3.shape[0]
@@ -161,26 +162,43 @@ while ((success1 & success2) & (success3 & success4)):
 	#cv2.imshow("Frame",im3)
 	#cv2.waitKey(0)
 	
+        result = np.zeros(OUTPUT_SIZE)
         print "\nA:"
 	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image2,H1)
 	resultA = (result2*np.logical_not(mask1) + result1).astype('uint8')
-        resultA,fgbg1B = stitch.reStitch(result1,result2,resultA,fgbg1B,seam1)
+	
+	result_window = result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:]
+        result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:] = resultA*mask2+ result_window*np.logical_not(mask2)
+        
+        #resultA,fgbg1B = stitch.reStitch(result1,result2,resultA,fgbg1B,seam1)
+
         
         print "\nB:"
-	result1,result2,mask1,mask2 = stitch.applyHomography(image4,image3,H2)
+	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image3,H2)
 	resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
-	seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
+	#seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
 	#resultB,fgbg2B = stitch.reStitch(result1,result2,resultB,fgbg2B,seam2)
+	
+	result_window = result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:]
+        result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:] =resultB*mask2 + result_window*np.logical_not(mask2)
 
         print "\nC:"
-	result1,result2,mask1,mask2 = stitch.applyHomography(resultA,resultB,H3)
+	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image4,H3)
 	result3 = (result2*np.logical_not(mask1) + result1).astype('uint8')
-	seam3 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
+	#seam3 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
         #result3,fgbg3B = stitch.reStitch(result1,result2,result3,fgbg3B,seam3)
         
-        result = np.zeros(OUTPUT_SIZE)
-        if (result3.shape[0] <= result.shape[0]) and (result3.shape[1] <= result.shape[1]):
-            result[0:result3.shape[0],0:result3.shape[1],:] = result3
+        result_window = result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result1.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result1.shape[1],:]
+        result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result1.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result1.shape[1],:] =result3*mask2 + result_window*np.logical_not(mask2)
+
+        
+
+        out_write_coord1 = [out_pos[0] - coord_shift1[0], out_pos[1] - coord_shift1[1]]
+        
+        #result[out_write_coord1[0]:out_write_coord1[0]+resultA.shape[0],out_write_coord1[0]:out_write_coord1[0]+resultA.shape[0],:] = resultA
+        print coord_shift1
+
+        result[out_pos[0]:out_pos[0]+image1.shape[0],out_pos[1]:out_pos[1]+image1.shape[1],:] =image1 
         result = result.astype('uint8')
 
 	elapsed = time.time() - total
