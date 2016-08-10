@@ -9,6 +9,7 @@ import matplotlib.cm as cm
 # Variables used to change stitcher settings. ie. Tunable Parameters
 BLEND_IMAGES = 0
 EDGE_CORRECTION = 0
+DEBUGGING = 0
 DILATION_KERNEL = np.ones([3,3])
 EROSION_LOOPS = 1
 DILATION_LOOPS = 6
@@ -16,7 +17,7 @@ EDGE_WIN_SIZE = 40
 SEAM_PAD = 45
 SIZE_BOUNDS = [1080,1920]
 SEAM_ADJ = [-SEAM_PAD,SEAM_PAD,-SEAM_PAD,SEAM_PAD]
- 
+
 class Stitcher:
 	def __init__(self):
 		# determine if we are using OpenCV v3.X
@@ -33,6 +34,15 @@ class Stitcher:
 		(imageB, imageA) = images
 		(kpsA, featuresA) = self.detectAndDescribe(imageA)
 		(kpsB, featuresB) = self.detectAndDescribe(imageB)
+		
+		if reStitching:
+                    #sort kpsA by closeness to imageA
+                    apple = 1
+                    #grab set of features in kpsA which are farthest from seam line
+                    
+                    #add those features to kpsB and featuresB
+                    
+                    
 		elapsed = time.time() - t
 		print "Detecting keypoints: %f Seconds" % elapsed 
 
@@ -82,7 +92,8 @@ class Stitcher:
 		x_bound = int(max(max(x_bound),imageB.shape[1]))
 		y_bound = int(max(max(y_bound),imageB.shape[0]))
 		
-		if (x_bound > SIZE_BOUNDS[0]) or (y_bound > SIZE_BOUNDS[1]):
+		print "X Bound:",x_bound,"Y Bound:",y_bound, "x shift:",x_shift,"y shift:",y_shift
+		if (x_bound+x_shift > SIZE_BOUNDS[0]) or (y_bound+y_shift > SIZE_BOUNDS[1]):
                     print x_bound, y_bound
                     print "ERROR: Image Too Large"
                     if reStitching:
@@ -114,6 +125,7 @@ class Stitcher:
 		elapsed = time.time() - t
 
 		print "Applying transformation: %f Seconds" % elapsed
+                print "Within stitching coord shift", coord_shift
                 
 		# check to see if the keypoint matches should be visualized
 		if showMatches:
@@ -128,6 +140,7 @@ class Stitcher:
 			return (result, vis,H,mask1,mask2,coord_shift)
  
 		# return the stitched image
+		
 		return (result,H,mask1,mask2,coord_shift)
 
         def detectAndDescribe(self, image):
@@ -291,10 +304,10 @@ class Stitcher:
 		return out_mask
 
 
-        def reStitch(self, image1, image2,background_image,fgbg,seam):
+        def reStitch(self, image1, image2,canvas,fgbg,seam,out_pos):
             
                 #cv2.imshow("seam",np.seam)
-                tmp_result = background_image
+                #tmp_result = canvas
                 seam_points = np.nonzero(seam)			# Determine the point locations of the seam
                 #print seam_points
                 seam_bounds = [np.min(seam_points[0]) ,np.max(seam_points[0]),np.min(seam_points[1]),np.max(seam_points[1])]
@@ -373,42 +386,76 @@ class Stitcher:
                                         #Show the stitched section. 
                                         #cv2.imshow('Stitched small', r1)
                                         #cv2.waitKey(0)
+                                        out_pos_item = [out_pos[0]+seam_bounds[0]-y_shift,out_pos[1]+seam_bounds[2] - x_shift]
+                                        
+                                        if (out_pos_item[0] < 0):
+                                            print "Object located out of image"
+                                            r1 = r1[-out_pos_item[0]:,:,:]
+                                            m1 = m1[-out_pos_item[0]:,:,:]
+                                            m2 = m2[-out_pos_item[0]:,:,:]
+                                            out_pos_item[0] = 0
+                                            
+                                        if (out_pos_item[1] < 0):
+                                            print "Object located out of image"
+                                            r1 = r1[:,-out_pos_item[1],:]
+                                            m1 = m1[:,-out_pos_item[1],:]
+                                            m2 = m2[:,-out_pos_item[1],:]
+                                            out_pos[1] = 0
+                                            
+                                        tmp_result = canvas[out_pos_item[0]:out_pos_item[0]+r1.shape[0],out_pos_item[1]:out_pos_item[1]+r1.shape[1]]
+                                            
+                                        print coord_shift
+                                        r1 = r1[0:tmp_result.shape[0],0:tmp_result.shape[1],:]
+                                        m1 = m1[0:tmp_result.shape[0],0:tmp_result.shape[1],:]
+                                        m2 = m2[0:tmp_result.shape[0],0:tmp_result.shape[1],:]
+                                        
+                                        print "Out Pos:",out_pos_item
+                                        print "tmp_result:",tmp_result.shape,"canvas slice:",canvas[out_pos_item[0]:out_pos_item[0]+r1.shape[0],out_pos_item[1]:out_pos_item[1]+r1.shape[1]].shape,"r1:",r1.shape,"m1:",m1.shape,"m2:",m2.shape
+                                        canvas[out_pos_item[0]:out_pos_item[0]+r1.shape[0],out_pos_item[1]:out_pos_item[1]+r1.shape[1]] = m2*np.logical_not(m1)*r1 + np.logical_not(m2)*tmp_result
+                                        canvas[out_pos_item[0],out_pos_item[1],:] =[255,0,0] 
+                                        print coord_shift,out_pos_item
+                                        
                                 
                                         # pad the image to the right shape and coordinate system. 
-                                        npad = ((y_shift,0),(x_shift,0),(0,0))
-                                        tmp_result = np.pad(tmp_result,pad_width = npad, mode='constant',constant_values=0)
-                                        tmp_window = r1.shape
-                                        after_pad = np.array([seam_bounds[0]+tmp_window[0] - tmp_result.shape[0],seam_bounds[2]+tmp_window[1] - tmp_result.shape[1]])
+                                        #npad = ((y_shift,0),(x_shift,0),(0,0))
+                                        #tmp_result = np.pad(tmp_result,pad_width = npad, mode='constant',constant_values=0)
+                                        #tmp_window = r1.shape
+                                        #after_pad = np.array([seam_bounds[0]+tmp_window[0] - tmp_result.shape[0],seam_bounds[2]+tmp_window[1] - tmp_result.shape[1]])
                                         
                                         #cv2.imshow('tmp_result',tmp_result)
                                         #cv2.imshow('r1',r1)
                                         
                                         
-                                        print tmp_window,tmp_result.shape,after_pad,seam_bounds[2],seam_bounds[0],w[i-1],h[i-1]
+                                        #print tmp_window,tmp_result.shape,after_pad,seam_bounds[2],seam_bounds[0],w[i-1],h[i-1]
                                         #print "After Padding:",  after_pad
-                                        after_pad = after_pad.clip(min=0)
-                                        after_pad = ((0,after_pad[0].astype('int')),(0,after_pad[1].astype('int')),(0,0))
-                                        tmp_result = np.pad(tmp_result, pad_width = after_pad,mode='constant', constant_values=0) 
+                                        #after_pad = after_pad.clip(min=0)
+                                        #after_pad = ((0,after_pad[0].astype('int')),(0,after_pad[1].astype('int')),(0,0))
+                                        #tmp_result = np.pad(tmp_result, pad_width = after_pad,mode='constant', constant_values=0) 
                                         
-                                        print "NPAD: ", npad, after_pad
+                                        #print "NPAD: ", npad, after_pad
                                         
                                 
-                                        tmp_mask = (r1 == 0).astype('int')
+                                        #tmp_mask = (r1 == 0).astype('int')
                                         #tmp_result = tmp_result[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:]
                                 
-                                        small_result = tmp_result[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:]*tmp_mask+r1
+                                        #small_result = tmp_result[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:]*tmp_mask+r1
                                         
-                                        tmp_result[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:] = small_result
+                                        #tmp_result[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:] = small_result
                                 
-                                        #background_image = np.pad(background_image,pad_width = npad,    mode='constant',constant_values=0)
-                                        #background_image = np.pad(background_image,pad_width = after_pad, mode='constant',constant_values=0)
+                                        #canvas = np.pad(canvas,pad_width = npad,    mode='constant',constant_values=0)
+                                        #canvas = np.pad(canvas,pad_width = after_pad, mode='constant',constant_values=0)
                                                                                                 
-                                        #if tmp_result.shape == background_image[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:].shape:
-                                        #    background_image[seam_bounds[0]:(seam_bounds[0]+tmp_result.shape[0]),seam_bounds[2]:(seam_bounds[2]+
+                                        #if tmp_result.shape == canvas[seam_bounds[0]:(seam_bounds[0]+tmp_window[0]),seam_bounds[2]:(seam_bounds[2]+tmp_window[1]),:].shape:
+                                        #    canvas[seam_bounds[0]:(seam_bounds[0]+tmp_result.shape[0]),seam_bounds[2]:(seam_bounds[2]+
                                         #tmp_result.shape[1]),:] = tmp_result
                                             
-                                        #background_image = background_image[y_shift:background_image.shape[0],x_shift:background_image.shape[1]]
+                                        #canvas = canvas[y_shift:canvas.shape[0],x_shift:canvas.shape[1]]
                                         
+                                        #small_result = canvas[out_pos_item[0]:out_pos_item[0]+r1.shape[0],out_pos_item[1]:out_pos_item[1]+r1.shape[1]]
+                                        #small_result = r1
+                                        #cv2.imshow('image1',image1[seam_bounds[0]:seam_bounds[1],seam_bounds[2]:seam_bounds[3]])
+                                        #cv2.imshow('m1',m1.astype('float'))
+                                        #cv2.imshow('m2',m2.astype('float'))
                                         #cv2.imshow('re-stitched', small_result.astype('uint8'))
                                         #cv2.waitKey(0)
                                         
@@ -417,6 +464,6 @@ class Stitcher:
                                             
                                         
                 #cv2.imshow('bounding boxes',image2)
-                return tmp_result, fgbg
+                return canvas, fgbg
 
 

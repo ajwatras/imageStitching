@@ -12,6 +12,7 @@ import time
 CALWINDOW = 1
 DILATION_KERNEL = np.ones([3,3])
 EROSION_LOOPS = 1
+DEBUGGING=0
 DILATION_LOOPS = 4
 FOV = 43
 OUTPUT_SIZE = [1080,1920,3]
@@ -47,6 +48,9 @@ H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
 output_template = np.zeros(OUTPUT_SIZE)
 output_center = np.array([OUTPUT_SIZE[0]/2,OUTPUT_SIZE[1]/2]).astype('int')
+if DEBUGGING:
+    f = open('videoStitch3_debug.txt','w')
+    f.write('VIDEO STITCH 3 DEBUGGING OUTPUT \n')
 
 
 im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so that the image doesn't get shifted
@@ -170,27 +174,29 @@ while ((success1 & success2) & (success3 & success4)):
 	result_window = result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:]
         result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:] = resultA*mask2+ result_window*np.logical_not(mask2)
         
-        #resultA,fgbg1B = stitch.reStitch(result1,result2,resultA,fgbg1B,seam1)
+        result,fgbg1B = stitch.reStitch(result1,result2,result,fgbg1B,seam1,[out_pos[0] - coord_shift1[0],out_pos[1]-coord_shift1[1]])
 
         
         print "\nB:"
 	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image3,H2)
 	resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
 	#seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
-	#resultB,fgbg2B = stitch.reStitch(result1,result2,resultB,fgbg2B,seam2)
+
 	
 	result_window = result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:]
         result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:] =resultB*mask2 + result_window*np.logical_not(mask2)
+
+	result,fgbg2B = stitch.reStitch(result1,result2,result,fgbg2B,seam2,[out_pos[0] - coord_shift2[0],out_pos[1]-coord_shift2[1]])
 
         print "\nC:"
 	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image4,H3)
 	result3 = (result2*np.logical_not(mask1) + result1).astype('uint8')
 	#seam3 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
-        #result3,fgbg3B = stitch.reStitch(result1,result2,result3,fgbg3B,seam3)
-        
+	
         result_window = result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result1.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result1.shape[1],:]
         result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result1.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result1.shape[1],:] =result3*mask2 + result_window*np.logical_not(mask2)
 
+	result,fgbg3B = stitch.reStitch(result1,result2,result,fgbg3B,seam3,[out_pos[0] - coord_shift3[0],out_pos[1]-coord_shift3[1]])
         
 
         out_write_coord1 = [out_pos[0] - coord_shift1[0], out_pos[1] - coord_shift1[1]]
@@ -247,3 +253,6 @@ vidcap1.release()
 vidcap2.release()
 vidcap3.release()
 vidcap4.release()
+
+if DEBUGGING:
+    f.release()
