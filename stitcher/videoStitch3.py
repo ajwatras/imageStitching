@@ -14,7 +14,7 @@ DILATION_KERNEL = np.ones([3,3])
 EROSION_LOOPS = 1
 DEBUGGING=0
 DILATION_LOOPS = 4
-FOV = 43
+FOV = 30
 OUTPUT_SIZE = [1080,1920,3]
 
 #Camera Coefficients
@@ -37,6 +37,7 @@ print [top_edge,bot_edge,left_edge,right_edge]
 #Initializing Needed Processes and Variables
 stitch = stitcher2.Stitcher()
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (OUTPUT_SIZE[1],OUTPUT_SIZE[0]))
 fgbg1A = cv2.createBackgroundSubtractorMOG2()
 fgbg1B = cv2.createBackgroundSubtractorMOG2()
 fgbg2A = cv2.createBackgroundSubtractorMOG2()
@@ -55,7 +56,7 @@ if DEBUGGING:
 
 im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so that the image doesn't get shifted
 
-# Video Sources
+## Video Sources
 #vidcap1 = cv2.VideoCapture('../data/testVideo/office/output1.avi')
 #vidcap2 = cv2.VideoCapture('../data/testVideo/office/output2.avi')
 #vidcap3 = cv2.VideoCapture('../data/testVideo/office/output3.avi')
@@ -120,6 +121,7 @@ for k in range(0,CALWINDOW):
 	
         # Uncomment to Check quality of first calibration stitch
         #cv2.imshow("result1", result1)
+        #cv2.imshow("vis1",vis1)
         #cv2.imshow("image3",image3)
         #cv2.waitKey(0)
 
@@ -127,18 +129,27 @@ for k in range(0,CALWINDOW):
 	(result2, vis2,H,mask21,mask22,coord_shift2) = stitch.stitch([image1, image3], showMatches=True)
 	H2 = H							# Store the second Homography
 	seam2 = stitch.locateSeam(mask21[:,:,0],mask22[:,:,0])	# Locate the seam between the two images.
+	
+	#cv2.imshow("result2",result2)
+	#cv2.imshow("vis2",vis2)
+	#cv2.waitKey(0)
+	
 	print "\n3:"
 	(result3, vis3,H,mask31,mask32,coord_shift3) = stitch.stitch([image1,image4], showMatches=True)
 	#H3 = H3+H/CALWINDOW
 	H3 = H							# Store the third homography
+        #print mask31,mask32
 	seam3 = stitch.locateSeam(mask31[:,:,0],mask32[:,:,0])	# Locate the seam between the two images.
+	
+	#cv2.imshow("result3",result3)
+	#cv2.imshow("vis3",vis3)
+	#cv2.waitKey(0)
+	
 	out_pos = output_center - np.array(image1.shape[0:2])/2
 
 
-height = result3.shape[0]
-width = result3.shape[1]
-
-out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (OUTPUT_SIZE[1],OUTPUT_SIZE[0]))
+#height = result3.shape[0]
+#width = result3.shape[1]
 
 # Streaming Step
 while ((success1 & success2) & (success3 & success4)):
@@ -181,8 +192,23 @@ while ((success1 & success2) & (success3 & success4)):
 	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image3,H2)
 	resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
 	#seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
+        
+        if (out_pos[0]-coord_shift2[0] < 0):
+            shift = -(out_pos[0]-coord_shift2[0])
+            
+            print "Shifting: ", shift
+            
+            result1 = result1[shift:,:,:]
+            result2 = result2[shift:,:,:]
+            resultB = resultB[shift:,:,:]
+            mask1 = mask1[shift:,:,:]
+            mask2 = mask2[shift:,:,:]
+            
+            coord_shift2[0] = coord_shift2[0]-shift
+            
+            
 
-	
+	print out_pos[0]-coord_shift2[0], out_pos[0]-coord_shift2[0]+result1.shape[0]
 	result_window = result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:]
         result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:] =resultB*mask2 + result_window*np.logical_not(mask2)
 

@@ -37,13 +37,17 @@ while(cap1.isOpened()):
         #frame3 = cv2.flip(frame3,1)
         #frame4 = cv2.flip(frame4,1)
 
+	result1 = np.concatenate((frame1,frame2),axis=1)
+	result2 =np.concatenate((frame3,frame4),axis=1)
+	result = np.concatenate((result1,result2),axis=0)
+
         # write the flipped frame
         out1.write(frame1)
         out2.write(frame2)
         out3.write(frame3)
         out4.write(frame4)
 
-        cv2.imshow('frame',frame1)
+        cv2.imshow('frame',result)
         if cv2.waitKey(1) & 0xFF == ord('q'): # terminate loop if 'q' is pressed.
             break
     else:

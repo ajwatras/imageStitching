@@ -5,7 +5,9 @@ import math
 import cv2
 
 # input parameters
-vid1 = "./output.avi"			#Video to be split
+vid1 = "../data/vidwriter/output1.avi"
+
+#vid1 = "./output.avi"			#Video to be split
 saveDest = "../data/vid2frame/"		#Location files should be saved 2
 FrameLimit = 100000			#Limit on length of the video (for filenaming)
 
@@ -16,6 +18,8 @@ cc = 0
 
 # Read frames and then save them until q is pressed or video is over
 ret1, frame1 = cap1.read()
+if ret1 == False:
+    print "Error, invalid video"
 while(ret1 == 1):
     
     cv2.imshow("Frame",frame1)

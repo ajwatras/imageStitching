@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import time
  
-DISPLAY_KEYPOINTS = 1
+DISPLAY_KEYPOINTS = 0
 
 vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
 vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')

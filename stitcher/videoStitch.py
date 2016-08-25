@@ -1,16 +1,72 @@
-# Use this method to try and call the stitch function to stitch together all four images. (s1-s4)
-# import the necessary packages
+# Use this method to try and call the stitch function to stitch together all four images. (s1-s4). This 3rd iteration will implement foreground re-stitching to try and remove discontinuities near image boundaries. 
+
+# Import the necessary packages
 import stitcher2
 import argparse
 import imutils
 import cv2
 import numpy as np
 import time
- 
-#vidcap1 = cv2.VideoCapture('../data/testVideo/output1.avi')
-#vidcap2 = cv2.VideoCapture('../data/testVideo/output2.avi')
-#vidcap3 = cv2.VideoCapture('../data/testVideo/output3.avi')
-#vidcap4 = cv2.VideoCapture('../data/testVideo/output4.avi')
+
+# Variables used to change stitcher settings. ie. Tunable Parameters
+CALWINDOW = 1
+DILATION_KERNEL = np.ones([3,3])
+EROSION_LOOPS = 1
+DEBUGGING=0
+DILATION_LOOPS = 4
+FOV = 45
+OUTPUT_SIZE = [1080,1920,3]
+
+#Camera Coefficients
+radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04459628])
+#radial_dst = [-0.37801445,  0.38328306, -0.01922729, -0.01341008, -0.60047771]
+mtx = np.array([[ 444.64628787,    0.,          309.40196271],[   0.,          501.63984347,  255.86111216],[   0.,            0.,            1.        ]])
+#mtx = [[ 457.59059782,    0.,          324.59076057],[   0.,          521.77053812,  294.85975196],[   0.,            0.,            1.,        ]]
+
+# Derived Parameters
+#FOV bounds
+pix2Ang = np.linspace(-45,45,480)
+pix2Ang2 = np.linspace(-45,45,640)
+top_edge = (np.abs(pix2Ang-FOV)).argmin()
+bot_edge = (np.abs(pix2Ang+FOV)).argmin()
+left_edge = (np.abs(pix2Ang2 + FOV)).argmin()
+right_edge = (np.abs(pix2Ang2 - FOV)).argmin()
+print [top_edge,bot_edge,left_edge,right_edge]
+
+
+#Initializing Needed Processes and Variables
+stitch = stitcher2.Stitcher()
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (OUTPUT_SIZE[1],OUTPUT_SIZE[0]))
+#result = np.zeros(OUTPUT_SIZE)
+fgbg1A = cv2.createBackgroundSubtractorMOG2()
+fgbg1B = cv2.createBackgroundSubtractorMOG2()
+fgbg2A = cv2.createBackgroundSubtractorMOG2()
+fgbg2B = cv2.createBackgroundSubtractorMOG2()
+fgbg3A = cv2.createBackgroundSubtractorMOG2()
+fgbg3B= cv2.createBackgroundSubtractorMOG2()
+H1 = np.zeros([3,3])
+H2 = np.zeros([3,3])
+H3 = np.zeros([3,3])
+output_template = np.zeros(OUTPUT_SIZE)
+output_center = np.array([OUTPUT_SIZE[0]/2,OUTPUT_SIZE[1]/2]).astype('int')
+if DEBUGGING:
+    f = open('videoStitch3_debug.txt','w')
+    f.write('VIDEO STITCH 3 DEBUGGING OUTPUT \n')
+
+
+im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so that the image doesn't get shifted
+
+## Video Sources
+#vidcap1 = cv2.VideoCapture('../data/testVideo/office/output1.avi')
+#vidcap2 = cv2.VideoCapture('../data/testVideo/office/output2.avi')
+#vidcap3 = cv2.VideoCapture('../data/testVideo/office/output3.avi')
+#vidcap4 = cv2.VideoCapture('../data/testVideo/office/output4.avi')
+
+#vidcap1 = cv2.VideoCapture('../data/testVideo/July2/output1.avi')
+#vidcap2 = cv2.VideoCapture('../data/testVideo/July2/output2.avi')
+#vidcap3 = cv2.VideoCapture('../data/testVideo/July2/output3.avi')
+#vidcap4 = cv2.VideoCapture('../data/testVideo/July2/output4.avi')
 
 vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
 vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
@@ -22,53 +78,46 @@ vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 #vidcap3 = cv2.VideoCapture(3)
 #vidcap4 = cv2.VideoCapture(4)
 
-OUTPUT_SIZE = [1080,1920,3]
 
 
 
-result1 = None
-result2 = None
-result = np.zeros(OUTPUT_SIZE).astype('uint8')
-
-
-# load the two images and resize them to have a width of 400 pixels
-# (for faster processing)
+# Throw out first several video frames as they often contain bad data.
 for k in range(0,5):
 	success1, image1 = vidcap1.read()
 	success2, image2 = vidcap2.read()
 	success3, image3 = vidcap3.read()
 	success4, image4 = vidcap4.read()
 
+# Calibration step
 while ((success1 & success2) & (success3 & success4)):
- 	
-	#Attempt to denoise the images a bit.
-	#kernel = np.ones((5,5),np.float32)/25
-        #image1 = cv2.filter2D(image1,-1,kernel)
-	#image2 = cv2.filter2D(image2,-1,kernel)
-	#image3 = cv2.filter2D(image3,-1,kernel)
-	#image4 = cv2.filter2D(image4,-1,kernel)
+    
+    
+    
+	#Resize the images so that we have the correct field of view
+	image1 = image1[bot_edge:top_edge,left_edge:right_edge]
+	image2 = image2[bot_edge:top_edge,left_edge:right_edge]
+	image3 = image3[bot_edge:top_edge,left_edge:right_edge]
+	image4 = image4[bot_edge:top_edge,left_edge:right_edge]
 
-	#image1 = cv2.GaussianBlur(image1,(5,5),0)
-	#image2 = cv2.GaussianBlur(image2,(5,5),0)
-	#image3 = cv2.GaussianBlur(image3,(5,5),0)
-	#image4 = cv2.GaussianBlur(image4,(5,5),0)
-
-
-	# stitch the images together to create a panorama
-	stitch = stitcher2.Stitcher()
-	#stitch = stitcher.Stitcher()
+	# Remove radial distortion based on pre-calibrated camera values
+	image1 = cv2.undistort(image1,mtx,radial_dst,None,mtx)
+	image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
+	image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
+	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 	
+	# Pad the image to avoid image reshifting
+	#image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
+	#image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
+	#image3 = np.pad(image3,pad_width = im_pad, mode='constant',constant_values=0)
+	#image4 = np.pad(image4,pad_width = im_pad, mode='constant',constant_values=0)
+	
+	t = time.time()
+	
+        result = np.zeros(OUTPUT_SIZE)
 
-	total = time.time()
-	#im1 = np.concatenate((image1,image2),axis=1)
-	#im2 =np.concatenate((image3,image4),axis=1)
-	#im3 = np.concatenate((im1,im2),axis=0)
-	#cv2.imshow("Frame",im3)
-	
-	
 	# Perform first stitch. Stitching together image 1 and image 2.
 	print "\n1:"
-	(result1, vis1,H,mask11,mask12) = stitch.stitch([image1, image2], showMatches=True)
+	(result1, vis1,H,mask11,mask12,coord_shift1) = stitch.stitch([image1, image2], showMatches=True)
 	#H1 = H							# Store first Homography
 	#seam1 = stitch.locateSeam(mask11[:,:,0],mask12[:,:,0]) 	# Locate the seam between the two images.
 	
@@ -78,67 +127,72 @@ while ((success1 & success2) & (success3 & success4)):
         #cv2.waitKey(0)
 
 	print "\n2:"
-	(result2, vis2,H,mask21,mask22) = stitch.stitch([resul1, image3], showMatches=True)
+	(result2, vis2,H,mask21,mask22,coord_shift2) = stitch.stitch([image1, image3], showMatches=True)
 	#H2 = H							# Store the second Homography
 	#seam2 = stitch.locateSeam(mask21[:,:,0],mask22[:,:,0])	# Locate the seam between the two images.
-        if (result1 is not 0) and (result2 is not 0):
-            print "\n3:"
-            (result3, vis3,H,mask31,mask32) = stitch.stitch([result2,image4], showMatches=True)
-            #H3 = H3+H/CALWINDOW
-            #H3 = H							# Store the third homography
-            #seam3 = stitch.locateSeam(mask31[:,:,0],mask32[:,:,0])	# Locate the seam between the two images.
-
-
-	#print "\n1:"	# Perform first stitch. Stitching together image 1 and image 2.
-	print "\n1:"
-	(result1, vis1,H,mask11,mask12) = stitch.stitch([image1, image2], showMatches=True)
-	H1 = H							# Store first Homography
-	seam1 = stitch.locateSeam(mask11[:,:,0],mask12[:,:,0]) 	# Locate the seam between the two images.
 	
-        # Uncomment to Check quality of first calibration stitch
-        #cv2.imshow("result1", result1)
-        #cv2.imshow("image3",image3)
-        #cv2.waitKey(0)
-
-	print "\n2:"
-	(result2, vis2,H,mask21,mask22) = stitch.stitch([image4, image3], showMatches=True)
-	H2 = H							# Store the second Homography
-	seam2 = stitch.locateSeam(mask21[:,:,0],mask22[:,:,0])	# Locate the seam between the two images.
 	print "\n3:"
-	(result3, vis3,H,mask31,mask32) = stitch.stitch([result1,result2], showMatches=True)
+	(result3, vis3,H,mask31,mask32,coord_shift3) = stitch.stitch([image1,image4], showMatches=True)
 	#H3 = H3+H/CALWINDOW
-	H3 = H							# Store the third homography
-	seam3 = stitch.locateSeam(mask31[:,:,0],mask32[:,:,0])	# Locate the seam between the two images.
+	#H3 = H							# Store the third homography
+        #print mask31,mask32
+	#seam3 = stitch.locateSeam(mask31[:,:,0],mask32[:,:,0])	# Locate the seam between the two images.
+	out_pos = output_center - np.array(image1.shape[0:2])/2
+	
+	if result1 is not 0:
+            result_window = result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:]
+            result1 = result1[0:result_window.shape[0],0:result_window.shape[1]]
+            mask11 = mask11[0:result_window.shape[0],0:result_window.shape[1]]
+            mask12 = mask12[0:result_window.shape[0],0:result_window.shape[1]]
+	
+            result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:] = result1*mask12+ result_window*np.logical_not(mask12)
 
-	#(result1, vis1,H) = stitch.stitch([image1, image2], showMatches=True)
-	#if (result1 is not None):
-        #    print "\n2:"
-        #    print "Result1",result1
-        #    (result2, vis2,H) = stitch.stitch([result1, image3], showMatches=True)
-	#if result2 is not None:
-        #    print result2
-        #    print "\n3:"
-        #    (result3, vis3,H) = stitch.stitch([result2, image4], showMatches=True)
+        if result2 is not 0:
+            result_window = result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift2[0]+result2.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result2.shape[1],:]
+            result2 = result2[0:result_window.shape[0],0:result_window.shape[1]]
+            mask21 = mask21[0:result_window.shape[0],0:result_window.shape[1]]
+            mask22 = mask22[0:result_window.shape[0],0:result_window.shape[1]]
+	
+            result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result2.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result2.shape[1],:] = result2*mask22+ result_window*np.logical_not(mask22)
+        
+        if result3 is not 0:
+            result_window = result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result3.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result3.shape[1],:]
+            result3 = result3[0:result_window.shape[0],0:result_window.shape[1]]
+            mask31 = mask31[0:result_window.shape[0],0:result_window.shape[1]]
+            mask32 = mask32[0:result_window.shape[0],0:result_window.shape[1]]
+	
+            result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result3.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result3.shape[1],:] = result3*mask32+ result_window*np.logical_not(mask32)
+	
+	result[out_pos[0]:out_pos[0]+image1.shape[0],out_pos[1]:out_pos[1]+image1.shape[1]] = image1
+	
+	result = result.astype('uint8')
+	
+	elapsed = time.time() - t
+	
+	print "Total time per frame:",elapsed
+	
+	out.write(result)
+	cv2.imshow("Result",result)
+	
+	
+	if cv2.waitKey(1) & 0xFF == ord('q'):
+        	break
 
-        if result3 is not None:
-            if result3 is not 0:
-                result = np.zeros(OUTPUT_SIZE).astype('uint8')
-                result[0:result3.shape[0],0:result3.shape[1],:] = result3[0:result.shape[0],0:result.shape[1]].astype('uint8')
-            
-	elapsed = time.time() - total
-	print "\n Total Time Elapsed: %f Seconds" % elapsed
+		#Read incoming video feeds
+	success1, image1 = vidcap1.read()
+	success2, image2 = vidcap2.read()
+	success3, image3 = vidcap3.read()
+	success4, image4 = vidcap4.read()
 
-	# show the images
-	cv2.imshow("Result", result)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-	success1,image1 = vidcap1.read()
-	success2,image2 = vidcap2.read()
-	success3,image3 = vidcap3.read()
-	success4,image4 = vidcap4.read()
 
 print "Video Stream Complete, Press any Key"
 cv2.waitKey(0)
-
 cv2.imwrite('vidStitched.jpg',result);
+
+out.release()
+
+vidcap1.release()
+vidcap2.release()
+vidcap3.release()
+vidcap4.release()
+
