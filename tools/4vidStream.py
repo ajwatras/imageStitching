@@ -7,10 +7,16 @@ import time
  
 DISPLAY_KEYPOINTS = 0
 
-vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
-vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
-vidcap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
-vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
+#vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
+#vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
+#vidcap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
+#vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
+
+
+vidcap1 = cv2.VideoCapture('../data/testVideo/JaeJun-August/output1.avi')
+vidcap2 = cv2.VideoCapture('../data/testVideo/JaeJun-August/output2.avi')
+vidcap3 = cv2.VideoCapture('../data/testVideo/JaeJun-August/output3.avi')
+vidcap4 = cv2.VideoCapture('../data/testVideo/JaeJun-August/output4.avi')
 
 #vidcap1 = cv2.VideoCapture(1)
 #vidcap2 = cv2.VideoCapture(2)
@@ -49,7 +55,7 @@ while ((success1 & success2) & (success3 & success4)):
 	
 	# show the images
 	cv2.imshow("Result", result)
-	if cv2.waitKey(1) & 0xFF == ord('q'):
+	if cv2.waitKey(10) & 0xFF == ord('q'):
         	break
 	#cv2.waitKey(0)
 
