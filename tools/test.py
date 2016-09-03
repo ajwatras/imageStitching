@@ -14,7 +14,7 @@ SLICE_LOCATION = 500
 ix,iy = -1,-1
 
 
-frame = cv2.imread("./testFrame.jpg")
+frame = cv2.imread("./frame01164.jpg")
 
 ## Begin test
 
@@ -30,6 +30,10 @@ cv2.imshow("frame",frame)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
+edge = cv2.Canny(frame,25,50)
+cv2.imshow("edges",edge)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 # (500,89)-->(500,72),(500,107)-->(500,90),(537,86)-->(537,86),(537,105)-->same
 xshift = 500
 yshift = 72

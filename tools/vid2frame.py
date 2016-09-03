@@ -6,7 +6,7 @@ import cv2
 
 # input parameters
 #vid1 = "../data/vidwriter/output1.avi"
-vid1 = "../data/testVideo/WideView-BeanDrop2/output4.avi"
+vid1 = "../data/testVideo/WideView-BeanDrop3/output1.avi"
 
 #vid1 = "./output.avi"			#Video to be split
 saveDest = "../data/vid2frame/"		#Location files should be saved 2

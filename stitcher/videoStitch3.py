@@ -67,15 +67,15 @@ im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so tha
 #vidcap3 = cv2.VideoCapture('../data/testVideo/July2/output3.avi')
 #vidcap4 = cv2.VideoCapture('../data/testVideo/July2/output4.avi')
 
-vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
-vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
-vidcap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
-vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
+#vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
+#vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
+#vidcap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
+#vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 
-#vidcap1 = cv2.VideoCapture(1)
-#vidcap2 = cv2.VideoCapture(2)
-#vidcap3 = cv2.VideoCapture(3)
-#vidcap4 = cv2.VideoCapture(4)
+vidcap1 = cv2.VideoCapture(1)
+vidcap2 = cv2.VideoCapture(2)
+vidcap3 = cv2.VideoCapture(3)
+vidcap4 = cv2.VideoCapture(4)
 
 
 
@@ -106,6 +106,12 @@ for k in range(0,CALWINDOW):
 	image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
 	image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
 	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
+	
+	#flip left right
+	#image1 = np.fliplr(image1)
+	#image2 = np.fliplr(image2)
+	#image3 = np.fliplr(image3)
+	#image4 = np.fliplr(image4)
 	
 	# Pad the image to avoid image reshifting
 	#image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
@@ -152,6 +158,7 @@ for k in range(0,CALWINDOW):
 #width = result3.shape[1]
 
 # Streaming Step
+cv2.imwrite('comparison.jpg',image1)
 while ((success1 & success2) & (success3 & success4)):
  	
 	#Attempt to denoise the images a bit.
@@ -185,7 +192,7 @@ while ((success1 & success2) & (success3 & success4)):
 	result_window = result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:]
         result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:] = resultA*mask2+ result_window*np.logical_not(mask2)
         
-        result,fgbg1B = stitch.reStitch(result1,result2,result,fgbg1B,seam1,[out_pos[0] - coord_shift1[0],out_pos[1]-coord_shift1[1]])
+        #result,fgbg1B = stitch.reStitch(result1,result2,result,fgbg1B,seam1,[out_pos[0] - coord_shift1[0],out_pos[1]-coord_shift1[1]])
 
         
         print "\nB:"
@@ -212,7 +219,7 @@ while ((success1 & success2) & (success3 & success4)):
 	result_window = result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:]
         result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:] =resultB*mask2 + result_window*np.logical_not(mask2)
 
-	result,fgbg2B = stitch.reStitch(result1,result2,result,fgbg2B,seam2,[out_pos[0] - coord_shift2[0],out_pos[1]-coord_shift2[1]])
+	#result,fgbg2B = stitch.reStitch(result1,result2,result,fgbg2B,seam2,[out_pos[0] - coord_shift2[0],out_pos[1]-coord_shift2[1]])
 
         print "\nC:"
 	result1,result2,mask1,mask2 = stitch.applyHomography(image1,image4,H3)
@@ -222,7 +229,7 @@ while ((success1 & success2) & (success3 & success4)):
         result_window = result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result1.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result1.shape[1],:]
         result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result1.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result1.shape[1],:] =result3*mask2 + result_window*np.logical_not(mask2)
 
-	result,fgbg3B = stitch.reStitch(result1,result2,result,fgbg3B,seam3,[out_pos[0] - coord_shift3[0],out_pos[1]-coord_shift3[1]])
+	#result,fgbg3B = stitch.reStitch(result1,result2,result,fgbg3B,seam3,[out_pos[0] - coord_shift3[0],out_pos[1]-coord_shift3[1]])
         
 
         out_write_coord1 = [out_pos[0] - coord_shift1[0], out_pos[1] - coord_shift1[1]]
@@ -262,6 +269,12 @@ while ((success1 & success2) & (success3 & success4)):
 		image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
 		image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
 		image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
+		
+		#flip left right
+                #image1 = np.fliplr(image1)
+                #image2 = np.fliplr(image2)
+                #image3 = np.fliplr(image3)
+                #image4 = np.fliplr(image4)
 		
                 #image1 = np.pad(image1,pad_width = im_pad, mode='constant',constant_values=0)
                 #image2 = np.pad(image2,pad_width = im_pad, mode='constant',constant_values=0)
