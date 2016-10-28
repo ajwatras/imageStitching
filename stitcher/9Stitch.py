@@ -13,15 +13,15 @@ import time
  
 # load the two images and resize them to have a width of 400 pixels
 # (for faster processing)
-image1 = cv2.imread("../stitching_img2/image001.png") # top left
-image2 = cv2.imread("../stitching_img2/image002.png") # top right
-image3 = cv2.imread("../stitching_img2/image003.png") # bottom left
-image4 = cv2.imread("../stitching_img2/image004.png") # bottom right
-image5 = cv2.imread("../stitching_img2/image005.png") # bottom right
-image6 = cv2.imread("../stitching_img2/image006.png") # bottom right
-image7 = cv2.imread("../stitching_img2/image007.png") # bottom right
-image8 = cv2.imread("../stitching_img2/image008.png") # bottom right
-image9 = cv2.imread("../stitching_img2/image009.png") # bottom right
+image1 = cv2.imread("../data/6-28-16/convex/image009.png") # top left
+image2 = cv2.imread("../data/6-28-16/convex/image008.png") # top right
+image3 = cv2.imread("../data/6-28-16/convex/image007.png") # bottom left
+image4 = cv2.imread("../data/6-28-16/convex/image006.png") # bottom right
+image5 = cv2.imread("../data/6-28-16/convex/image005.png") # bottom right
+image6 = cv2.imread("../data/6-28-16/convex/image004.png") # bottom right
+image7 = cv2.imread("../data/6-28-16/convex/image001.png") # bottom right
+image8 = cv2.imread("../data/6-28-16/convex/image002.png") # bottom right
+image9 = cv2.imread("../data/6-28-16/convex/image003.png") # bottom right
 #image1 = imutils.resize(image1, width=400)
 #image2 = imutils.resize(image2, width=400)
 #image3 = imutils.resize(image3, width=400)

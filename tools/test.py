@@ -1,7 +1,8 @@
 ## Import libraries for test.
-import numpy as np
 import cv2
-import time
+import numpy as np
+from matplotlib import pyplot as plt
+
 
 ## Constants often used in testing
 radial_dst = np.array([-0.38368541,  0.17835109, -0.004914,    0.00220994, -0.04459628]) # Estimated Mobius camera Distortion.
@@ -30,57 +31,39 @@ cv2.imshow("frame",frame)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-edge = cv2.Canny(frame,25,50)
-cv2.imshow("edges",edge)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-# (500,89)-->(500,72),(500,107)-->(500,90),(537,86)-->(537,86),(537,105)-->same
-xshift = 500
-yshift = 72
-src_pts = np.float32([[500-xshift,87-yshift],[500-xshift,105-yshift],[625-xshift,84-yshift],[625-xshift,99-yshift]])
-dst_pts = np.float32([[500-xshift,72-yshift],[500-xshift,90-yshift],[625-xshift,84-yshift],[625-xshift,99-yshift]])
-M = cv2.getPerspectiveTransform(src_pts,dst_pts)
+img = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 
-segment = frame[72:105,500:625,:]
+#laplacian = cv2.Laplacian(img,cv2.CV_64F)
+sobelx = cv2.Sobel(img,cv2.CV_64F,1,0,ksize=5)
+mask = np.zeros(sobelx.shape)
+#mask[:,SLICE_LOCATION-1:SLICE_LOCATION+1] = np.ones([mask.shape[0],2])
+mask[:,SLICE_LOCATION] = np.ones(mask.shape[0])
+x_filt = mask*sobelx
+x_filt= (np.abs(x_filt) > 250).astype('uint8')
+#x_filt = sobelx*x_filt
 
-
-print frame.shape
-print segment.shape
-warped = cv2.warpPerspective(segment,M,(frame.shape[1] - xshift,frame.shape[0]- yshift))
-mask = (warped > 0).astype('uint8')
-
-
-cv2.imshow("warped",warped)
-frame[72:105,500:625,:] = np.zeros([segment.shape[0],segment.shape[1],segment.shape[2]])
-tmp_image = frame[yshift:,xshift:,:]
-frame[yshift:,xshift:,:] = mask*warped + np.logical_not(mask)*tmp_image
-
-cv2.imwrite('testOutput1.jpg',frame)
-
-cv2.rectangle(frame,(500,72),(625,105),(255,0,0))
-
-cv2.imwrite('testOutput2.jpg',frame)
-
-
-def draw_circle(event,x,y,flags,param):
-    global ix,iy
-    if event == cv2.EVENT_LBUTTONDBLCLK:
-        cv2.circle(frame,(x,y),2,(255,0,0),-1)
-        ix,iy = x,y
-
-cv2.namedWindow('image')
-cv2.setMouseCallback('image',draw_circle)
-
-while(1):
-    cv2.imshow('image',frame)
-    k = cv2.waitKey(20) & 0xFF
-    if k == 27:
-        break
-    elif k == ord('a'):
-        print ix,iy
-    elif k == ord('q'):
-        break
+x_loc,y_loc = np.nonzero(x_filt)
+for i in range(0,len(x_loc)):
+    frame[x_loc[i],y_loc[i],:] = [255,0,0]
     
-cv2.destroyAllWindows()
+    
 
+
+sobely = cv2.Sobel(x_filt,cv2.CV_64F,0,1,ksize=5)
+#sobely = np.abs(sobely) > 1
+#print np.nonzero((np.abs(sobely) > 200))
+
+#plt.subplot(2,2,1),plt.imshow(img,cmap = 'gray')
+#plt.title('Original'), plt.xticks([]), plt.yticks([])
+plt.subplot(2,2,1),plt.imshow(sobelx,cmap = 'gray')
+plt.title('Sobel X'), plt.xticks([]), plt.yticks([])
+plt.subplot(2,2,2),plt.imshow(x_filt*sobelx,cmap = 'gray')
+plt.title('Filtered X'), plt.xticks([]), plt.yticks([])
+plt.subplot(2,2,3),plt.imshow(sobely,cmap = 'gray')
+plt.title('Sobel Y'), plt.xticks([]), plt.yticks([])
+plt.subplot(2,2,4),plt.imshow(frame,cmap = 'gray')
+plt.title('Tagged Frame'), plt.xticks([]), plt.yticks([])
+
+
+plt.show()
 

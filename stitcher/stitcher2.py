@@ -180,7 +180,7 @@ class Stitcher:
 		(kps, features) = descriptor.detectAndCompute(image, None)
                 
  
-                image_kps = image.copy()
+                #image_kps = image.copy()
                 #cv2.drawKeypoints(image_kps,kps,image_kps)
                 #cv2.imshow("KPS",image_kps)
                 #cv2.waitKey(0)

@@ -37,7 +37,7 @@ H3 = np.zeros([3,3])
 vidcap4 = cv2.VideoCapture('../data/vidwriter/output1.avi')
 vidcap3 = cv2.VideoCapture('../data/vidwriter/output2.avi')
 vidcap2 = cv2.VideoCapture('../data/vidwriter/output3.avi')
-vidcap1display = cv2.VideoCapture('../data/vidwriter/output4.avi')
+vidcap1 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 
 #vidcap1 = cv2.VideoCapture(1)
 #vidcap2 = cv2.VideoCapture(2)
