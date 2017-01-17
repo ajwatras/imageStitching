@@ -8,14 +8,14 @@ import cv2
 #cap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
 #cap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 
-cap1 = cv2.VideoCapture('../data/testVideo/JaeJun-August/output1.avi')
-cap2 = cv2.VideoCapture('../data/testVideo/JaeJun-August/output2.avi')
-cap3 = cv2.VideoCapture('../data/testVideo/JaeJun-August/output3.avi')
-cap4 = cv2.VideoCapture('../data/testVideo/JaeJun-August/output4.avi')
+cap1 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output1.avi')
+cap2 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output2.avi')
+cap3 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output3.avi')
+cap4 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output4.avi')
 
 # Define the codec and create VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('./output.avi',fourcc, 20.0, (500,500))
+out = cv2.VideoWriter('./output.avi',fourcc, 20.0, (1280, 960))
 
 ret1, frame1 = cap1.read()
 ret2, frame2 = cap2.read()
@@ -33,6 +33,7 @@ while(ret1):
         out.write(result)
 
         cv2.imshow('frame',result)
+        print result.shape
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     else:

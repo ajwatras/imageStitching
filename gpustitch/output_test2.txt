@@ -1,0 +1,33 @@
+
+ Frames:  121
+Removing Barrel distortion:  25.0336232231 ms
+Converting to Grayscale:  0.737026752066 ms
+Uploading to GPU:  3.73999333884 ms
+Detecting Feature Points:  59.4882334711 ms
+Matching Feature Points:  0.463975438017 ms
+Calculating Homography:  2.68022420661 ms
+Applying Homography:  0.762668942149 ms
+Total Computation Time:  64.5075677686 ms
+Frames Per Second:  15.5020571166 ms
+
+ Frames:  121
+Removing Barrel distortion:  25.0336232231 ms
+Converting to Grayscale:  0.737026752066 ms
+Uploading to GPU:  3.73999333884 ms
+Detecting Feature Points:  59.4882334711 ms
+Matching Feature Points:  0.463975438017 ms
+Calculating Homography:  2.68022420661 ms
+Applying Homography:  0.762668942149 ms
+Total Computation Time:  64.5075677686 ms
+Frames Per Second:  15.5020571166 ms
+
+ Frames:  121
+Removing Barrel distortion:  25.0336232231 ms
+Converting to Grayscale:  0.737026752066 ms
+Uploading to GPU:  3.73999333884 ms
+Detecting Feature Points:  59.4882334711 ms
+Matching Feature Points:  0.463975438017 ms
+Calculating Homography:  2.68022420661 ms
+Applying Homography:  0.762668942149 ms
+Total Computation Time:  64.5075677686 ms
+Frames Per Second:  15.5020571166 ms

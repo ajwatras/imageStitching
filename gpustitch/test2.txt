@@ -1,0 +1,1573 @@
+
+
+Stitching Frame 1
+Removing barrel distortion: 632.012594 milliseconds 
+Converting to grayscale: 2.081910 milliseconds 
+Uploading image to GPU: 401.926794 milliseconds 
+Detect and Describe: 49.580117 milliseconds 
+Match Keypoints: 0.461409 milliseconds 
+Calculate homography: 2.814338 milliseconds 
+Apply Homography: 0.782970 milliseconds 
+Stitch Image: 1.059121 milliseconds 
+Total Computation Time for stitch: 54.7108 Milliseconds
+Frames Per Second: 18.2779
+
+
+Stitching Frame 2
+Removing barrel distortion: 19.000569 milliseconds 
+Converting to grayscale: 0.790767 milliseconds 
+Uploading image to GPU: 0.359077 milliseconds 
+Detect and Describe: 83.555593 milliseconds 
+Match Keypoints: 0.538121 milliseconds 
+Calculate homography: 3.572123 milliseconds 
+Apply Homography: 1.053997 milliseconds 
+Stitch Image: 1.146582 milliseconds 
+Total Computation Time for stitch: 89.8842 Milliseconds
+Frames Per Second: 11.1254
+
+
+Stitching Frame 3
+Removing barrel distortion: 24.704766 milliseconds 
+Converting to grayscale: 0.528167 milliseconds 
+Uploading image to GPU: 0.961670 milliseconds 
+Detect and Describe: 59.661863 milliseconds 
+Match Keypoints: 0.490203 milliseconds 
+Calculate homography: 2.628603 milliseconds 
+Apply Homography: 0.833241 milliseconds 
+Stitch Image: 1.146928 milliseconds 
+Total Computation Time for stitch: 64.7908 Milliseconds
+Frames Per Second: 15.4343
+
+
+Stitching Frame 4
+Removing barrel distortion: 19.395465 milliseconds 
+Converting to grayscale: 0.561205 milliseconds 
+Uploading image to GPU: 2.538925 milliseconds 
+Detect and Describe: 55.032197 milliseconds 
+Match Keypoints: 0.433018 milliseconds 
+Calculate homography: 2.850851 milliseconds 
+Apply Homography: 0.781893 milliseconds 
+Stitch Image: 1.159685 milliseconds 
+Total Computation Time for stitch: 60.2769 Milliseconds
+Frames Per Second: 16.5901
+
+
+Stitching Frame 5
+Removing barrel distortion: 18.027417 milliseconds 
+Converting to grayscale: 0.564856 milliseconds 
+Uploading image to GPU: 0.343860 milliseconds 
+Detect and Describe: 63.387470 milliseconds 
+Match Keypoints: 0.777692 milliseconds 
+Calculate homography: 3.706539 milliseconds 
+Apply Homography: 1.117670 milliseconds 
+Stitch Image: 2.121265 milliseconds 
+Total Computation Time for stitch: 71.1426 Milliseconds
+Frames Per Second: 14.0563
+
+
+Stitching Frame 6
+Removing barrel distortion: 23.524606 milliseconds 
+Converting to grayscale: 0.584832 milliseconds 
+Uploading image to GPU: 0.459403 milliseconds 
+Detect and Describe: 58.216405 milliseconds 
+Match Keypoints: 0.862270 milliseconds 
+Calculate homography: 3.978021 milliseconds 
+Apply Homography: 1.018351 milliseconds 
+Stitch Image: 1.339009 milliseconds 
+Total Computation Time for stitch: 65.441 Milliseconds
+Frames Per Second: 15.2809
+
+
+Stitching Frame 7
+Removing barrel distortion: 17.487366 milliseconds 
+Converting to grayscale: 0.550823 milliseconds 
+Uploading image to GPU: 0.348450 milliseconds 
+Detect and Describe: 50.036543 milliseconds 
+Match Keypoints: 0.419947 milliseconds 
+Calculate homography: 2.513142 milliseconds 
+Apply Homography: 0.619639 milliseconds 
+Stitch Image: 1.045596 milliseconds 
+Total Computation Time for stitch: 54.6473 Milliseconds
+Frames Per Second: 18.2992
+
+
+Stitching Frame 8
+Removing barrel distortion: 17.440097 milliseconds 
+Converting to grayscale: 0.547430 milliseconds 
+Uploading image to GPU: 0.383977 milliseconds 
+Detect and Describe: 49.607130 milliseconds 
+Match Keypoints: 0.419194 milliseconds 
+Calculate homography: 2.439967 milliseconds 
+Apply Homography: 0.641627 milliseconds 
+Stitch Image: 1.075296 milliseconds 
+Total Computation Time for stitch: 54.1964 Milliseconds
+Frames Per Second: 18.4514
+
+
+Stitching Frame 9
+Removing barrel distortion: 17.627773 milliseconds 
+Converting to grayscale: 0.541120 milliseconds 
+Uploading image to GPU: 0.402688 milliseconds 
+Detect and Describe: 49.585881 milliseconds 
+Match Keypoints: 0.414283 milliseconds 
+Calculate homography: 2.468761 milliseconds 
+Apply Homography: 0.679244 milliseconds 
+Stitch Image: 0.834953 milliseconds 
+Total Computation Time for stitch: 54.0047 Milliseconds
+Frames Per Second: 18.5169
+
+
+Stitching Frame 10
+Removing barrel distortion: 17.780732 milliseconds 
+Converting to grayscale: 0.815030 milliseconds 
+Uploading image to GPU: 0.382832 milliseconds 
+Detect and Describe: 63.452885 milliseconds 
+Match Keypoints: 0.482980 milliseconds 
+Calculate homography: 2.513104 milliseconds 
+Apply Homography: 0.617088 milliseconds 
+Stitch Image: 0.802138 milliseconds 
+Total Computation Time for stitch: 67.8841 Milliseconds
+Frames Per Second: 14.731
+
+
+Stitching Frame 11
+Removing barrel distortion: 18.362610 milliseconds 
+Converting to grayscale: 0.810893 milliseconds 
+Uploading image to GPU: 0.348863 milliseconds 
+Detect and Describe: 63.969204 milliseconds 
+Match Keypoints: 0.458816 milliseconds 
+Calculate homography: 2.992325 milliseconds 
+Apply Homography: 0.631770 milliseconds 
+Stitch Image: 0.834408 milliseconds 
+Total Computation Time for stitch: 68.9055 Milliseconds
+Frames Per Second: 14.5126
+
+
+Stitching Frame 12
+Removing barrel distortion: 24.545264 milliseconds 
+Converting to grayscale: 0.667547 milliseconds 
+Uploading image to GPU: 0.407524 milliseconds 
+Detect and Describe: 69.805020 milliseconds 
+Match Keypoints: 0.421241 milliseconds 
+Calculate homography: 2.269334 milliseconds 
+Apply Homography: 0.585241 milliseconds 
+Stitch Image: 0.774316 milliseconds 
+Total Computation Time for stitch: 73.8676 Milliseconds
+Frames Per Second: 13.5377
+
+
+Stitching Frame 13
+Removing barrel distortion: 18.967609 milliseconds 
+Converting to grayscale: 0.525855 milliseconds 
+Uploading image to GPU: 0.338797 milliseconds 
+Detect and Describe: 64.121698 milliseconds 
+Match Keypoints: 0.442107 milliseconds 
+Calculate homography: 2.611738 milliseconds 
+Apply Homography: 0.650718 milliseconds 
+Stitch Image: 1.016555 milliseconds 
+Total Computation Time for stitch: 68.8573 Milliseconds
+Frames Per Second: 14.5228
+
+
+Stitching Frame 14
+Removing barrel distortion: 16.784934 milliseconds 
+Converting to grayscale: 0.522384 milliseconds 
+Uploading image to GPU: 0.335680 milliseconds 
+Detect and Describe: 49.747324 milliseconds 
+Match Keypoints: 0.435468 milliseconds 
+Calculate homography: 2.210375 milliseconds 
+Apply Homography: 0.588770 milliseconds 
+Stitch Image: 0.850381 milliseconds 
+Total Computation Time for stitch: 53.8466 Milliseconds
+Frames Per Second: 18.5713
+
+
+Stitching Frame 15
+Removing barrel distortion: 24.463133 milliseconds 
+Converting to grayscale: 0.653199 milliseconds 
+Uploading image to GPU: 0.408608 milliseconds 
+Detect and Describe: 63.618778 milliseconds 
+Match Keypoints: 0.426019 milliseconds 
+Calculate homography: 2.421922 milliseconds 
+Apply Homography: 0.588438 milliseconds 
+Stitch Image: 0.802762 milliseconds 
+Total Computation Time for stitch: 67.8722 Milliseconds
+Frames Per Second: 14.7336
+
+
+Stitching Frame 16
+Removing barrel distortion: 24.368848 milliseconds 
+Converting to grayscale: 4.682986 milliseconds 
+Uploading image to GPU: 0.403432 milliseconds 
+Detect and Describe: 65.275212 milliseconds 
+Match Keypoints: 0.439573 milliseconds 
+Calculate homography: 2.460383 milliseconds 
+Apply Homography: 0.547372 milliseconds 
+Stitch Image: 0.785229 milliseconds 
+Total Computation Time for stitch: 69.5208 Milliseconds
+Frames Per Second: 14.3842
+
+
+Stitching Frame 17
+Removing barrel distortion: 24.126113 milliseconds 
+Converting to grayscale: 0.560475 milliseconds 
+Uploading image to GPU: 0.401767 milliseconds 
+Detect and Describe: 60.671142 milliseconds 
+Match Keypoints: 0.429425 milliseconds 
+Calculate homography: 2.801081 milliseconds 
+Apply Homography: 0.622519 milliseconds 
+Stitch Image: 6.159696 milliseconds 
+Total Computation Time for stitch: 70.6988 Milliseconds
+Frames Per Second: 14.1445
+
+
+Stitching Frame 18
+Removing barrel distortion: 24.184601 milliseconds 
+Converting to grayscale: 0.561804 milliseconds 
+Uploading image to GPU: 0.423086 milliseconds 
+Detect and Describe: 62.105384 milliseconds 
+Match Keypoints: 0.450455 milliseconds 
+Calculate homography: 2.973698 milliseconds 
+Apply Homography: 0.679595 milliseconds 
+Stitch Image: 0.831027 milliseconds 
+Total Computation Time for stitch: 67.0547 Milliseconds
+Frames Per Second: 14.9132
+
+
+Stitching Frame 19
+Removing barrel distortion: 17.507358 milliseconds 
+Converting to grayscale: 0.522966 milliseconds 
+Uploading image to GPU: 0.361164 milliseconds 
+Detect and Describe: 65.490581 milliseconds 
+Match Keypoints: 0.431692 milliseconds 
+Calculate homography: 2.323188 milliseconds 
+Apply Homography: 0.603556 milliseconds 
+Stitch Image: 0.818522 milliseconds 
+Total Computation Time for stitch: 69.6815 Milliseconds
+Frames Per Second: 14.351
+
+
+Stitching Frame 20
+Removing barrel distortion: 18.081144 milliseconds 
+Converting to grayscale: 0.519415 milliseconds 
+Uploading image to GPU: 0.457643 milliseconds 
+Detect and Describe: 58.496072 milliseconds 
+Match Keypoints: 0.426858 milliseconds 
+Calculate homography: 2.628273 milliseconds 
+Apply Homography: 0.574781 milliseconds 
+Stitch Image: 0.827764 milliseconds 
+Total Computation Time for stitch: 62.9679 Milliseconds
+Frames Per Second: 15.8811
+
+
+Stitching Frame 21
+Removing barrel distortion: 17.430553 milliseconds 
+Converting to grayscale: 0.614899 milliseconds 
+Uploading image to GPU: 0.345163 milliseconds 
+Detect and Describe: 60.747833 milliseconds 
+Match Keypoints: 0.516272 milliseconds 
+Calculate homography: 2.619762 milliseconds 
+Apply Homography: 0.924749 milliseconds 
+Stitch Image: 5.171244 milliseconds 
+Total Computation Time for stitch: 69.9987 Milliseconds
+Frames Per Second: 14.286
+
+
+Stitching Frame 22
+Removing barrel distortion: 18.754618 milliseconds 
+Converting to grayscale: 0.721797 milliseconds 
+Uploading image to GPU: 0.437460 milliseconds 
+Detect and Describe: 69.021600 milliseconds 
+Match Keypoints: 0.424215 milliseconds 
+Calculate homography: 2.253770 milliseconds 
+Apply Homography: 0.587176 milliseconds 
+Stitch Image: 0.780810 milliseconds 
+Total Computation Time for stitch: 73.0801 Milliseconds
+Frames Per Second: 13.6836
+
+
+Stitching Frame 23
+Removing barrel distortion: 17.762723 milliseconds 
+Converting to grayscale: 0.725108 milliseconds 
+Uploading image to GPU: 0.358744 milliseconds 
+Detect and Describe: 62.427512 milliseconds 
+Match Keypoints: 0.453032 milliseconds 
+Calculate homography: 2.368537 milliseconds 
+Apply Homography: 0.662149 milliseconds 
+Stitch Image: 0.987625 milliseconds 
+Total Computation Time for stitch: 66.9146 Milliseconds
+Frames Per Second: 14.9444
+
+
+Stitching Frame 24
+Removing barrel distortion: 17.363590 milliseconds 
+Converting to grayscale: 0.539810 milliseconds 
+Uploading image to GPU: 0.334633 milliseconds 
+Detect and Describe: 50.158239 milliseconds 
+Match Keypoints: 0.422498 milliseconds 
+Calculate homography: 2.780767 milliseconds 
+Apply Homography: 0.565727 milliseconds 
+Stitch Image: 0.801040 milliseconds 
+Total Computation Time for stitch: 54.7408 Milliseconds
+Frames Per Second: 18.2679
+
+
+Stitching Frame 25
+Removing barrel distortion: 24.579524 milliseconds 
+Converting to grayscale: 0.667859 milliseconds 
+Uploading image to GPU: 0.411764 milliseconds 
+Detect and Describe: 61.188808 milliseconds 
+Match Keypoints: 0.583649 milliseconds 
+Calculate homography: 2.935469 milliseconds 
+Apply Homography: 0.633702 milliseconds 
+Stitch Image: 0.838595 milliseconds 
+Total Computation Time for stitch: 66.1956 Milliseconds
+Frames Per Second: 15.1067
+
+
+Stitching Frame 26
+Removing barrel distortion: 18.259305 milliseconds 
+Converting to grayscale: 0.673874 milliseconds 
+Uploading image to GPU: 0.349971 milliseconds 
+Detect and Describe: 52.890299 milliseconds 
+Match Keypoints: 0.534579 milliseconds 
+Calculate homography: 3.520710 milliseconds 
+Apply Homography: 1.240179 milliseconds 
+Stitch Image: 1.515421 milliseconds 
+Total Computation Time for stitch: 59.7196 Milliseconds
+Frames Per Second: 16.7449
+
+
+Stitching Frame 27
+Removing barrel distortion: 17.493717 milliseconds 
+Converting to grayscale: 0.625034 milliseconds 
+Uploading image to GPU: 0.337784 milliseconds 
+Detect and Describe: 63.679367 milliseconds 
+Match Keypoints: 0.436736 milliseconds 
+Calculate homography: 2.440844 milliseconds 
+Apply Homography: 0.616687 milliseconds 
+Stitch Image: 0.844712 milliseconds 
+Total Computation Time for stitch: 68.032 Milliseconds
+Frames Per Second: 14.699
+
+
+Stitching Frame 28
+Removing barrel distortion: 17.771716 milliseconds 
+Converting to grayscale: 0.678363 milliseconds 
+Uploading image to GPU: 0.597461 milliseconds 
+Detect and Describe: 56.049896 milliseconds 
+Match Keypoints: 0.428717 milliseconds 
+Calculate homography: 2.378459 milliseconds 
+Apply Homography: 0.612793 milliseconds 
+Stitch Image: 0.832946 milliseconds 
+Total Computation Time for stitch: 60.3175 Milliseconds
+Frames Per Second: 16.5789
+
+
+Stitching Frame 29
+Removing barrel distortion: 17.473628 milliseconds 
+Converting to grayscale: 0.723238 milliseconds 
+Uploading image to GPU: 0.345936 milliseconds 
+Detect and Describe: 61.828555 milliseconds 
+Match Keypoints: 0.417610 milliseconds 
+Calculate homography: 2.410216 milliseconds 
+Apply Homography: 0.553515 milliseconds 
+Stitch Image: 0.845804 milliseconds 
+Total Computation Time for stitch: 66.068 Milliseconds
+Frames Per Second: 15.1359
+
+
+Stitching Frame 30
+Removing barrel distortion: 17.454111 milliseconds 
+Converting to grayscale: 0.732625 milliseconds 
+Uploading image to GPU: 0.370202 milliseconds 
+Detect and Describe: 65.655855 milliseconds 
+Match Keypoints: 0.433397 milliseconds 
+Calculate homography: 2.465564 milliseconds 
+Apply Homography: 0.572626 milliseconds 
+Stitch Image: 0.811554 milliseconds 
+Total Computation Time for stitch: 69.9529 Milliseconds
+Frames Per Second: 14.2953
+
+
+Stitching Frame 31
+Removing barrel distortion: 24.259679 milliseconds 
+Converting to grayscale: 0.558118 milliseconds 
+Uploading image to GPU: 0.365942 milliseconds 
+Detect and Describe: 61.719331 milliseconds 
+Match Keypoints: 0.439700 milliseconds 
+Calculate homography: 2.538067 milliseconds 
+Apply Homography: 0.730946 milliseconds 
+Stitch Image: 0.895533 milliseconds 
+Total Computation Time for stitch: 66.3436 Milliseconds
+Frames Per Second: 15.073
+
+
+Stitching Frame 32
+Removing barrel distortion: 20.471870 milliseconds 
+Converting to grayscale: 0.809846 milliseconds 
+Uploading image to GPU: 0.406880 milliseconds 
+Detect and Describe: 57.233670 milliseconds 
+Match Keypoints: 0.457228 milliseconds 
+Calculate homography: 2.899794 milliseconds 
+Apply Homography: 0.690069 milliseconds 
+Stitch Image: 1.047944 milliseconds 
+Total Computation Time for stitch: 62.35 Milliseconds
+Frames Per Second: 16.0385
+
+
+Stitching Frame 33
+Removing barrel distortion: 17.497669 milliseconds 
+Converting to grayscale: 1.650445 milliseconds 
+Uploading image to GPU: 0.451066 milliseconds 
+Detect and Describe: 63.836013 milliseconds 
+Match Keypoints: 0.458818 milliseconds 
+Calculate homography: 2.767275 milliseconds 
+Apply Homography: 0.672949 milliseconds 
+Stitch Image: 0.851143 milliseconds 
+Total Computation Time for stitch: 68.6039 Milliseconds
+Frames Per Second: 14.5764
+
+
+Stitching Frame 34
+Removing barrel distortion: 24.527142 milliseconds 
+Converting to grayscale: 0.536217 milliseconds 
+Uploading image to GPU: 0.411333 milliseconds 
+Detect and Describe: 59.517526 milliseconds 
+Match Keypoints: 0.450419 milliseconds 
+Calculate homography: 2.325795 milliseconds 
+Apply Homography: 0.628777 milliseconds 
+Stitch Image: 0.836334 milliseconds 
+Total Computation Time for stitch: 63.773 Milliseconds
+Frames Per Second: 15.6806
+
+
+Stitching Frame 35
+Removing barrel distortion: 18.035383 milliseconds 
+Converting to grayscale: 0.496423 milliseconds 
+Uploading image to GPU: 0.342342 milliseconds 
+Detect and Describe: 53.195171 milliseconds 
+Match Keypoints: 0.615344 milliseconds 
+Calculate homography: 2.519686 milliseconds 
+Apply Homography: 2.890834 milliseconds 
+Stitch Image: 1.051417 milliseconds 
+Total Computation Time for stitch: 60.2926 Milliseconds
+Frames Per Second: 16.5858
+
+
+Stitching Frame 36
+Removing barrel distortion: 17.993676 milliseconds 
+Converting to grayscale: 0.720016 milliseconds 
+Uploading image to GPU: 0.715071 milliseconds 
+Detect and Describe: 55.981637 milliseconds 
+Match Keypoints: 0.577372 milliseconds 
+Calculate homography: 3.832230 milliseconds 
+Apply Homography: 0.810006 milliseconds 
+Stitch Image: 1.270529 milliseconds 
+Total Computation Time for stitch: 62.4885 Milliseconds
+Frames Per Second: 16.003
+
+
+Stitching Frame 37
+Removing barrel distortion: 24.509127 milliseconds 
+Converting to grayscale: 0.545312 milliseconds 
+Uploading image to GPU: 1.581074 milliseconds 
+Detect and Describe: 55.148566 milliseconds 
+Match Keypoints: 0.435226 milliseconds 
+Calculate homography: 2.908868 milliseconds 
+Apply Homography: 0.559298 milliseconds 
+Stitch Image: 0.824130 milliseconds 
+Total Computation Time for stitch: 59.8891 Milliseconds
+Frames Per Second: 16.6975
+
+
+Stitching Frame 38
+Removing barrel distortion: 17.520035 milliseconds 
+Converting to grayscale: 0.743540 milliseconds 
+Uploading image to GPU: 0.359103 milliseconds 
+Detect and Describe: 63.353262 milliseconds 
+Match Keypoints: 0.419953 milliseconds 
+Calculate homography: 2.528661 milliseconds 
+Apply Homography: 0.696309 milliseconds 
+Stitch Image: 1.053287 milliseconds 
+Total Computation Time for stitch: 68.0711 Milliseconds
+Frames Per Second: 14.6905
+
+
+Stitching Frame 39
+Removing barrel distortion: 17.375465 milliseconds 
+Converting to grayscale: 0.531873 milliseconds 
+Uploading image to GPU: 0.404228 milliseconds 
+Detect and Describe: 69.546409 milliseconds 
+Match Keypoints: 0.450162 milliseconds 
+Calculate homography: 2.276749 milliseconds 
+Apply Homography: 0.598148 milliseconds 
+Stitch Image: 0.795678 milliseconds 
+Total Computation Time for stitch: 73.6812 Milliseconds
+Frames Per Second: 13.572
+
+
+Stitching Frame 40
+Removing barrel distortion: 18.276305 milliseconds 
+Converting to grayscale: 0.531280 milliseconds 
+Uploading image to GPU: 0.357548 milliseconds 
+Detect and Describe: 63.165674 milliseconds 
+Match Keypoints: 0.443166 milliseconds 
+Calculate homography: 2.480997 milliseconds 
+Apply Homography: 0.693515 milliseconds 
+Stitch Image: 1.063321 milliseconds 
+Total Computation Time for stitch: 67.8618 Milliseconds
+Frames Per Second: 14.7358
+
+
+Stitching Frame 41
+Removing barrel distortion: 17.123647 milliseconds 
+Converting to grayscale: 0.535603 milliseconds 
+Uploading image to GPU: 0.329379 milliseconds 
+Detect and Describe: 49.729006 milliseconds 
+Match Keypoints: 0.418364 milliseconds 
+Calculate homography: 2.475809 milliseconds 
+Apply Homography: 0.550046 milliseconds 
+Stitch Image: 0.776123 milliseconds 
+Total Computation Time for stitch: 53.9612 Milliseconds
+Frames Per Second: 18.5318
+
+
+Stitching Frame 42
+Removing barrel distortion: 17.427441 milliseconds 
+Converting to grayscale: 0.517469 milliseconds 
+Uploading image to GPU: 0.380286 milliseconds 
+Detect and Describe: 66.761176 milliseconds 
+Match Keypoints: 0.440636 milliseconds 
+Calculate homography: 2.991823 milliseconds 
+Apply Homography: 0.618789 milliseconds 
+Stitch Image: 0.819719 milliseconds 
+Total Computation Time for stitch: 71.6473 Milliseconds
+Frames Per Second: 13.9573
+
+
+Stitching Frame 43
+Removing barrel distortion: 17.543164 milliseconds 
+Converting to grayscale: 0.694023 milliseconds 
+Uploading image to GPU: 0.372235 milliseconds 
+Detect and Describe: 63.302443 milliseconds 
+Match Keypoints: 0.433957 milliseconds 
+Calculate homography: 2.407003 milliseconds 
+Apply Homography: 0.593876 milliseconds 
+Stitch Image: 0.798665 milliseconds 
+Total Computation Time for stitch: 67.5503 Milliseconds
+Frames Per Second: 14.8038
+
+
+Stitching Frame 44
+Removing barrel distortion: 17.454542 milliseconds 
+Converting to grayscale: 0.688754 milliseconds 
+Uploading image to GPU: 0.343055 milliseconds 
+Detect and Describe: 64.709545 milliseconds 
+Match Keypoints: 0.417619 milliseconds 
+Calculate homography: 2.796389 milliseconds 
+Apply Homography: 0.765635 milliseconds 
+Stitch Image: 0.979483 milliseconds 
+Total Computation Time for stitch: 69.6951 Milliseconds
+Frames Per Second: 14.3482
+
+
+Stitching Frame 45
+Removing barrel distortion: 23.042281 milliseconds 
+Converting to grayscale: 0.673220 milliseconds 
+Uploading image to GPU: 0.369741 milliseconds 
+Detect and Describe: 55.599690 milliseconds 
+Match Keypoints: 0.679012 milliseconds 
+Calculate homography: 4.530335 milliseconds 
+Apply Homography: 0.881976 milliseconds 
+Stitch Image: 1.005735 milliseconds 
+Total Computation Time for stitch: 62.7235 Milliseconds
+Frames Per Second: 15.943
+
+
+Stitching Frame 46
+Removing barrel distortion: 24.221349 milliseconds 
+Converting to grayscale: 0.733611 milliseconds 
+Uploading image to GPU: 0.393521 milliseconds 
+Detect and Describe: 64.819157 milliseconds 
+Match Keypoints: 0.468676 milliseconds 
+Calculate homography: 2.448837 milliseconds 
+Apply Homography: 0.649001 milliseconds 
+Stitch Image: 0.827490 milliseconds 
+Total Computation Time for stitch: 69.2281 Milliseconds
+Frames Per Second: 14.445
+
+
+Stitching Frame 47
+Removing barrel distortion: 24.399158 milliseconds 
+Converting to grayscale: 0.551159 milliseconds 
+Uploading image to GPU: 0.403525 milliseconds 
+Detect and Describe: 61.358434 milliseconds 
+Match Keypoints: 0.415101 milliseconds 
+Calculate homography: 2.370904 milliseconds 
+Apply Homography: 0.589431 milliseconds 
+Stitch Image: 0.798845 milliseconds 
+Total Computation Time for stitch: 65.5454 Milliseconds
+Frames Per Second: 15.2566
+
+
+Stitching Frame 48
+Removing barrel distortion: 22.451094 milliseconds 
+Converting to grayscale: 0.707022 milliseconds 
+Uploading image to GPU: 0.428507 milliseconds 
+Detect and Describe: 59.499082 milliseconds 
+Match Keypoints: 0.592184 milliseconds 
+Calculate homography: 2.762472 milliseconds 
+Apply Homography: 1.314423 milliseconds 
+Stitch Image: 5.841910 milliseconds 
+Total Computation Time for stitch: 70.028 Milliseconds
+Frames Per Second: 14.28
+
+
+Stitching Frame 49
+Removing barrel distortion: 24.289016 milliseconds 
+Converting to grayscale: 0.709988 milliseconds 
+Uploading image to GPU: 0.432286 milliseconds 
+Detect and Describe: 60.599448 milliseconds 
+Match Keypoints: 0.431972 milliseconds 
+Calculate homography: 2.517162 milliseconds 
+Apply Homography: 0.588111 milliseconds 
+Stitch Image: 0.850295 milliseconds 
+Total Computation Time for stitch: 65.0015 Milliseconds
+Frames Per Second: 15.3843
+
+
+Stitching Frame 50
+Removing barrel distortion: 17.774333 milliseconds 
+Converting to grayscale: 0.501331 milliseconds 
+Uploading image to GPU: 0.355647 milliseconds 
+Detect and Describe: 65.280997 milliseconds 
+Match Keypoints: 0.416496 milliseconds 
+Calculate homography: 2.422414 milliseconds 
+Apply Homography: 0.625554 milliseconds 
+Stitch Image: 0.842082 milliseconds 
+Total Computation Time for stitch: 69.601 Milliseconds
+Frames Per Second: 14.3676
+
+
+Stitching Frame 51
+Removing barrel distortion: 17.931249 milliseconds 
+Converting to grayscale: 0.613287 milliseconds 
+Uploading image to GPU: 0.358486 milliseconds 
+Detect and Describe: 64.890010 milliseconds 
+Match Keypoints: 0.511175 milliseconds 
+Calculate homography: 2.353519 milliseconds 
+Apply Homography: 0.573701 milliseconds 
+Stitch Image: 0.780323 milliseconds 
+Total Computation Time for stitch: 69.123 Milliseconds
+Frames Per Second: 14.467
+
+
+Stitching Frame 52
+Removing barrel distortion: 17.439561 milliseconds 
+Converting to grayscale: 0.512920 milliseconds 
+Uploading image to GPU: 0.360518 milliseconds 
+Detect and Describe: 61.050403 milliseconds 
+Match Keypoints: 0.418307 milliseconds 
+Calculate homography: 2.274300 milliseconds 
+Apply Homography: 0.601014 milliseconds 
+Stitch Image: 0.868965 milliseconds 
+Total Computation Time for stitch: 65.2276 Milliseconds
+Frames Per Second: 15.3309
+
+
+Stitching Frame 53
+Removing barrel distortion: 17.686573 milliseconds 
+Converting to grayscale: 0.506579 milliseconds 
+Uploading image to GPU: 0.359062 milliseconds 
+Detect and Describe: 61.148325 milliseconds 
+Match Keypoints: 0.432078 milliseconds 
+Calculate homography: 2.236539 milliseconds 
+Apply Homography: 0.538832 milliseconds 
+Stitch Image: 0.923177 milliseconds 
+Total Computation Time for stitch: 65.2925 Milliseconds
+Frames Per Second: 15.3157
+
+
+Stitching Frame 54
+Removing barrel distortion: 25.336707 milliseconds 
+Converting to grayscale: 0.913275 milliseconds 
+Uploading image to GPU: 0.456265 milliseconds 
+Detect and Describe: 57.435870 milliseconds 
+Match Keypoints: 0.578620 milliseconds 
+Calculate homography: 3.987642 milliseconds 
+Apply Homography: 4.043017 milliseconds 
+Stitch Image: 0.844771 milliseconds 
+Total Computation Time for stitch: 66.9116 Milliseconds
+Frames Per Second: 14.9451
+
+
+Stitching Frame 55
+Removing barrel distortion: 24.475542 milliseconds 
+Converting to grayscale: 0.743011 milliseconds 
+Uploading image to GPU: 0.400631 milliseconds 
+Detect and Describe: 61.680116 milliseconds 
+Match Keypoints: 0.420588 milliseconds 
+Calculate homography: 2.700863 milliseconds 
+Apply Homography: 0.683704 milliseconds 
+Stitch Image: 0.792167 milliseconds 
+Total Computation Time for stitch: 66.2926 Milliseconds
+Frames Per Second: 15.0846
+
+
+Stitching Frame 56
+Removing barrel distortion: 24.323009 milliseconds 
+Converting to grayscale: 0.678604 milliseconds 
+Uploading image to GPU: 0.360322 milliseconds 
+Detect and Describe: 57.528478 milliseconds 
+Match Keypoints: 0.621115 milliseconds 
+Calculate homography: 3.026086 milliseconds 
+Apply Homography: 3.573218 milliseconds 
+Stitch Image: 0.817630 milliseconds 
+Total Computation Time for stitch: 65.5838 Milliseconds
+Frames Per Second: 15.2477
+
+
+Stitching Frame 57
+Removing barrel distortion: 17.602822 milliseconds 
+Converting to grayscale: 0.665771 milliseconds 
+Uploading image to GPU: 0.357097 milliseconds 
+Detect and Describe: 66.490950 milliseconds 
+Match Keypoints: 0.438356 milliseconds 
+Calculate homography: 2.344769 milliseconds 
+Apply Homography: 0.569403 milliseconds 
+Stitch Image: 0.781537 milliseconds 
+Total Computation Time for stitch: 70.6427 Milliseconds
+Frames Per Second: 14.1557
+
+
+Stitching Frame 58
+Removing barrel distortion: 17.624690 milliseconds 
+Converting to grayscale: 0.663997 milliseconds 
+Uploading image to GPU: 0.347195 milliseconds 
+Detect and Describe: 62.279728 milliseconds 
+Match Keypoints: 0.443305 milliseconds 
+Calculate homography: 2.556418 milliseconds 
+Apply Homography: 0.579459 milliseconds 
+Stitch Image: 0.808230 milliseconds 
+Total Computation Time for stitch: 66.6884 Milliseconds
+Frames Per Second: 14.9951
+
+
+Stitching Frame 59
+Removing barrel distortion: 17.342344 milliseconds 
+Converting to grayscale: 0.660727 milliseconds 
+Uploading image to GPU: 0.354559 milliseconds 
+Detect and Describe: 61.377456 milliseconds 
+Match Keypoints: 0.417093 milliseconds 
+Calculate homography: 2.777812 milliseconds 
+Apply Homography: 0.606216 milliseconds 
+Stitch Image: 0.988484 milliseconds 
+Total Computation Time for stitch: 66.1801 Milliseconds
+Frames Per Second: 15.1103
+
+
+Stitching Frame 60
+Removing barrel distortion: 16.855237 milliseconds 
+Converting to grayscale: 0.542004 milliseconds 
+Uploading image to GPU: 0.344736 milliseconds 
+Detect and Describe: 49.506584 milliseconds 
+Match Keypoints: 0.419841 milliseconds 
+Calculate homography: 2.248123 milliseconds 
+Apply Homography: 0.598814 milliseconds 
+Stitch Image: 0.986400 milliseconds 
+Total Computation Time for stitch: 53.7719 Milliseconds
+Frames Per Second: 18.5971
+
+
+Stitching Frame 61
+Removing barrel distortion: 17.116183 milliseconds 
+Converting to grayscale: 0.548742 milliseconds 
+Uploading image to GPU: 0.399108 milliseconds 
+Detect and Describe: 50.095061 milliseconds 
+Match Keypoints: 0.420030 milliseconds 
+Calculate homography: 2.540665 milliseconds 
+Apply Homography: 0.632771 milliseconds 
+Stitch Image: 0.822767 milliseconds 
+Total Computation Time for stitch: 54.5275 Milliseconds
+Frames Per Second: 18.3394
+
+
+Stitching Frame 62
+Removing barrel distortion: 17.766238 milliseconds 
+Converting to grayscale: 0.663946 milliseconds 
+Uploading image to GPU: 0.354038 milliseconds 
+Detect and Describe: 61.908635 milliseconds 
+Match Keypoints: 0.427257 milliseconds 
+Calculate homography: 2.816382 milliseconds 
+Apply Homography: 0.677741 milliseconds 
+Stitch Image: 0.799438 milliseconds 
+Total Computation Time for stitch: 66.6467 Milliseconds
+Frames Per Second: 15.0045
+
+
+Stitching Frame 63
+Removing barrel distortion: 18.290330 milliseconds 
+Converting to grayscale: 0.687732 milliseconds 
+Uploading image to GPU: 0.414838 milliseconds 
+Detect and Describe: 69.565604 milliseconds 
+Match Keypoints: 0.425753 milliseconds 
+Calculate homography: 2.350368 milliseconds 
+Apply Homography: 0.585335 milliseconds 
+Stitch Image: 0.794139 milliseconds 
+Total Computation Time for stitch: 73.7338 Milliseconds
+Frames Per Second: 13.5623
+
+
+Stitching Frame 64
+Removing barrel distortion: 18.392394 milliseconds 
+Converting to grayscale: 0.505833 milliseconds 
+Uploading image to GPU: 0.336074 milliseconds 
+Detect and Describe: 66.194859 milliseconds 
+Match Keypoints: 1.456942 milliseconds 
+Calculate homography: 2.411160 milliseconds 
+Apply Homography: 0.669166 milliseconds 
+Stitch Image: 0.829372 milliseconds 
+Total Computation Time for stitch: 71.5815 Milliseconds
+Frames Per Second: 13.9701
+
+
+Stitching Frame 65
+Removing barrel distortion: 24.337256 milliseconds 
+Converting to grayscale: 0.694117 milliseconds 
+Uploading image to GPU: 0.382735 milliseconds 
+Detect and Describe: 60.986624 milliseconds 
+Match Keypoints: 0.467469 milliseconds 
+Calculate homography: 2.511826 milliseconds 
+Apply Homography: 2.877501 milliseconds 
+Stitch Image: 0.885388 milliseconds 
+Total Computation Time for stitch: 67.7441 Milliseconds
+Frames Per Second: 14.7614
+
+
+Stitching Frame 66
+Removing barrel distortion: 17.448614 milliseconds 
+Converting to grayscale: 0.821838 milliseconds 
+Uploading image to GPU: 0.362642 milliseconds 
+Detect and Describe: 64.848291 milliseconds 
+Match Keypoints: 0.456706 milliseconds 
+Calculate homography: 2.591016 milliseconds 
+Apply Homography: 0.581652 milliseconds 
+Stitch Image: 0.802251 milliseconds 
+Total Computation Time for stitch: 69.2931 Milliseconds
+Frames Per Second: 14.4314
+
+
+Stitching Frame 67
+Removing barrel distortion: 17.358588 milliseconds 
+Converting to grayscale: 0.849584 milliseconds 
+Uploading image to GPU: 0.358978 milliseconds 
+Detect and Describe: 61.528297 milliseconds 
+Match Keypoints: 0.429965 milliseconds 
+Calculate homography: 2.300425 milliseconds 
+Apply Homography: 0.598061 milliseconds 
+Stitch Image: 0.927372 milliseconds 
+Total Computation Time for stitch: 65.8003 Milliseconds
+Frames Per Second: 15.1975
+
+
+Stitching Frame 68
+Removing barrel distortion: 17.532440 milliseconds 
+Converting to grayscale: 0.804920 milliseconds 
+Uploading image to GPU: 0.360634 milliseconds 
+Detect and Describe: 66.624376 milliseconds 
+Match Keypoints: 0.423422 milliseconds 
+Calculate homography: 2.304321 milliseconds 
+Apply Homography: 0.595088 milliseconds 
+Stitch Image: 0.816648 milliseconds 
+Total Computation Time for stitch: 70.7781 Milliseconds
+Frames Per Second: 14.1287
+
+
+Stitching Frame 69
+Removing barrel distortion: 17.401063 milliseconds 
+Converting to grayscale: 0.820242 milliseconds 
+Uploading image to GPU: 0.378964 milliseconds 
+Detect and Describe: 65.472691 milliseconds 
+Match Keypoints: 0.434708 milliseconds 
+Calculate homography: 2.422865 milliseconds 
+Apply Homography: 0.633824 milliseconds 
+Stitch Image: 1.018417 milliseconds 
+Total Computation Time for stitch: 69.9984 Milliseconds
+Frames Per Second: 14.286
+
+
+Stitching Frame 70
+Removing barrel distortion: 17.268647 milliseconds 
+Converting to grayscale: 0.540290 milliseconds 
+Uploading image to GPU: 0.331721 milliseconds 
+Detect and Describe: 49.695499 milliseconds 
+Match Keypoints: 0.440320 milliseconds 
+Calculate homography: 2.503535 milliseconds 
+Apply Homography: 0.551424 milliseconds 
+Stitch Image: 0.790842 milliseconds 
+Total Computation Time for stitch: 53.9939 Milliseconds
+Frames Per Second: 18.5206
+
+
+Stitching Frame 71
+Removing barrel distortion: 17.792134 milliseconds 
+Converting to grayscale: 0.613392 milliseconds 
+Uploading image to GPU: 0.340428 milliseconds 
+Detect and Describe: 64.317041 milliseconds 
+Match Keypoints: 0.440192 milliseconds 
+Calculate homography: 2.533304 milliseconds 
+Apply Homography: 0.586461 milliseconds 
+Stitch Image: 0.799723 milliseconds 
+Total Computation Time for stitch: 68.6906 Milliseconds
+Frames Per Second: 14.558
+
+
+Stitching Frame 72
+Removing barrel distortion: 17.529619 milliseconds 
+Converting to grayscale: 0.511872 milliseconds 
+Uploading image to GPU: 0.338092 milliseconds 
+Detect and Describe: 67.418090 milliseconds 
+Match Keypoints: 0.444038 milliseconds 
+Calculate homography: 2.788667 milliseconds 
+Apply Homography: 0.576620 milliseconds 
+Stitch Image: 0.786547 milliseconds 
+Total Computation Time for stitch: 72.0277 Milliseconds
+Frames Per Second: 13.8836
+
+
+Stitching Frame 73
+Removing barrel distortion: 17.286065 milliseconds 
+Converting to grayscale: 0.675629 milliseconds 
+Uploading image to GPU: 0.348911 milliseconds 
+Detect and Describe: 61.384802 milliseconds 
+Match Keypoints: 0.436691 milliseconds 
+Calculate homography: 2.531850 milliseconds 
+Apply Homography: 0.594927 milliseconds 
+Stitch Image: 0.796514 milliseconds 
+Total Computation Time for stitch: 65.7589 Milliseconds
+Frames Per Second: 15.2071
+
+
+Stitching Frame 74
+Removing barrel distortion: 17.373798 milliseconds 
+Converting to grayscale: 0.665478 milliseconds 
+Uploading image to GPU: 0.348318 milliseconds 
+Detect and Describe: 65.881168 milliseconds 
+Match Keypoints: 0.450277 milliseconds 
+Calculate homography: 2.528954 milliseconds 
+Apply Homography: 0.586564 milliseconds 
+Stitch Image: 0.815619 milliseconds 
+Total Computation Time for stitch: 70.2752 Milliseconds
+Frames Per Second: 14.2298
+
+
+Stitching Frame 75
+Removing barrel distortion: 17.626366 milliseconds 
+Converting to grayscale: 0.856121 milliseconds 
+Uploading image to GPU: 0.356284 milliseconds 
+Detect and Describe: 59.144570 milliseconds 
+Match Keypoints: 0.483792 milliseconds 
+Calculate homography: 2.529274 milliseconds 
+Apply Homography: 0.642094 milliseconds 
+Stitch Image: 0.832966 milliseconds 
+Total Computation Time for stitch: 63.6488 Milliseconds
+Frames Per Second: 15.7112
+
+
+Stitching Frame 76
+Removing barrel distortion: 19.613981 milliseconds 
+Converting to grayscale: 0.651093 milliseconds 
+Uploading image to GPU: 0.341672 milliseconds 
+Detect and Describe: 58.163878 milliseconds 
+Match Keypoints: 0.491283 milliseconds 
+Calculate homography: 2.621769 milliseconds 
+Apply Homography: 0.773484 milliseconds 
+Stitch Image: 0.948953 milliseconds 
+Total Computation Time for stitch: 63.0209 Milliseconds
+Frames Per Second: 15.8678
+
+
+Stitching Frame 77
+Removing barrel distortion: 22.303559 milliseconds 
+Converting to grayscale: 0.686367 milliseconds 
+Uploading image to GPU: 0.341142 milliseconds 
+Detect and Describe: 56.844407 milliseconds 
+Match Keypoints: 0.733356 milliseconds 
+Calculate homography: 3.610274 milliseconds 
+Apply Homography: 1.112481 milliseconds 
+Stitch Image: 1.008962 milliseconds 
+Total Computation Time for stitch: 63.339 Milliseconds
+Frames Per Second: 15.7881
+
+
+Stitching Frame 78
+Removing barrel distortion: 25.490559 milliseconds 
+Converting to grayscale: 0.580889 milliseconds 
+Uploading image to GPU: 0.410952 milliseconds 
+Detect and Describe: 61.145687 milliseconds 
+Match Keypoints: 0.440762 milliseconds 
+Calculate homography: 2.243881 milliseconds 
+Apply Homography: 0.587672 milliseconds 
+Stitch Image: 0.792025 milliseconds 
+Total Computation Time for stitch: 65.2229 Milliseconds
+Frames Per Second: 15.332
+
+
+Stitching Frame 79
+Removing barrel distortion: 17.403638 milliseconds 
+Converting to grayscale: 0.663522 milliseconds 
+Uploading image to GPU: 0.334155 milliseconds 
+Detect and Describe: 65.247496 milliseconds 
+Match Keypoints: 0.421789 milliseconds 
+Calculate homography: 2.350131 milliseconds 
+Apply Homography: 0.550445 milliseconds 
+Stitch Image: 0.893023 milliseconds 
+Total Computation Time for stitch: 69.4757 Milliseconds
+Frames Per Second: 14.3935
+
+
+Stitching Frame 80
+Removing barrel distortion: 17.438227 milliseconds 
+Converting to grayscale: 0.701111 milliseconds 
+Uploading image to GPU: 0.353679 milliseconds 
+Detect and Describe: 61.123858 milliseconds 
+Match Keypoints: 0.412761 milliseconds 
+Calculate homography: 2.924527 milliseconds 
+Apply Homography: 0.644585 milliseconds 
+Stitch Image: 0.857487 milliseconds 
+Total Computation Time for stitch: 65.9824 Milliseconds
+Frames Per Second: 15.1555
+
+
+Stitching Frame 81
+Removing barrel distortion: 17.967844 milliseconds 
+Converting to grayscale: 0.520622 milliseconds 
+Uploading image to GPU: 0.355503 milliseconds 
+Detect and Describe: 59.721645 milliseconds 
+Match Keypoints: 0.417522 milliseconds 
+Calculate homography: 2.177442 milliseconds 
+Apply Homography: 0.585113 milliseconds 
+Stitch Image: 0.795259 milliseconds 
+Total Computation Time for stitch: 63.7093 Milliseconds
+Frames Per Second: 15.6963
+
+
+Stitching Frame 82
+Removing barrel distortion: 23.168918 milliseconds 
+Converting to grayscale: 0.726739 milliseconds 
+Uploading image to GPU: 0.429786 milliseconds 
+Detect and Describe: 56.408371 milliseconds 
+Match Keypoints: 0.599509 milliseconds 
+Calculate homography: 2.456555 milliseconds 
+Apply Homography: 0.749426 milliseconds 
+Stitch Image: 3.263294 milliseconds 
+Total Computation Time for stitch: 63.4976 Milliseconds
+Frames Per Second: 15.7486
+
+
+Stitching Frame 83
+Removing barrel distortion: 24.220504 milliseconds 
+Converting to grayscale: 0.712499 milliseconds 
+Uploading image to GPU: 0.364836 milliseconds 
+Detect and Describe: 61.472373 milliseconds 
+Match Keypoints: 0.439162 milliseconds 
+Calculate homography: 2.195138 milliseconds 
+Apply Homography: 1.281461 milliseconds 
+Stitch Image: 5.188328 milliseconds 
+Total Computation Time for stitch: 70.5906 Milliseconds
+Frames Per Second: 14.1662
+
+
+Stitching Frame 84
+Removing barrel distortion: 24.303565 milliseconds 
+Converting to grayscale: 0.660770 milliseconds 
+Uploading image to GPU: 0.394041 milliseconds 
+Detect and Describe: 59.212609 milliseconds 
+Match Keypoints: 0.579617 milliseconds 
+Calculate homography: 3.610767 milliseconds 
+Apply Homography: 0.692824 milliseconds 
+Stitch Image: 0.898032 milliseconds 
+Total Computation Time for stitch: 65.0126 Milliseconds
+Frames Per Second: 15.3816
+
+
+Stitching Frame 85
+Removing barrel distortion: 17.417940 milliseconds 
+Converting to grayscale: 0.660678 milliseconds 
+Uploading image to GPU: 0.360666 milliseconds 
+Detect and Describe: 53.228210 milliseconds 
+Match Keypoints: 0.668523 milliseconds 
+Calculate homography: 2.714683 milliseconds 
+Apply Homography: 2.682398 milliseconds 
+Stitch Image: 0.822680 milliseconds 
+Total Computation Time for stitch: 60.1335 Milliseconds
+Frames Per Second: 16.6297
+
+
+Stitching Frame 86
+Removing barrel distortion: 17.528697 milliseconds 
+Converting to grayscale: 0.717087 milliseconds 
+Uploading image to GPU: 0.503892 milliseconds 
+Detect and Describe: 59.094727 milliseconds 
+Match Keypoints: 1.220342 milliseconds 
+Calculate homography: 5.589065 milliseconds 
+Apply Homography: 0.763497 milliseconds 
+Stitch Image: 1.027652 milliseconds 
+Total Computation Time for stitch: 67.725 Milliseconds
+Frames Per Second: 14.7656
+
+
+Stitching Frame 87
+Removing barrel distortion: 18.109532 milliseconds 
+Converting to grayscale: 1.118215 milliseconds 
+Uploading image to GPU: 0.460169 milliseconds 
+Detect and Describe: 62.602762 milliseconds 
+Match Keypoints: 0.664487 milliseconds 
+Calculate homography: 3.578932 milliseconds 
+Apply Homography: 0.658108 milliseconds 
+Stitch Image: 0.821611 milliseconds 
+Total Computation Time for stitch: 68.3433 Milliseconds
+Frames Per Second: 14.632
+
+
+Stitching Frame 88
+Removing barrel distortion: 20.394633 milliseconds 
+Converting to grayscale: 0.623121 milliseconds 
+Uploading image to GPU: 0.731000 milliseconds 
+Detect and Describe: 55.880518 milliseconds 
+Match Keypoints: 0.715750 milliseconds 
+Calculate homography: 3.842221 milliseconds 
+Apply Homography: 0.838692 milliseconds 
+Stitch Image: 1.072378 milliseconds 
+Total Computation Time for stitch: 62.3679 Milliseconds
+Frames Per Second: 16.0339
+
+
+Stitching Frame 89
+Removing barrel distortion: 20.184685 milliseconds 
+Converting to grayscale: 0.879446 milliseconds 
+Uploading image to GPU: 0.557886 milliseconds 
+Detect and Describe: 71.374665 milliseconds 
+Match Keypoints: 0.423266 milliseconds 
+Calculate homography: 2.363192 milliseconds 
+Apply Homography: 0.585935 milliseconds 
+Stitch Image: 0.803666 milliseconds 
+Total Computation Time for stitch: 75.5728 Milliseconds
+Frames Per Second: 13.2323
+
+
+Stitching Frame 90
+Removing barrel distortion: 24.362112 milliseconds 
+Converting to grayscale: 0.871283 milliseconds 
+Uploading image to GPU: 0.381082 milliseconds 
+Detect and Describe: 61.131865 milliseconds 
+Match Keypoints: 0.420703 milliseconds 
+Calculate homography: 2.569737 milliseconds 
+Apply Homography: 0.612902 milliseconds 
+Stitch Image: 0.792113 milliseconds 
+Total Computation Time for stitch: 65.5394 Milliseconds
+Frames Per Second: 15.258
+
+
+Stitching Frame 91
+Removing barrel distortion: 17.609081 milliseconds 
+Converting to grayscale: 0.829184 milliseconds 
+Uploading image to GPU: 0.361600 milliseconds 
+Detect and Describe: 65.734777 milliseconds 
+Match Keypoints: 0.425917 milliseconds 
+Calculate homography: 2.212409 milliseconds 
+Apply Homography: 0.577701 milliseconds 
+Stitch Image: 0.836867 milliseconds 
+Total Computation Time for stitch: 69.801 Milliseconds
+Frames Per Second: 14.3264
+
+
+Stitching Frame 92
+Removing barrel distortion: 17.484023 milliseconds 
+Converting to grayscale: 0.933634 milliseconds 
+Uploading image to GPU: 0.354242 milliseconds 
+Detect and Describe: 65.684192 milliseconds 
+Match Keypoints: 0.443176 milliseconds 
+Calculate homography: 3.425157 milliseconds 
+Apply Homography: 0.764706 milliseconds 
+Stitch Image: 0.848735 milliseconds 
+Total Computation Time for stitch: 71.1898 Milliseconds
+Frames Per Second: 14.047
+
+
+Stitching Frame 93
+Removing barrel distortion: 18.860777 milliseconds 
+Converting to grayscale: 0.835065 milliseconds 
+Uploading image to GPU: 0.366872 milliseconds 
+Detect and Describe: 55.268059 milliseconds 
+Match Keypoints: 0.422865 milliseconds 
+Calculate homography: 2.587402 milliseconds 
+Apply Homography: 0.540315 milliseconds 
+Stitch Image: 0.797489 milliseconds 
+Total Computation Time for stitch: 59.6283 Milliseconds
+Frames Per Second: 16.7706
+
+
+Stitching Frame 94
+Removing barrel distortion: 17.704845 milliseconds 
+Converting to grayscale: 0.885815 milliseconds 
+Uploading image to GPU: 0.457286 milliseconds 
+Detect and Describe: 66.528169 milliseconds 
+Match Keypoints: 0.472218 milliseconds 
+Calculate homography: 2.375838 milliseconds 
+Apply Homography: 0.693055 milliseconds 
+Stitch Image: 1.039222 milliseconds 
+Total Computation Time for stitch: 71.1237 Milliseconds
+Frames Per Second: 14.06
+
+
+Stitching Frame 95
+Removing barrel distortion: 17.785384 milliseconds 
+Converting to grayscale: 0.646074 milliseconds 
+Uploading image to GPU: 0.334791 milliseconds 
+Detect and Describe: 49.310383 milliseconds 
+Match Keypoints: 0.490173 milliseconds 
+Calculate homography: 2.440355 milliseconds 
+Apply Homography: 0.545790 milliseconds 
+Stitch Image: 0.793323 milliseconds 
+Total Computation Time for stitch: 53.5931 Milliseconds
+Frames Per Second: 18.6591
+
+
+Stitching Frame 96
+Removing barrel distortion: 18.156827 milliseconds 
+Converting to grayscale: 0.507716 milliseconds 
+Uploading image to GPU: 0.377278 milliseconds 
+Detect and Describe: 56.849853 milliseconds 
+Match Keypoints: 0.403615 milliseconds 
+Calculate homography: 2.190988 milliseconds 
+Apply Homography: 0.565355 milliseconds 
+Stitch Image: 0.806609 milliseconds 
+Total Computation Time for stitch: 60.8289 Milliseconds
+Frames Per Second: 16.4396
+
+
+Stitching Frame 97
+Removing barrel distortion: 25.209036 milliseconds 
+Converting to grayscale: 0.530233 milliseconds 
+Uploading image to GPU: 0.388345 milliseconds 
+Detect and Describe: 60.031142 milliseconds 
+Match Keypoints: 0.445509 milliseconds 
+Calculate homography: 2.438924 milliseconds 
+Apply Homography: 0.545192 milliseconds 
+Stitch Image: 0.790773 milliseconds 
+Total Computation Time for stitch: 64.264 Milliseconds
+Frames Per Second: 15.5608
+
+
+Stitching Frame 98
+Removing barrel distortion: 26.674221 milliseconds 
+Converting to grayscale: 0.518726 milliseconds 
+Uploading image to GPU: 0.386685 milliseconds 
+Detect and Describe: 56.146359 milliseconds 
+Match Keypoints: 0.413848 milliseconds 
+Calculate homography: 2.404695 milliseconds 
+Apply Homography: 0.539660 milliseconds 
+Stitch Image: 0.814091 milliseconds 
+Total Computation Time for stitch: 60.3309 Milliseconds
+Frames Per Second: 16.5752
+
+
+Stitching Frame 99
+Removing barrel distortion: 17.409785 milliseconds 
+Converting to grayscale: 0.714440 milliseconds 
+Uploading image to GPU: 0.343381 milliseconds 
+Detect and Describe: 64.583816 milliseconds 
+Match Keypoints: 0.408627 milliseconds 
+Calculate homography: 2.677674 milliseconds 
+Apply Homography: 0.588149 milliseconds 
+Stitch Image: 0.859738 milliseconds 
+Total Computation Time for stitch: 69.1345 Milliseconds
+Frames Per Second: 14.4646
+
+
+Stitching Frame 100
+Removing barrel distortion: 18.110136 milliseconds 
+Converting to grayscale: 0.526041 milliseconds 
+Uploading image to GPU: 0.400820 milliseconds 
+Detect and Describe: 58.731093 milliseconds 
+Match Keypoints: 0.410345 milliseconds 
+Calculate homography: 2.543650 milliseconds 
+Apply Homography: 0.556109 milliseconds 
+Stitch Image: 0.792948 milliseconds 
+Total Computation Time for stitch: 63.0459 Milliseconds
+Frames Per Second: 15.8615
+
+
+Stitching Frame 101
+Removing barrel distortion: 25.168734 milliseconds 
+Converting to grayscale: 0.593489 milliseconds 
+Uploading image to GPU: 0.390670 milliseconds 
+Detect and Describe: 60.637786 milliseconds 
+Match Keypoints: 0.431649 milliseconds 
+Calculate homography: 2.311545 milliseconds 
+Apply Homography: 0.615454 milliseconds 
+Stitch Image: 0.830471 milliseconds 
+Total Computation Time for stitch: 64.8435 Milliseconds
+Frames Per Second: 15.4217
+
+
+Stitching Frame 102
+Removing barrel distortion: 17.669928 milliseconds 
+Converting to grayscale: 0.633125 milliseconds 
+Uploading image to GPU: 0.350496 milliseconds 
+Detect and Describe: 64.146578 milliseconds 
+Match Keypoints: 0.424503 milliseconds 
+Calculate homography: 2.404314 milliseconds 
+Apply Homography: 0.583152 milliseconds 
+Stitch Image: 0.783552 milliseconds 
+Total Computation Time for stitch: 68.3551 Milliseconds
+Frames Per Second: 14.6295
+
+
+Stitching Frame 103
+Removing barrel distortion: 19.534401 milliseconds 
+Converting to grayscale: 0.954613 milliseconds 
+Uploading image to GPU: 0.497132 milliseconds 
+Detect and Describe: 66.520251 milliseconds 
+Match Keypoints: 0.421369 milliseconds 
+Calculate homography: 2.551663 milliseconds 
+Apply Homography: 0.604261 milliseconds 
+Stitch Image: 0.811608 milliseconds 
+Total Computation Time for stitch: 70.9247 Milliseconds
+Frames Per Second: 14.0995
+
+
+Stitching Frame 104
+Removing barrel distortion: 19.050073 milliseconds 
+Converting to grayscale: 0.699147 milliseconds 
+Uploading image to GPU: 0.407036 milliseconds 
+Detect and Describe: 60.600342 milliseconds 
+Match Keypoints: 0.443612 milliseconds 
+Calculate homography: 2.365894 milliseconds 
+Apply Homography: 0.602158 milliseconds 
+Stitch Image: 0.791595 milliseconds 
+Total Computation Time for stitch: 64.818 Milliseconds
+Frames Per Second: 15.4278
+
+
+Stitching Frame 105
+Removing barrel distortion: 24.795517 milliseconds 
+Converting to grayscale: 0.524141 milliseconds 
+Uploading image to GPU: 0.346504 milliseconds 
+Detect and Describe: 59.281715 milliseconds 
+Match Keypoints: 0.438295 milliseconds 
+Calculate homography: 2.270905 milliseconds 
+Apply Homography: 0.624474 milliseconds 
+Stitch Image: 0.828801 milliseconds 
+Total Computation Time for stitch: 63.4588 Milliseconds
+Frames Per Second: 15.7583
+
+
+Stitching Frame 106
+Removing barrel distortion: 18.259540 milliseconds 
+Converting to grayscale: 0.683952 milliseconds 
+Uploading image to GPU: 0.497217 milliseconds 
+Detect and Describe: 56.789935 milliseconds 
+Match Keypoints: 0.484902 milliseconds 
+Calculate homography: 2.241998 milliseconds 
+Apply Homography: 0.668904 milliseconds 
+Stitch Image: 0.856240 milliseconds 
+Total Computation Time for stitch: 61.062 Milliseconds
+Frames Per Second: 16.3768
+
+
+Stitching Frame 107
+Removing barrel distortion: 23.866173 milliseconds 
+Converting to grayscale: 0.553811 milliseconds 
+Uploading image to GPU: 0.338969 milliseconds 
+Detect and Describe: 56.013431 milliseconds 
+Match Keypoints: 0.342280 milliseconds 
+Calculate homography: 2.531889 milliseconds 
+Apply Homography: 0.660514 milliseconds 
+Stitch Image: 0.885094 milliseconds 
+Total Computation Time for stitch: 60.4505 Milliseconds
+Frames Per Second: 16.5424
+
+
+Stitching Frame 108
+Removing barrel distortion: 23.554098 milliseconds 
+Converting to grayscale: 0.543906 milliseconds 
+Uploading image to GPU: 0.383834 milliseconds 
+Detect and Describe: 51.920726 milliseconds 
+Match Keypoints: 0.334503 milliseconds 
+Calculate homography: 1.972633 milliseconds 
+Apply Homography: 0.548607 milliseconds 
+Stitch Image: 0.813562 milliseconds 
+Total Computation Time for stitch: 55.6023 Milliseconds
+Frames Per Second: 17.9849
+
+
+Stitching Frame 109
+Removing barrel distortion: 24.571249 milliseconds 
+Converting to grayscale: 0.616595 milliseconds 
+Uploading image to GPU: 0.404764 milliseconds 
+Detect and Describe: 57.735256 milliseconds 
+Match Keypoints: 0.324412 milliseconds 
+Calculate homography: 2.192797 milliseconds 
+Apply Homography: 0.598458 milliseconds 
+Stitch Image: 1.022101 milliseconds 
+Total Computation Time for stitch: 61.8885 Milliseconds
+Frames Per Second: 16.1581
+
+
+Stitching Frame 110
+Removing barrel distortion: 18.385973 milliseconds 
+Converting to grayscale: 1.166091 milliseconds 
+Uploading image to GPU: 0.479525 milliseconds 
+Detect and Describe: 50.532516 milliseconds 
+Match Keypoints: 0.325162 milliseconds 
+Calculate homography: 1.702908 milliseconds 
+Apply Homography: 0.549298 milliseconds 
+Stitch Image: 0.829727 milliseconds 
+Total Computation Time for stitch: 53.9521 Milliseconds
+Frames Per Second: 18.535
+
+
+Stitching Frame 111
+Removing barrel distortion: 17.940257 milliseconds 
+Converting to grayscale: 0.623700 milliseconds 
+Uploading image to GPU: 0.405543 milliseconds 
+Detect and Describe: 50.069354 milliseconds 
+Match Keypoints: 0.309718 milliseconds 
+Calculate homography: 1.715361 milliseconds 
+Apply Homography: 0.590407 milliseconds 
+Stitch Image: 0.767812 milliseconds 
+Total Computation Time for stitch: 53.4656 Milliseconds
+Frames Per Second: 18.7036
+
+
+Stitching Frame 112
+Removing barrel distortion: 18.858572 milliseconds 
+Converting to grayscale: 0.565659 milliseconds 
+Uploading image to GPU: 0.347022 milliseconds 
+Detect and Describe: 51.562459 milliseconds 
+Match Keypoints: 0.333062 milliseconds 
+Calculate homography: 2.888782 milliseconds 
+Apply Homography: 0.839730 milliseconds 
+Stitch Image: 0.920582 milliseconds 
+Total Computation Time for stitch: 56.5641 Milliseconds
+Frames Per Second: 17.6791
+
+
+Stitching Frame 113
+Removing barrel distortion: 24.468848 milliseconds 
+Converting to grayscale: 3.350744 milliseconds 
+Uploading image to GPU: 0.351949 milliseconds 
+Detect and Describe: 56.770739 milliseconds 
+Match Keypoints: 0.384098 milliseconds 
+Calculate homography: 2.281956 milliseconds 
+Apply Homography: 0.628468 milliseconds 
+Stitch Image: 0.863184 milliseconds 
+Total Computation Time for stitch: 60.948 Milliseconds
+Frames Per Second: 16.4074
+
+
+Stitching Frame 114
+Removing barrel distortion: 18.471808 milliseconds 
+Converting to grayscale: 0.538111 milliseconds 
+Uploading image to GPU: 0.410653 milliseconds 
+Detect and Describe: 52.813820 milliseconds 
+Match Keypoints: 0.312747 milliseconds 
+Calculate homography: 2.344868 milliseconds 
+Apply Homography: 0.616650 milliseconds 
+Stitch Image: 0.821399 milliseconds 
+Total Computation Time for stitch: 56.9236 Milliseconds
+Frames Per Second: 17.5674
+
+
+Stitching Frame 115
+Removing barrel distortion: 24.813444 milliseconds 
+Converting to grayscale: 0.590788 milliseconds 
+Uploading image to GPU: 0.357902 milliseconds 
+Detect and Describe: 50.590265 milliseconds 
+Match Keypoints: 0.267967 milliseconds 
+Calculate homography: 1.594376 milliseconds 
+Apply Homography: 0.535631 milliseconds 
+Stitch Image: 0.801573 milliseconds 
+Total Computation Time for stitch: 53.8022 Milliseconds
+Frames Per Second: 18.5866
+
+
+Stitching Frame 116
+Removing barrel distortion: 23.846866 milliseconds 
+Converting to grayscale: 0.531776 milliseconds 
+Uploading image to GPU: 0.356933 milliseconds 
+Detect and Describe: 46.705114 milliseconds 
+Match Keypoints: 0.272596 milliseconds 
+Calculate homography: 1.871145 milliseconds 
+Apply Homography: 0.561190 milliseconds 
+Stitch Image: 0.816643 milliseconds 
+Total Computation Time for stitch: 50.2431 Milliseconds
+Frames Per Second: 19.9032
+
+
+Stitching Frame 117
+Removing barrel distortion: 24.053237 milliseconds 
+Converting to grayscale: 0.552375 milliseconds 
+Uploading image to GPU: 0.380538 milliseconds 
+Detect and Describe: 56.719501 milliseconds 
+Match Keypoints: 0.277642 milliseconds 
+Calculate homography: 1.859426 milliseconds 
+Apply Homography: 0.561033 milliseconds 
+Stitch Image: 0.789301 milliseconds 
+Total Computation Time for stitch: 60.2283 Milliseconds
+Frames Per Second: 16.6035
+
+
+Stitching Frame 118
+Removing barrel distortion: 17.827912 milliseconds 
+Converting to grayscale: 0.634870 milliseconds 
+Uploading image to GPU: 0.379472 milliseconds 
+Detect and Describe: 47.947028 milliseconds 
+Match Keypoints: 0.246739 milliseconds 
+Calculate homography: 1.881043 milliseconds 
+Apply Homography: 0.605719 milliseconds 
+Stitch Image: 0.831643 milliseconds 
+Total Computation Time for stitch: 51.5267 Milliseconds
+Frames Per Second: 19.4074
+
+
+Stitching Frame 119
+Removing barrel distortion: 17.548407 milliseconds 
+Converting to grayscale: 0.653544 milliseconds 
+Uploading image to GPU: 0.378974 milliseconds 
+Detect and Describe: 48.751168 milliseconds 
+Match Keypoints: 0.225148 milliseconds 
+Calculate homography: 3.175983 milliseconds 
+Apply Homography: 0.461871 milliseconds 
+Stitch Image: 4.255336 milliseconds 
+Total Computation Time for stitch: 56.8813 Milliseconds
+Frames Per Second: 17.5805
+
+
+Stitching Frame 120
+Removing barrel distortion: 25.682062 milliseconds 
+Converting to grayscale: 1.230747 milliseconds 
+Uploading image to GPU: 0.420782 milliseconds 
+Detect and Describe: 46.534648 milliseconds 
+Match Keypoints: 0.221383 milliseconds 
+Calculate homography: 3.678345 milliseconds 
+Apply Homography: 0.353307 milliseconds 
+Stitch Image: 1.013492 milliseconds 
+Total Computation Time for stitch: 51.8134 Milliseconds
+Frames Per Second: 19.3
+
+
+Stitching Frame 121
+Removing barrel distortion: 19.722473 milliseconds 
+Converting to grayscale: 0.747251 milliseconds 
+Uploading image to GPU: 0.364755 milliseconds 
+Detect and Describe: 42.038476 milliseconds 
+Match Keypoints: 0.223195 milliseconds 
+Calculate homography: 8.000075 milliseconds 
+Apply Homography: 0.346518 milliseconds 
+Stitch Image: 0.749827 milliseconds 
+Total Computation Time for stitch: 51.3704 Milliseconds
+Frames Per Second: 19.4665

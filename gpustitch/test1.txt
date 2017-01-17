@@ -1,0 +1,3702 @@
+
+
+Stitching Frame 1
+Removing barrel distortion: toc: 626492.479000 microseconds 
+Converting to grayscale: toc: 1039.313000 microseconds 
+Uploading image to GPU: toc: 385721.524000 microseconds 
+FOUND 2169 keypoints on first image
+FOUND 2249 keypoints on second image
+Detect and Describe: toc: 54857.817000 microseconds 
+Match Keypoints: toc: 3305.899000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 807.360000 microseconds 
+Stitch Image: toc: 1086.775000 microseconds 
+Total Computation Time for stitch: 60068.4 Microseconds
+Frames Per Second: 16.6477
+
+
+Stitching Frame 2
+Removing barrel distortion: toc: 23455.688000 microseconds 
+Converting to grayscale: toc: 509.220000 microseconds 
+Uploading image to GPU: toc: 369.014000 microseconds 
+FOUND 2197 keypoints on first image
+FOUND 2283 keypoints on second image
+Detect and Describe: toc: 81192.565000 microseconds 
+Match Keypoints: toc: 7626.747000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 7689.744000 microseconds 
+Stitch Image: toc: 2710.802000 microseconds 
+Total Computation Time for stitch: 99238.9 Microseconds
+Frames Per Second: 10.0767
+
+
+Stitching Frame 3
+Removing barrel distortion: toc: 17997.146000 microseconds 
+Converting to grayscale: toc: 569.132000 microseconds 
+Uploading image to GPU: toc: 376.709000 microseconds 
+FOUND 2156 keypoints on first image
+FOUND 2281 keypoints on second image
+Detect and Describe: toc: 59791.744000 microseconds 
+Match Keypoints: toc: 3543.470000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 2011.247000 microseconds 
+Stitch Image: toc: 2074.783000 microseconds 
+Total Computation Time for stitch: 67439.2 Microseconds
+Frames Per Second: 14.8282
+
+
+Stitching Frame 4
+Removing barrel distortion: toc: 19036.777000 microseconds 
+Converting to grayscale: toc: 587.668000 microseconds 
+Uploading image to GPU: toc: 335.108000 microseconds 
+FOUND 2190 keypoints on first image
+FOUND 2278 keypoints on second image
+Detect and Describe: toc: 56604.122000 microseconds 
+Match Keypoints: toc: 3071.050000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1439.425000 microseconds 
+Stitch Image: toc: 2464.530000 microseconds 
+Total Computation Time for stitch: 63599 Microseconds
+Frames Per Second: 15.7235
+
+
+Stitching Frame 5
+Removing barrel distortion: toc: 18193.457000 microseconds 
+Converting to grayscale: toc: 2113.170000 microseconds 
+Uploading image to GPU: toc: 417.547000 microseconds 
+FOUND 2200 keypoints on first image
+FOUND 2279 keypoints on second image
+Detect and Describe: toc: 71280.176000 microseconds 
+Match Keypoints: toc: 3378.792000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 875.729000 microseconds 
+Stitch Image: toc: 1027.627000 microseconds 
+Total Computation Time for stitch: 76586.2 Microseconds
+Frames Per Second: 13.0572
+
+
+Stitching Frame 6
+Removing barrel distortion: toc: 17432.589000 microseconds 
+Converting to grayscale: toc: 872.088000 microseconds 
+Uploading image to GPU: toc: 365.345000 microseconds 
+FOUND 2226 keypoints on first image
+FOUND 2353 keypoints on second image
+Detect and Describe: toc: 65245.889000 microseconds 
+Match Keypoints: toc: 2680.020000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 588.957000 microseconds 
+Stitch Image: toc: 782.232000 microseconds 
+Total Computation Time for stitch: 69309.3 Microseconds
+Frames Per Second: 14.4281
+
+
+Stitching Frame 7
+Removing barrel distortion: toc: 17243.073000 microseconds 
+Converting to grayscale: toc: 655.577000 microseconds 
+Uploading image to GPU: toc: 342.459000 microseconds 
+FOUND 2259 keypoints on first image
+FOUND 2382 keypoints on second image
+Detect and Describe: toc: 63597.119000 microseconds 
+Match Keypoints: toc: 2758.918000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 588.585000 microseconds 
+Stitch Image: toc: 787.100000 microseconds 
+Total Computation Time for stitch: 67743.2 Microseconds
+Frames Per Second: 14.7616
+
+
+Stitching Frame 8
+Removing barrel distortion: toc: 17282.957000 microseconds 
+Converting to grayscale: toc: 747.511000 microseconds 
+Uploading image to GPU: toc: 337.151000 microseconds 
+FOUND 2247 keypoints on first image
+FOUND 2409 keypoints on second image
+Detect and Describe: toc: 61751.417000 microseconds 
+Match Keypoints: toc: 2799.869000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 642.151000 microseconds 
+Stitch Image: toc: 995.829000 microseconds 
+Total Computation Time for stitch: 66203.2 Microseconds
+Frames Per Second: 15.105
+
+
+Stitching Frame 9
+Removing barrel distortion: toc: 17834.564000 microseconds 
+Converting to grayscale: toc: 575.960000 microseconds 
+Uploading image to GPU: toc: 339.946000 microseconds 
+FOUND 2243 keypoints on first image
+FOUND 2395 keypoints on second image
+Detect and Describe: toc: 50321.144000 microseconds 
+Match Keypoints: toc: 2953.151000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 570.213000 microseconds 
+Stitch Image: toc: 773.568000 microseconds 
+Total Computation Time for stitch: 54631.7 Microseconds
+Frames Per Second: 18.3044
+
+
+Stitching Frame 10
+Removing barrel distortion: toc: 17433.451000 microseconds 
+Converting to grayscale: toc: 671.494000 microseconds 
+Uploading image to GPU: toc: 341.735000 microseconds 
+FOUND 2257 keypoints on first image
+FOUND 2358 keypoints on second image
+Detect and Describe: toc: 60488.174000 microseconds 
+Match Keypoints: toc: 3027.560000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 595.031000 microseconds 
+Stitch Image: toc: 820.605000 microseconds 
+Total Computation Time for stitch: 64944 Microseconds
+Frames Per Second: 15.3979
+
+
+Stitching Frame 11
+Removing barrel distortion: toc: 17382.617000 microseconds 
+Converting to grayscale: toc: 530.060000 microseconds 
+Uploading image to GPU: toc: 345.119000 microseconds 
+FOUND 2224 keypoints on first image
+FOUND 2371 keypoints on second image
+Detect and Describe: toc: 65130.020000 microseconds 
+Match Keypoints: toc: 2677.469000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 576.809000 microseconds 
+Stitch Image: toc: 782.788000 microseconds 
+Total Computation Time for stitch: 69179 Microseconds
+Frames Per Second: 14.4553
+
+
+Stitching Frame 12
+Removing barrel distortion: toc: 17357.387000 microseconds 
+Converting to grayscale: toc: 669.229000 microseconds 
+Uploading image to GPU: toc: 348.251000 microseconds 
+FOUND 2216 keypoints on first image
+FOUND 2372 keypoints on second image
+Detect and Describe: toc: 63752.352000 microseconds 
+Match Keypoints: toc: 3028.315000 microseconds 
+X Bound: 819  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 575.047000 microseconds 
+Stitch Image: toc: 788.501000 microseconds 
+Total Computation Time for stitch: 68158.1 Microseconds
+Frames Per Second: 14.6718
+
+
+Stitching Frame 13
+Removing barrel distortion: toc: 17382.630000 microseconds 
+Converting to grayscale: toc: 717.623000 microseconds 
+Uploading image to GPU: toc: 356.282000 microseconds 
+FOUND 2250 keypoints on first image
+FOUND 2371 keypoints on second image
+Detect and Describe: toc: 64108.214000 microseconds 
+Match Keypoints: toc: 2958.296000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 595.385000 microseconds 
+Stitch Image: toc: 790.505000 microseconds 
+Total Computation Time for stitch: 68463.9 Microseconds
+Frames Per Second: 14.6062
+
+
+Stitching Frame 14
+Removing barrel distortion: toc: 17282.362000 microseconds 
+Converting to grayscale: toc: 716.896000 microseconds 
+Uploading image to GPU: toc: 339.495000 microseconds 
+FOUND 2232 keypoints on first image
+FOUND 2381 keypoints on second image
+Detect and Describe: toc: 58779.959000 microseconds 
+Match Keypoints: toc: 4782.228000 microseconds 
+X Bound: 817  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 981.369000 microseconds 
+Stitch Image: toc: 1541.252000 microseconds 
+Total Computation Time for stitch: 66102.8 Microseconds
+Frames Per Second: 15.128
+
+
+Stitching Frame 15
+Removing barrel distortion: toc: 24246.127000 microseconds 
+Converting to grayscale: toc: 611.569000 microseconds 
+Uploading image to GPU: toc: 459.651000 microseconds 
+FOUND 2239 keypoints on first image
+FOUND 2388 keypoints on second image
+Detect and Describe: toc: 79729.263000 microseconds 
+Match Keypoints: toc: 3198.476000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1316.840000 microseconds 
+Stitch Image: toc: 1834.005000 microseconds 
+Total Computation Time for stitch: 86092.2 Microseconds
+Frames Per Second: 11.6155
+
+
+Stitching Frame 16
+Removing barrel distortion: toc: 17412.853000 microseconds 
+Converting to grayscale: toc: 636.462000 microseconds 
+Uploading image to GPU: toc: 417.848000 microseconds 
+FOUND 2237 keypoints on first image
+FOUND 2416 keypoints on second image
+Detect and Describe: toc: 70193.483000 microseconds 
+Match Keypoints: toc: 2831.073000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 805.176000 microseconds 
+Stitch Image: toc: 880.300000 microseconds 
+Total Computation Time for stitch: 74731.3 Microseconds
+Frames Per Second: 13.3813
+
+
+Stitching Frame 17
+Removing barrel distortion: toc: 17370.590000 microseconds 
+Converting to grayscale: toc: 665.039000 microseconds 
+Uploading image to GPU: toc: 467.837000 microseconds 
+FOUND 2237 keypoints on first image
+FOUND 2415 keypoints on second image
+Detect and Describe: toc: 67177.508000 microseconds 
+Match Keypoints: toc: 2785.191000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1540.640000 microseconds 
+Stitch Image: toc: 850.017000 microseconds 
+Total Computation Time for stitch: 72371.8 Microseconds
+Frames Per Second: 13.8175
+
+
+Stitching Frame 18
+Removing barrel distortion: toc: 17388.888000 microseconds 
+Converting to grayscale: toc: 710.165000 microseconds 
+Uploading image to GPU: toc: 371.573000 microseconds 
+FOUND 2249 keypoints on first image
+FOUND 2416 keypoints on second image
+Detect and Describe: toc: 60147.448000 microseconds 
+Match Keypoints: toc: 2774.164000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 640.863000 microseconds 
+Stitch Image: toc: 999.563000 microseconds 
+Total Computation Time for stitch: 64573.8 Microseconds
+Frames Per Second: 15.4862
+
+
+Stitching Frame 19
+Removing barrel distortion: toc: 16880.429000 microseconds 
+Converting to grayscale: toc: 548.218000 microseconds 
+Uploading image to GPU: toc: 350.523000 microseconds 
+FOUND 2275 keypoints on first image
+FOUND 2406 keypoints on second image
+Detect and Describe: toc: 50222.021000 microseconds 
+Match Keypoints: toc: 2677.629000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 564.039000 microseconds 
+Stitch Image: toc: 777.953000 microseconds 
+Total Computation Time for stitch: 54252.2 Microseconds
+Frames Per Second: 18.4324
+
+
+Stitching Frame 20
+Removing barrel distortion: toc: 17294.557000 microseconds 
+Converting to grayscale: toc: 517.158000 microseconds 
+Uploading image to GPU: toc: 337.687000 microseconds 
+FOUND 2277 keypoints on first image
+FOUND 2379 keypoints on second image
+Detect and Describe: toc: 60860.700000 microseconds 
+Match Keypoints: toc: 2811.400000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 587.149000 microseconds 
+Stitch Image: toc: 796.855000 microseconds 
+Total Computation Time for stitch: 65067.9 Microseconds
+Frames Per Second: 15.3686
+
+
+Stitching Frame 21
+Removing barrel distortion: toc: 19857.600000 microseconds 
+Converting to grayscale: toc: 506.829000 microseconds 
+Uploading image to GPU: toc: 342.714000 microseconds 
+FOUND 2272 keypoints on first image
+FOUND 2384 keypoints on second image
+Detect and Describe: toc: 55490.737000 microseconds 
+Match Keypoints: toc: 2753.305000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 667.057000 microseconds 
+Stitch Image: toc: 1004.537000 microseconds 
+Total Computation Time for stitch: 59927.7 Microseconds
+Frames Per Second: 16.6868
+
+
+Stitching Frame 22
+Removing barrel distortion: toc: 17375.268000 microseconds 
+Converting to grayscale: toc: 499.308000 microseconds 
+Uploading image to GPU: toc: 340.091000 microseconds 
+FOUND 2260 keypoints on first image
+FOUND 2385 keypoints on second image
+Detect and Describe: toc: 54411.620000 microseconds 
+Match Keypoints: toc: 2760.953000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 636.126000 microseconds 
+Stitch Image: toc: 994.198000 microseconds 
+Total Computation Time for stitch: 58817.2 Microseconds
+Frames Per Second: 17.0018
+
+
+Stitching Frame 23
+Removing barrel distortion: toc: 16747.217000 microseconds 
+Converting to grayscale: toc: 530.935000 microseconds 
+Uploading image to GPU: toc: 338.968000 microseconds 
+FOUND 2274 keypoints on first image
+FOUND 2390 keypoints on second image
+Detect and Describe: toc: 50396.936000 microseconds 
+Match Keypoints: toc: 2667.051000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 558.133000 microseconds 
+Stitch Image: toc: 776.468000 microseconds 
+Total Computation Time for stitch: 54407.8 Microseconds
+Frames Per Second: 18.3797
+
+
+Stitching Frame 24
+Removing barrel distortion: toc: 17305.511000 microseconds 
+Converting to grayscale: toc: 676.103000 microseconds 
+Uploading image to GPU: toc: 359.248000 microseconds 
+FOUND 2246 keypoints on first image
+FOUND 2377 keypoints on second image
+Detect and Describe: toc: 60602.551000 microseconds 
+Match Keypoints: toc: 2661.399000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 651.780000 microseconds 
+Stitch Image: toc: 981.235000 microseconds 
+Total Computation Time for stitch: 64908.7 Microseconds
+Frames Per Second: 15.4062
+
+
+Stitching Frame 25
+Removing barrel distortion: toc: 16712.059000 microseconds 
+Converting to grayscale: toc: 543.316000 microseconds 
+Uploading image to GPU: toc: 321.075000 microseconds 
+FOUND 2260 keypoints on first image
+FOUND 2398 keypoints on second image
+Detect and Describe: toc: 50298.143000 microseconds 
+Match Keypoints: toc: 2991.684000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 569.552000 microseconds 
+Stitch Image: toc: 787.569000 microseconds 
+Total Computation Time for stitch: 54656.5 Microseconds
+Frames Per Second: 18.2961
+
+
+Stitching Frame 26
+Removing barrel distortion: toc: 17419.949000 microseconds 
+Converting to grayscale: toc: 763.898000 microseconds 
+Uploading image to GPU: toc: 344.144000 microseconds 
+FOUND 2260 keypoints on first image
+FOUND 2408 keypoints on second image
+Detect and Describe: toc: 67020.558000 microseconds 
+Match Keypoints: toc: 3796.776000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 749.698000 microseconds 
+Stitch Image: toc: 983.155000 microseconds 
+Total Computation Time for stitch: 72562.8 Microseconds
+Frames Per Second: 13.7812
+
+
+Stitching Frame 27
+Removing barrel distortion: toc: 23606.430000 microseconds 
+Converting to grayscale: toc: 553.021000 microseconds 
+Uploading image to GPU: toc: 430.577000 microseconds 
+FOUND 2266 keypoints on first image
+FOUND 2419 keypoints on second image
+Detect and Describe: toc: 71831.946000 microseconds 
+Match Keypoints: toc: 4296.630000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 991.614000 microseconds 
+Stitch Image: toc: 1073.772000 microseconds 
+Total Computation Time for stitch: 78224.9 Microseconds
+Frames Per Second: 12.7837
+
+
+Stitching Frame 28
+Removing barrel distortion: toc: 17395.049000 microseconds 
+Converting to grayscale: toc: 676.380000 microseconds 
+Uploading image to GPU: toc: 411.735000 microseconds 
+FOUND 2241 keypoints on first image
+FOUND 2423 keypoints on second image
+Detect and Describe: toc: 74167.042000 microseconds 
+Match Keypoints: toc: 3155.288000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 801.598000 microseconds 
+Stitch Image: toc: 1063.305000 microseconds 
+Total Computation Time for stitch: 79212.9 Microseconds
+Frames Per Second: 12.6242
+
+
+Stitching Frame 29
+Removing barrel distortion: toc: 17028.921000 microseconds 
+Converting to grayscale: toc: 591.677000 microseconds 
+Uploading image to GPU: toc: 355.022000 microseconds 
+FOUND 2267 keypoints on first image
+FOUND 2419 keypoints on second image
+Detect and Describe: toc: 50353.806000 microseconds 
+Match Keypoints: toc: 2785.999000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 563.962000 microseconds 
+Stitch Image: toc: 776.962000 microseconds 
+Total Computation Time for stitch: 54490 Microseconds
+Frames Per Second: 18.352
+
+
+Stitching Frame 30
+Removing barrel distortion: toc: 24288.505000 microseconds 
+Converting to grayscale: toc: 2951.260000 microseconds 
+Uploading image to GPU: toc: 393.612000 microseconds 
+FOUND 2257 keypoints on first image
+FOUND 2441 keypoints on second image
+Detect and Describe: toc: 61926.193000 microseconds 
+Match Keypoints: toc: 3253.131000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 574.141000 microseconds 
+Stitch Image: toc: 791.178000 microseconds 
+Total Computation Time for stitch: 66557.1 Microseconds
+Frames Per Second: 15.0247
+
+
+Stitching Frame 31
+Removing barrel distortion: toc: 24241.435000 microseconds 
+Converting to grayscale: toc: 672.956000 microseconds 
+Uploading image to GPU: toc: 410.720000 microseconds 
+FOUND 2240 keypoints on first image
+FOUND 2406 keypoints on second image
+Detect and Describe: toc: 64997.763000 microseconds 
+Match Keypoints: toc: 2603.305000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 627.883000 microseconds 
+Stitch Image: toc: 775.637000 microseconds 
+Total Computation Time for stitch: 69016.9 Microseconds
+Frames Per Second: 14.4892
+
+
+Stitching Frame 32
+Removing barrel distortion: toc: 23996.714000 microseconds 
+Converting to grayscale: toc: 697.547000 microseconds 
+Uploading image to GPU: toc: 416.939000 microseconds 
+FOUND 2239 keypoints on first image
+FOUND 2373 keypoints on second image
+Detect and Describe: toc: 60949.863000 microseconds 
+Match Keypoints: toc: 2845.538000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 675.617000 microseconds 
+Stitch Image: toc: 6327.663000 microseconds 
+Total Computation Time for stitch: 70811 Microseconds
+Frames Per Second: 14.1221
+
+
+Stitching Frame 33
+Removing barrel distortion: toc: 16818.446000 microseconds 
+Converting to grayscale: toc: 692.750000 microseconds 
+Uploading image to GPU: toc: 349.184000 microseconds 
+FOUND 2275 keypoints on first image
+FOUND 2370 keypoints on second image
+Detect and Describe: toc: 50069.596000 microseconds 
+Match Keypoints: toc: 2857.585000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 562.780000 microseconds 
+Stitch Image: toc: 792.459000 microseconds 
+Total Computation Time for stitch: 54291.2 Microseconds
+Frames Per Second: 18.4192
+
+
+Stitching Frame 34
+Removing barrel distortion: toc: 24257.926000 microseconds 
+Converting to grayscale: toc: 553.377000 microseconds 
+Uploading image to GPU: toc: 408.244000 microseconds 
+FOUND 2267 keypoints on first image
+FOUND 2394 keypoints on second image
+Detect and Describe: toc: 60659.608000 microseconds 
+Match Keypoints: toc: 2670.598000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 3085.447000 microseconds 
+Stitch Image: toc: 1009.808000 microseconds 
+Total Computation Time for stitch: 67437.5 Microseconds
+Frames Per Second: 14.8285
+
+
+Stitching Frame 35
+Removing barrel distortion: toc: 17031.913000 microseconds 
+Converting to grayscale: toc: 552.768000 microseconds 
+Uploading image to GPU: toc: 322.264000 microseconds 
+FOUND 2302 keypoints on first image
+FOUND 2390 keypoints on second image
+Detect and Describe: toc: 50273.712000 microseconds 
+Match Keypoints: toc: 2712.273000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 626.341000 microseconds 
+Stitch Image: toc: 1007.540000 microseconds 
+Total Computation Time for stitch: 54629.1 Microseconds
+Frames Per Second: 18.3053
+
+
+Stitching Frame 36
+Removing barrel distortion: toc: 16731.519000 microseconds 
+Converting to grayscale: toc: 538.139000 microseconds 
+Uploading image to GPU: toc: 331.136000 microseconds 
+FOUND 2254 keypoints on first image
+FOUND 2417 keypoints on second image
+Detect and Describe: toc: 50544.246000 microseconds 
+Match Keypoints: toc: 2739.244000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 559.226000 microseconds 
+Stitch Image: toc: 787.649000 microseconds 
+Total Computation Time for stitch: 54641.9 Microseconds
+Frames Per Second: 18.301
+
+
+Stitching Frame 37
+Removing barrel distortion: toc: 23939.493000 microseconds 
+Converting to grayscale: toc: 689.325000 microseconds 
+Uploading image to GPU: toc: 420.930000 microseconds 
+FOUND 2291 keypoints on first image
+FOUND 2417 keypoints on second image
+Detect and Describe: toc: 64128.720000 microseconds 
+Match Keypoints: toc: 2920.829000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 631.393000 microseconds 
+Stitch Image: toc: 786.584000 microseconds 
+Total Computation Time for stitch: 68479.9 Microseconds
+Frames Per Second: 14.6028
+
+
+Stitching Frame 38
+Removing barrel distortion: toc: 23937.095000 microseconds 
+Converting to grayscale: toc: 663.620000 microseconds 
+Uploading image to GPU: toc: 398.904000 microseconds 
+FOUND 2290 keypoints on first image
+FOUND 2423 keypoints on second image
+Detect and Describe: toc: 61235.488000 microseconds 
+Match Keypoints: toc: 2936.910000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 4684.118000 microseconds 
+Stitch Image: toc: 815.338000 microseconds 
+Total Computation Time for stitch: 69684.4 Microseconds
+Frames Per Second: 14.3504
+
+
+Stitching Frame 39
+Removing barrel distortion: toc: 17306.981000 microseconds 
+Converting to grayscale: toc: 534.271000 microseconds 
+Uploading image to GPU: toc: 342.123000 microseconds 
+FOUND 2277 keypoints on first image
+FOUND 2404 keypoints on second image
+Detect and Describe: toc: 63049.280000 microseconds 
+Match Keypoints: toc: 2824.133000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 579.137000 microseconds 
+Stitch Image: toc: 778.422000 microseconds 
+Total Computation Time for stitch: 67242.8 Microseconds
+Frames Per Second: 14.8715
+
+
+Stitching Frame 40
+Removing barrel distortion: toc: 17242.783000 microseconds 
+Converting to grayscale: toc: 531.112000 microseconds 
+Uploading image to GPU: toc: 348.822000 microseconds 
+FOUND 2253 keypoints on first image
+FOUND 2404 keypoints on second image
+Detect and Describe: toc: 62084.132000 microseconds 
+Match Keypoints: toc: 2801.734000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 594.959000 microseconds 
+Stitch Image: toc: 784.568000 microseconds 
+Total Computation Time for stitch: 66277.4 Microseconds
+Frames Per Second: 15.0881
+
+
+Stitching Frame 41
+Removing barrel distortion: toc: 17247.130000 microseconds 
+Converting to grayscale: toc: 519.895000 microseconds 
+Uploading image to GPU: toc: 344.983000 microseconds 
+FOUND 2270 keypoints on first image
+FOUND 2405 keypoints on second image
+Detect and Describe: toc: 66392.253000 microseconds 
+Match Keypoints: toc: 2829.790000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 653.453000 microseconds 
+Stitch Image: toc: 781.328000 microseconds 
+Total Computation Time for stitch: 70671.1 Microseconds
+Frames Per Second: 14.15
+
+
+Stitching Frame 42
+Removing barrel distortion: toc: 17356.487000 microseconds 
+Converting to grayscale: toc: 516.709000 microseconds 
+Uploading image to GPU: toc: 347.761000 microseconds 
+FOUND 2268 keypoints on first image
+FOUND 2402 keypoints on second image
+Detect and Describe: toc: 60442.931000 microseconds 
+Match Keypoints: toc: 2984.982000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 598.342000 microseconds 
+Stitch Image: toc: 785.899000 microseconds 
+Total Computation Time for stitch: 64823.4 Microseconds
+Frames Per Second: 15.4265
+
+
+Stitching Frame 1
+Removing barrel distortion: toc: 610448.766000 microseconds 
+Converting to grayscale: toc: 1269.608000 microseconds 
+Uploading image to GPU: toc: 388209.058000 microseconds 
+FOUND 2169 keypoints on first image
+FOUND 2249 keypoints on second image
+Detect and Describe: toc: 54862.723000 microseconds 
+Match Keypoints: toc: 3336.774000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 831.903000 microseconds 
+Stitch Image: toc: 1068.621000 microseconds 
+Total Computation Time for stitch: 60110.8 Microseconds
+Frames Per Second: 16.636
+
+
+Stitching Frame 2
+Removing barrel distortion: toc: 17622.719000 microseconds 
+Converting to grayscale: toc: 889.943000 microseconds 
+Uploading image to GPU: toc: 355.540000 microseconds 
+FOUND 2197 keypoints on first image
+FOUND 2283 keypoints on second image
+Detect and Describe: toc: 102898.607000 microseconds 
+Match Keypoints: toc: 3752.738000 microseconds 
+X Bound: 822  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1209.327000 microseconds 
+Stitch Image: toc: 2044.415000 microseconds 
+Total Computation Time for stitch: 109930 Microseconds
+Frames Per Second: 9.09671
+
+
+Stitching Frame 3
+Removing barrel distortion: toc: 17358.619000 microseconds 
+Converting to grayscale: toc: 633.525000 microseconds 
+Uploading image to GPU: toc: 368.197000 microseconds 
+FOUND 2156 keypoints on first image
+FOUND 2281 keypoints on second image
+Detect and Describe: toc: 64938.720000 microseconds 
+Match Keypoints: toc: 3095.508000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 800.262000 microseconds 
+Stitch Image: toc: 3318.381000 microseconds 
+Total Computation Time for stitch: 72195.4 Microseconds
+Frames Per Second: 13.8513
+
+
+Stitching Frame 4
+Removing barrel distortion: toc: 23290.829000 microseconds 
+Converting to grayscale: toc: 672.502000 microseconds 
+Uploading image to GPU: toc: 354.106000 microseconds 
+FOUND 2190 keypoints on first image
+FOUND 2278 keypoints on second image
+Detect and Describe: toc: 57379.356000 microseconds 
+Match Keypoints: toc: 4640.141000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1685.415000 microseconds 
+Stitch Image: toc: 1003.717000 microseconds 
+Total Computation Time for stitch: 64733.8 Microseconds
+Frames Per Second: 15.4479
+
+
+Stitching Frame 5
+Removing barrel distortion: toc: 20241.480000 microseconds 
+Converting to grayscale: toc: 676.733000 microseconds 
+Uploading image to GPU: toc: 338.684000 microseconds 
+FOUND 2200 keypoints on first image
+FOUND 2279 keypoints on second image
+Detect and Describe: toc: 58091.153000 microseconds 
+Match Keypoints: toc: 4313.767000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 856.540000 microseconds 
+Stitch Image: toc: 972.125000 microseconds 
+Total Computation Time for stitch: 64252.4 Microseconds
+Frames Per Second: 15.5636
+
+
+Stitching Frame 6
+Removing barrel distortion: toc: 24145.796000 microseconds 
+Converting to grayscale: toc: 672.178000 microseconds 
+Uploading image to GPU: toc: 350.677000 microseconds 
+FOUND 2226 keypoints on first image
+FOUND 2353 keypoints on second image
+Detect and Describe: toc: 58441.595000 microseconds 
+Match Keypoints: toc: 4869.647000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 675.379000 microseconds 
+Stitch Image: toc: 791.737000 microseconds 
+Total Computation Time for stitch: 64792 Microseconds
+Frames Per Second: 15.434
+
+
+Stitching Frame 7
+Removing barrel distortion: toc: 23823.990000 microseconds 
+Converting to grayscale: toc: 548.911000 microseconds 
+Uploading image to GPU: toc: 336.926000 microseconds 
+FOUND 2259 keypoints on first image
+FOUND 2382 keypoints on second image
+Detect and Describe: toc: 57093.569000 microseconds 
+Match Keypoints: toc: 3834.296000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 3261.905000 microseconds 
+Stitch Image: toc: 805.802000 microseconds 
+Total Computation Time for stitch: 65013.3 Microseconds
+Frames Per Second: 15.3815
+
+
+Stitching Frame 8
+Removing barrel distortion: toc: 17283.377000 microseconds 
+Converting to grayscale: toc: 620.637000 microseconds 
+Uploading image to GPU: toc: 366.898000 microseconds 
+FOUND 2247 keypoints on first image
+FOUND 2409 keypoints on second image
+Detect and Describe: toc: 64037.933000 microseconds 
+Match Keypoints: toc: 2955.360000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 617.154000 microseconds 
+Stitch Image: toc: 779.107000 microseconds 
+Total Computation Time for stitch: 68400.7 Microseconds
+Frames Per Second: 14.6197
+
+
+Stitching Frame 9
+Removing barrel distortion: toc: 17238.011000 microseconds 
+Converting to grayscale: toc: 717.530000 microseconds 
+Uploading image to GPU: toc: 345.629000 microseconds 
+FOUND 2243 keypoints on first image
+FOUND 2395 keypoints on second image
+Detect and Describe: toc: 58388.306000 microseconds 
+Match Keypoints: toc: 3213.775000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 657.438000 microseconds 
+Stitch Image: toc: 799.193000 microseconds 
+Total Computation Time for stitch: 63073.3 Microseconds
+Frames Per Second: 15.8546
+
+
+Stitching Frame 10
+Removing barrel distortion: toc: 17952.932000 microseconds 
+Converting to grayscale: toc: 652.275000 microseconds 
+Uploading image to GPU: toc: 344.461000 microseconds 
+FOUND 2257 keypoints on first image
+FOUND 2358 keypoints on second image
+Detect and Describe: toc: 58524.934000 microseconds 
+Match Keypoints: toc: 3077.128000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 857.392000 microseconds 
+Stitch Image: toc: 1046.050000 microseconds 
+Total Computation Time for stitch: 63520 Microseconds
+Frames Per Second: 15.7431
+
+
+Stitching Frame 11
+Removing barrel distortion: toc: 17781.039000 microseconds 
+Converting to grayscale: toc: 554.438000 microseconds 
+Uploading image to GPU: toc: 332.514000 microseconds 
+FOUND 2224 keypoints on first image
+FOUND 2371 keypoints on second image
+Detect and Describe: toc: 58868.598000 microseconds 
+Match Keypoints: toc: 2782.146000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 602.392000 microseconds 
+Stitch Image: toc: 788.847000 microseconds 
+Total Computation Time for stitch: 63056.4 Microseconds
+Frames Per Second: 15.8588
+
+
+Stitching Frame 12
+Removing barrel distortion: toc: 17318.028000 microseconds 
+Converting to grayscale: toc: 688.270000 microseconds 
+Uploading image to GPU: toc: 347.243000 microseconds 
+FOUND 2216 keypoints on first image
+FOUND 2372 keypoints on second image
+Detect and Describe: toc: 61488.043000 microseconds 
+Match Keypoints: toc: 3616.457000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 817.426000 microseconds 
+Stitch Image: toc: 843.137000 microseconds 
+Total Computation Time for stitch: 66783.2 Microseconds
+Frames Per Second: 14.9738
+
+
+Stitching Frame 13
+Removing barrel distortion: toc: 17777.707000 microseconds 
+Converting to grayscale: toc: 565.444000 microseconds 
+Uploading image to GPU: toc: 356.265000 microseconds 
+FOUND 2250 keypoints on first image
+FOUND 2371 keypoints on second image
+Detect and Describe: toc: 64073.725000 microseconds 
+Match Keypoints: toc: 3700.798000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 606.015000 microseconds 
+Stitch Image: toc: 778.244000 microseconds 
+Total Computation Time for stitch: 69171 Microseconds
+Frames Per Second: 14.4569
+
+
+Stitching Frame 14
+Removing barrel distortion: toc: 17253.336000 microseconds 
+Converting to grayscale: toc: 683.714000 microseconds 
+Uploading image to GPU: toc: 335.141000 microseconds 
+FOUND 2232 keypoints on first image
+FOUND 2381 keypoints on second image
+Detect and Describe: toc: 60427.761000 microseconds 
+Match Keypoints: toc: 3101.343000 microseconds 
+X Bound: 819  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 603.709000 microseconds 
+Stitch Image: toc: 789.787000 microseconds 
+Total Computation Time for stitch: 64933.7 Microseconds
+Frames Per Second: 15.4003
+
+
+Stitching Frame 15
+Removing barrel distortion: toc: 17300.992000 microseconds 
+Converting to grayscale: toc: 679.373000 microseconds 
+Uploading image to GPU: toc: 337.852000 microseconds 
+FOUND 2239 keypoints on first image
+FOUND 2388 keypoints on second image
+Detect and Describe: toc: 60343.949000 microseconds 
+Match Keypoints: toc: 3728.276000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 598.233000 microseconds 
+Stitch Image: toc: 792.866000 microseconds 
+Total Computation Time for stitch: 65475.3 Microseconds
+Frames Per Second: 15.2729
+
+
+Stitching Frame 16
+Removing barrel distortion: toc: 17326.439000 microseconds 
+Converting to grayscale: toc: 683.550000 microseconds 
+Uploading image to GPU: toc: 353.258000 microseconds 
+FOUND 2237 keypoints on first image
+FOUND 2416 keypoints on second image
+Detect and Describe: toc: 61490.072000 microseconds 
+Match Keypoints: toc: 2636.619000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 633.279000 microseconds 
+Stitch Image: toc: 790.254000 microseconds 
+Total Computation Time for stitch: 65561.3 Microseconds
+Frames Per Second: 15.2529
+
+
+Stitching Frame 17
+Removing barrel distortion: toc: 17523.213000 microseconds 
+Converting to grayscale: toc: 604.053000 microseconds 
+Uploading image to GPU: toc: 372.128000 microseconds 
+FOUND 2237 keypoints on first image
+FOUND 2415 keypoints on second image
+Detect and Describe: toc: 59597.556000 microseconds 
+Match Keypoints: toc: 2613.946000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 692.274000 microseconds 
+Stitch Image: toc: 1003.952000 microseconds 
+Total Computation Time for stitch: 63919.3 Microseconds
+Frames Per Second: 15.6447
+
+
+Stitching Frame 18
+Removing barrel distortion: toc: 16692.696000 microseconds 
+Converting to grayscale: toc: 542.671000 microseconds 
+Uploading image to GPU: toc: 325.481000 microseconds 
+FOUND 2249 keypoints on first image
+FOUND 2416 keypoints on second image
+Detect and Describe: toc: 50427.737000 microseconds 
+Match Keypoints: toc: 2697.621000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 693.880000 microseconds 
+Stitch Image: toc: 1010.951000 microseconds 
+Total Computation Time for stitch: 54841.5 Microseconds
+Frames Per Second: 18.2344
+
+
+Stitching Frame 19
+Removing barrel distortion: toc: 16647.598000 microseconds 
+Converting to grayscale: toc: 541.119000 microseconds 
+Uploading image to GPU: toc: 418.131000 microseconds 
+FOUND 2275 keypoints on first image
+FOUND 2406 keypoints on second image
+Detect and Describe: toc: 52044.879000 microseconds 
+Match Keypoints: toc: 2680.018000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 587.184000 microseconds 
+Stitch Image: toc: 778.940000 microseconds 
+Total Computation Time for stitch: 56105.8 Microseconds
+Frames Per Second: 17.8235
+
+
+Stitching Frame 20
+Removing barrel distortion: toc: 24244.645000 microseconds 
+Converting to grayscale: toc: 1995.515000 microseconds 
+Uploading image to GPU: toc: 391.795000 microseconds 
+FOUND 2277 keypoints on first image
+FOUND 2379 keypoints on second image
+Detect and Describe: toc: 64288.912000 microseconds 
+Match Keypoints: toc: 2818.850000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 587.373000 microseconds 
+Stitch Image: toc: 795.244000 microseconds 
+Total Computation Time for stitch: 68502.4 Microseconds
+Frames Per Second: 14.598
+
+
+Stitching Frame 21
+Removing barrel distortion: toc: 23986.334000 microseconds 
+Converting to grayscale: toc: 675.854000 microseconds 
+Uploading image to GPU: toc: 429.654000 microseconds 
+FOUND 2272 keypoints on first image
+FOUND 2384 keypoints on second image
+Detect and Describe: toc: 61797.489000 microseconds 
+Match Keypoints: toc: 2813.839000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 711.895000 microseconds 
+Stitch Image: toc: 1000.410000 microseconds 
+Total Computation Time for stitch: 66335.7 Microseconds
+Frames Per Second: 15.0748
+
+
+Stitching Frame 22
+Removing barrel distortion: toc: 17139.031000 microseconds 
+Converting to grayscale: toc: 530.097000 microseconds 
+Uploading image to GPU: toc: 329.330000 microseconds 
+FOUND 2260 keypoints on first image
+FOUND 2385 keypoints on second image
+Detect and Describe: toc: 50206.062000 microseconds 
+Match Keypoints: toc: 2777.680000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 572.683000 microseconds 
+Stitch Image: toc: 787.411000 microseconds 
+Total Computation Time for stitch: 54353.7 Microseconds
+Frames Per Second: 18.398
+
+
+Stitching Frame 23
+Removing barrel distortion: toc: 17320.576000 microseconds 
+Converting to grayscale: toc: 677.739000 microseconds 
+Uploading image to GPU: toc: 349.252000 microseconds 
+FOUND 2274 keypoints on first image
+FOUND 2390 keypoints on second image
+Detect and Describe: toc: 64088.891000 microseconds 
+Match Keypoints: toc: 2681.314000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 611.049000 microseconds 
+Stitch Image: toc: 796.431000 microseconds 
+Total Computation Time for stitch: 68189.5 Microseconds
+Frames Per Second: 14.665
+
+
+Stitching Frame 24
+Removing barrel distortion: toc: 17696.289000 microseconds 
+Converting to grayscale: toc: 698.804000 microseconds 
+Uploading image to GPU: toc: 360.466000 microseconds 
+FOUND 2246 keypoints on first image
+FOUND 2377 keypoints on second image
+Detect and Describe: toc: 76606.364000 microseconds 
+Match Keypoints: toc: 2912.059000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 633.907000 microseconds 
+Stitch Image: toc: 781.569000 microseconds 
+Total Computation Time for stitch: 80946.6 Microseconds
+Frames Per Second: 12.3538
+
+
+Stitching Frame 25
+Removing barrel distortion: toc: 18021.202000 microseconds 
+Converting to grayscale: toc: 667.512000 microseconds 
+Uploading image to GPU: toc: 385.529000 microseconds 
+FOUND 2260 keypoints on first image
+FOUND 2398 keypoints on second image
+Detect and Describe: toc: 62693.527000 microseconds 
+Match Keypoints: toc: 3639.360000 microseconds 
+X Bound: 817  Y Bound: 525  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 638.715000 microseconds 
+Stitch Image: toc: 803.794000 microseconds 
+Total Computation Time for stitch: 67788.1 Microseconds
+Frames Per Second: 14.7519
+
+
+Stitching Frame 26
+Removing barrel distortion: toc: 17410.736000 microseconds 
+Converting to grayscale: toc: 671.224000 microseconds 
+Uploading image to GPU: toc: 524.268000 microseconds 
+FOUND 2260 keypoints on first image
+FOUND 2408 keypoints on second image
+Detect and Describe: toc: 56338.730000 microseconds 
+Match Keypoints: toc: 2944.496000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 600.073000 microseconds 
+Stitch Image: toc: 778.268000 microseconds 
+Total Computation Time for stitch: 60673.8 Microseconds
+Frames Per Second: 16.4816
+
+
+Stitching Frame 27
+Removing barrel distortion: toc: 17295.655000 microseconds 
+Converting to grayscale: toc: 712.421000 microseconds 
+Uploading image to GPU: toc: 345.856000 microseconds 
+FOUND 2266 keypoints on first image
+FOUND 2419 keypoints on second image
+Detect and Describe: toc: 75703.636000 microseconds 
+Match Keypoints: toc: 3248.791000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 648.868000 microseconds 
+Stitch Image: toc: 802.331000 microseconds 
+Total Computation Time for stitch: 80416.2 Microseconds
+Frames Per Second: 12.4353
+
+
+Stitching Frame 28
+Removing barrel distortion: toc: 17950.166000 microseconds 
+Converting to grayscale: toc: 578.891000 microseconds 
+Uploading image to GPU: toc: 367.899000 microseconds 
+FOUND 2241 keypoints on first image
+FOUND 2423 keypoints on second image
+Detect and Describe: toc: 75214.099000 microseconds 
+Match Keypoints: toc: 2855.489000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 623.305000 microseconds 
+Stitch Image: toc: 790.217000 microseconds 
+Total Computation Time for stitch: 79496.7 Microseconds
+Frames Per Second: 12.5791
+
+
+Stitching Frame 29
+Removing barrel distortion: toc: 24452.092000 microseconds 
+Converting to grayscale: toc: 708.106000 microseconds 
+Uploading image to GPU: toc: 364.247000 microseconds 
+FOUND 2267 keypoints on first image
+FOUND 2419 keypoints on second image
+Detect and Describe: toc: 60748.448000 microseconds 
+Match Keypoints: toc: 2821.955000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 4713.152000 microseconds 
+Stitch Image: toc: 823.166000 microseconds 
+Total Computation Time for stitch: 69120.3 Microseconds
+Frames Per Second: 14.4675
+
+
+Stitching Frame 30
+Removing barrel distortion: toc: 24411.476000 microseconds 
+Converting to grayscale: toc: 738.058000 microseconds 
+Uploading image to GPU: toc: 369.556000 microseconds 
+FOUND 2257 keypoints on first image
+FOUND 2441 keypoints on second image
+Detect and Describe: toc: 73288.567000 microseconds 
+Match Keypoints: toc: 3285.391000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 792.675000 microseconds 
+Stitch Image: toc: 826.821000 microseconds 
+Total Computation Time for stitch: 78212.7 Microseconds
+Frames Per Second: 12.7856
+
+
+Stitching Frame 31
+Removing barrel distortion: toc: 24624.287000 microseconds 
+Converting to grayscale: toc: 563.402000 microseconds 
+Uploading image to GPU: toc: 451.189000 microseconds 
+FOUND 2240 keypoints on first image
+FOUND 2406 keypoints on second image
+Detect and Describe: toc: 70267.420000 microseconds 
+Match Keypoints: toc: 2782.394000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 774.699000 microseconds 
+Stitch Image: toc: 1110.945000 microseconds 
+Total Computation Time for stitch: 74949.8 Microseconds
+Frames Per Second: 13.3423
+
+
+Stitching Frame 32
+Removing barrel distortion: toc: 22988.538000 microseconds 
+Converting to grayscale: toc: 707.142000 microseconds 
+Uploading image to GPU: toc: 458.292000 microseconds 
+FOUND 2239 keypoints on first image
+FOUND 2373 keypoints on second image
+Detect and Describe: toc: 54871.113000 microseconds 
+Match Keypoints: toc: 4373.749000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 767.655000 microseconds 
+Stitch Image: toc: 865.058000 microseconds 
+Total Computation Time for stitch: 60892.7 Microseconds
+Frames Per Second: 16.4223
+
+
+Stitching Frame 33
+Removing barrel distortion: toc: 25354.678000 microseconds 
+Converting to grayscale: toc: 590.482000 microseconds 
+Uploading image to GPU: toc: 396.618000 microseconds 
+FOUND 2275 keypoints on first image
+FOUND 2370 keypoints on second image
+Detect and Describe: toc: 55471.061000 microseconds 
+Match Keypoints: toc: 4526.179000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 775.877000 microseconds 
+Stitch Image: toc: 870.162000 microseconds 
+Total Computation Time for stitch: 61658.6 Microseconds
+Frames Per Second: 16.2183
+
+
+Stitching Frame 34
+Removing barrel distortion: toc: 26115.134000 microseconds 
+Converting to grayscale: toc: 1083.311000 microseconds 
+Uploading image to GPU: toc: 538.441000 microseconds 
+FOUND 2267 keypoints on first image
+FOUND 2394 keypoints on second image
+Detect and Describe: toc: 60053.088000 microseconds 
+Match Keypoints: toc: 2737.709000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 823.505000 microseconds 
+Stitch Image: toc: 2077.371000 microseconds 
+Total Computation Time for stitch: 65712.8 Microseconds
+Frames Per Second: 15.2177
+
+
+Stitching Frame 35
+Removing barrel distortion: toc: 24039.753000 microseconds 
+Converting to grayscale: toc: 669.643000 microseconds 
+Uploading image to GPU: toc: 347.619000 microseconds 
+FOUND 2302 keypoints on first image
+FOUND 2390 keypoints on second image
+Detect and Describe: toc: 62441.131000 microseconds 
+Match Keypoints: toc: 4776.019000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 11045.941000 microseconds 
+Stitch Image: toc: 2333.682000 microseconds 
+Total Computation Time for stitch: 80632 Microseconds
+Frames Per Second: 12.402
+
+
+Stitching Frame 36
+Removing barrel distortion: toc: 17480.765000 microseconds 
+Converting to grayscale: toc: 598.249000 microseconds 
+Uploading image to GPU: toc: 359.071000 microseconds 
+FOUND 2254 keypoints on first image
+FOUND 2417 keypoints on second image
+Detect and Describe: toc: 62440.588000 microseconds 
+Match Keypoints: toc: 2983.268000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 813.041000 microseconds 
+Stitch Image: toc: 6425.973000 microseconds 
+Total Computation Time for stitch: 72678.7 Microseconds
+Frames Per Second: 13.7592
+
+
+Stitching Frame 37
+Removing barrel distortion: toc: 17364.417000 microseconds 
+Converting to grayscale: toc: 709.679000 microseconds 
+Uploading image to GPU: toc: 458.312000 microseconds 
+FOUND 2291 keypoints on first image
+FOUND 2417 keypoints on second image
+Detect and Describe: toc: 68079.146000 microseconds 
+Match Keypoints: toc: 3258.863000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 738.246000 microseconds 
+Stitch Image: toc: 1030.682000 microseconds 
+Total Computation Time for stitch: 73126.9 Microseconds
+Frames Per Second: 13.6749
+
+
+Stitching Frame 38
+Removing barrel distortion: toc: 18082.831000 microseconds 
+Converting to grayscale: toc: 655.453000 microseconds 
+Uploading image to GPU: toc: 398.409000 microseconds 
+FOUND 2290 keypoints on first image
+FOUND 2423 keypoints on second image
+Detect and Describe: toc: 60091.385000 microseconds 
+Match Keypoints: toc: 3668.579000 microseconds 
+X Bound: 819  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 783.416000 microseconds 
+Stitch Image: toc: 1075.451000 microseconds 
+Total Computation Time for stitch: 65639.1 Microseconds
+Frames Per Second: 15.2348
+
+
+Stitching Frame 39
+Removing barrel distortion: toc: 17799.076000 microseconds 
+Converting to grayscale: toc: 650.387000 microseconds 
+Uploading image to GPU: toc: 341.286000 microseconds 
+FOUND 2277 keypoints on first image
+FOUND 2404 keypoints on second image
+Detect and Describe: toc: 56348.826000 microseconds 
+Match Keypoints: toc: 3023.800000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 800.211000 microseconds 
+Stitch Image: toc: 903.858000 microseconds 
+Total Computation Time for stitch: 61096.3 Microseconds
+Frames Per Second: 16.3676
+
+
+Stitching Frame 40
+Removing barrel distortion: toc: 20918.826000 microseconds 
+Converting to grayscale: toc: 558.168000 microseconds 
+Uploading image to GPU: toc: 371.749000 microseconds 
+FOUND 2253 keypoints on first image
+FOUND 2404 keypoints on second image
+Detect and Describe: toc: 60039.486000 microseconds 
+Match Keypoints: toc: 4362.273000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1001.592000 microseconds 
+Stitch Image: toc: 1227.779000 microseconds 
+Total Computation Time for stitch: 66654 Microseconds
+Frames Per Second: 15.0029
+
+
+Stitching Frame 41
+Removing barrel distortion: toc: 17983.551000 microseconds 
+Converting to grayscale: toc: 525.520000 microseconds 
+Uploading image to GPU: toc: 337.725000 microseconds 
+FOUND 2270 keypoints on first image
+FOUND 2405 keypoints on second image
+Detect and Describe: toc: 52586.593000 microseconds 
+Match Keypoints: toc: 2867.034000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 656.429000 microseconds 
+Stitch Image: toc: 1002.208000 microseconds 
+Total Computation Time for stitch: 57123.5 Microseconds
+Frames Per Second: 17.5059
+
+
+Stitching Frame 42
+Removing barrel distortion: toc: 16729.496000 microseconds 
+Converting to grayscale: toc: 520.734000 microseconds 
+Uploading image to GPU: toc: 367.996000 microseconds 
+FOUND 2268 keypoints on first image
+FOUND 2402 keypoints on second image
+Detect and Describe: toc: 50381.166000 microseconds 
+Match Keypoints: toc: 2791.280000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 591.021000 microseconds 
+Stitch Image: toc: 776.233000 microseconds 
+Total Computation Time for stitch: 54549.6 Microseconds
+Frames Per Second: 18.3319
+
+
+Stitching Frame 43
+Removing barrel distortion: toc: 23906.161000 microseconds 
+Converting to grayscale: toc: 698.652000 microseconds 
+Uploading image to GPU: toc: 410.857000 microseconds 
+FOUND 2255 keypoints on first image
+FOUND 2418 keypoints on second image
+Detect and Describe: toc: 60370.298000 microseconds 
+Match Keypoints: toc: 2873.466000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 661.593000 microseconds 
+Stitch Image: toc: 982.249000 microseconds 
+Total Computation Time for stitch: 64900 Microseconds
+Frames Per Second: 15.4083
+
+
+Stitching Frame 44
+Removing barrel distortion: toc: 16803.798000 microseconds 
+Converting to grayscale: toc: 533.490000 microseconds 
+Uploading image to GPU: toc: 334.631000 microseconds 
+FOUND 2257 keypoints on first image
+FOUND 2431 keypoints on second image
+Detect and Describe: toc: 50416.209000 microseconds 
+Match Keypoints: toc: 2641.506000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 588.449000 microseconds 
+Stitch Image: toc: 777.483000 microseconds 
+Total Computation Time for stitch: 54433.7 Microseconds
+Frames Per Second: 18.371
+
+
+Stitching Frame 45
+Removing barrel distortion: toc: 24321.236000 microseconds 
+Converting to grayscale: toc: 609.538000 microseconds 
+Uploading image to GPU: toc: 351.798000 microseconds 
+FOUND 2235 keypoints on first image
+FOUND 2402 keypoints on second image
+Detect and Describe: toc: 60104.439000 microseconds 
+Match Keypoints: toc: 2762.376000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 712.995000 microseconds 
+Stitch Image: toc: 1943.443000 microseconds 
+Total Computation Time for stitch: 65537.3 Microseconds
+Frames Per Second: 15.2585
+
+
+Stitching Frame 46
+Removing barrel distortion: toc: 17207.968000 microseconds 
+Converting to grayscale: toc: 537.839000 microseconds 
+Uploading image to GPU: toc: 339.744000 microseconds 
+FOUND 2259 keypoints on first image
+FOUND 2380 keypoints on second image
+Detect and Describe: toc: 56600.595000 microseconds 
+Match Keypoints: toc: 2833.460000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 658.751000 microseconds 
+Stitch Image: toc: 805.407000 microseconds 
+Total Computation Time for stitch: 60910.5 Microseconds
+Frames Per Second: 16.4175
+
+
+Stitching Frame 47
+Removing barrel distortion: toc: 17397.909000 microseconds 
+Converting to grayscale: toc: 587.779000 microseconds 
+Uploading image to GPU: toc: 423.558000 microseconds 
+FOUND 2252 keypoints on first image
+FOUND 2387 keypoints on second image
+Detect and Describe: toc: 64183.294000 microseconds 
+Match Keypoints: toc: 2683.611000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 690.322000 microseconds 
+Stitch Image: toc: 815.314000 microseconds 
+Total Computation Time for stitch: 68385.6 Microseconds
+Frames Per Second: 14.623
+
+
+Stitching Frame 48
+Removing barrel distortion: toc: 17436.963000 microseconds 
+Converting to grayscale: toc: 650.251000 microseconds 
+Uploading image to GPU: toc: 344.658000 microseconds 
+FOUND 2280 keypoints on first image
+FOUND 2400 keypoints on second image
+Detect and Describe: toc: 65040.031000 microseconds 
+Match Keypoints: toc: 2751.683000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 665.428000 microseconds 
+Stitch Image: toc: 1006.197000 microseconds 
+Total Computation Time for stitch: 69474.7 Microseconds
+Frames Per Second: 14.3937
+
+
+Stitching Frame 49
+Removing barrel distortion: toc: 16755.556000 microseconds 
+Converting to grayscale: toc: 532.062000 microseconds 
+Uploading image to GPU: toc: 336.725000 microseconds 
+FOUND 2261 keypoints on first image
+FOUND 2390 keypoints on second image
+Detect and Describe: toc: 51289.300000 microseconds 
+Match Keypoints: toc: 2842.382000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1209.984000 microseconds 
+Stitch Image: toc: 5490.780000 microseconds 
+Total Computation Time for stitch: 60843.9 Microseconds
+Frames Per Second: 16.4355
+
+
+Stitching Frame 50
+Removing barrel distortion: toc: 24041.612000 microseconds 
+Converting to grayscale: toc: 671.151000 microseconds 
+Uploading image to GPU: toc: 417.155000 microseconds 
+FOUND 2261 keypoints on first image
+FOUND 2404 keypoints on second image
+Detect and Describe: toc: 60552.336000 microseconds 
+Match Keypoints: toc: 2745.541000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 590.024000 microseconds 
+Stitch Image: toc: 796.339000 microseconds 
+Total Computation Time for stitch: 64696.6 Microseconds
+Frames Per Second: 15.4568
+
+
+Stitching Frame 51
+Removing barrel distortion: toc: 24123.658000 microseconds 
+Converting to grayscale: toc: 668.814000 microseconds 
+Uploading image to GPU: toc: 408.575000 microseconds 
+FOUND 2284 keypoints on first image
+FOUND 2413 keypoints on second image
+Detect and Describe: toc: 66754.032000 microseconds 
+Match Keypoints: toc: 2787.608000 microseconds 
+X Bound: 818  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 627.012000 microseconds 
+Stitch Image: toc: 794.453000 microseconds 
+Total Computation Time for stitch: 70977.9 Microseconds
+Frames Per Second: 14.0889
+
+
+Stitching Frame 52
+Removing barrel distortion: toc: 19038.498000 microseconds 
+Converting to grayscale: toc: 657.534000 microseconds 
+Uploading image to GPU: toc: 335.135000 microseconds 
+FOUND 2269 keypoints on first image
+FOUND 2401 keypoints on second image
+Detect and Describe: toc: 63511.625000 microseconds 
+Match Keypoints: toc: 2731.541000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 733.667000 microseconds 
+Stitch Image: toc: 813.156000 microseconds 
+Total Computation Time for stitch: 67802.5 Microseconds
+Frames Per Second: 14.7487
+
+
+Stitching Frame 53
+Removing barrel distortion: toc: 17254.285000 microseconds 
+Converting to grayscale: toc: 688.843000 microseconds 
+Uploading image to GPU: toc: 356.665000 microseconds 
+FOUND 2279 keypoints on first image
+FOUND 2399 keypoints on second image
+Detect and Describe: toc: 60301.679000 microseconds 
+Match Keypoints: toc: 2796.243000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 600.463000 microseconds 
+Stitch Image: toc: 783.064000 microseconds 
+Total Computation Time for stitch: 64493.2 Microseconds
+Frames Per Second: 15.5055
+
+
+Stitching Frame 54
+Removing barrel distortion: toc: 24233.872000 microseconds 
+Converting to grayscale: toc: 667.112000 microseconds 
+Uploading image to GPU: toc: 396.305000 microseconds 
+FOUND 2283 keypoints on first image
+FOUND 2401 keypoints on second image
+Detect and Describe: toc: 68655.736000 microseconds 
+Match Keypoints: toc: 2796.123000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 599.434000 microseconds 
+Stitch Image: toc: 796.313000 microseconds 
+Total Computation Time for stitch: 72859 Microseconds
+Frames Per Second: 13.7251
+
+
+Stitching Frame 55
+Removing barrel distortion: toc: 23884.263000 microseconds 
+Converting to grayscale: toc: 556.796000 microseconds 
+Uploading image to GPU: toc: 408.338000 microseconds 
+FOUND 2263 keypoints on first image
+FOUND 2407 keypoints on second image
+Detect and Describe: toc: 59134.602000 microseconds 
+Match Keypoints: toc: 2730.916000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 5670.253000 microseconds 
+Stitch Image: toc: 1002.327000 microseconds 
+Total Computation Time for stitch: 68550.6 Microseconds
+Frames Per Second: 14.5878
+
+
+Stitching Frame 56
+Removing barrel distortion: toc: 16772.304000 microseconds 
+Converting to grayscale: toc: 557.244000 microseconds 
+Uploading image to GPU: toc: 347.838000 microseconds 
+FOUND 2264 keypoints on first image
+FOUND 2398 keypoints on second image
+Detect and Describe: toc: 50337.146000 microseconds 
+Match Keypoints: toc: 2756.073000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 647.749000 microseconds 
+Stitch Image: toc: 1013.449000 microseconds 
+Total Computation Time for stitch: 54764.2 Microseconds
+Frames Per Second: 18.2601
+
+
+Stitching Frame 57
+Removing barrel distortion: toc: 16809.307000 microseconds 
+Converting to grayscale: toc: 584.487000 microseconds 
+Uploading image to GPU: toc: 330.589000 microseconds 
+FOUND 2268 keypoints on first image
+FOUND 2396 keypoints on second image
+Detect and Describe: toc: 50377.173000 microseconds 
+Match Keypoints: toc: 2861.749000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 690.636000 microseconds 
+Stitch Image: toc: 822.663000 microseconds 
+Total Computation Time for stitch: 54768.6 Microseconds
+Frames Per Second: 18.2586
+
+
+Stitching Frame 58
+Removing barrel distortion: toc: 23702.656000 microseconds 
+Converting to grayscale: toc: 553.417000 microseconds 
+Uploading image to GPU: toc: 348.436000 microseconds 
+FOUND 2274 keypoints on first image
+FOUND 2397 keypoints on second image
+Detect and Describe: toc: 55581.052000 microseconds 
+Match Keypoints: toc: 3758.794000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 3665.686000 microseconds 
+Stitch Image: toc: 812.058000 microseconds 
+Total Computation Time for stitch: 63835.8 Microseconds
+Frames Per Second: 15.6652
+
+
+Stitching Frame 59
+Removing barrel distortion: toc: 24110.175000 microseconds 
+Converting to grayscale: toc: 559.463000 microseconds 
+Uploading image to GPU: toc: 399.024000 microseconds 
+FOUND 2268 keypoints on first image
+FOUND 2399 keypoints on second image
+Detect and Describe: toc: 60986.482000 microseconds 
+Match Keypoints: toc: 3348.675000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 700.475000 microseconds 
+Stitch Image: toc: 790.014000 microseconds 
+Total Computation Time for stitch: 65839.4 Microseconds
+Frames Per Second: 15.1885
+
+
+Stitching Frame 60
+Removing barrel distortion: toc: 23967.022000 microseconds 
+Converting to grayscale: toc: 722.324000 microseconds 
+Uploading image to GPU: toc: 441.167000 microseconds 
+FOUND 2249 keypoints on first image
+FOUND 2380 keypoints on second image
+Detect and Describe: toc: 63944.360000 microseconds 
+Match Keypoints: toc: 2865.536000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 599.470000 microseconds 
+Stitch Image: toc: 792.740000 microseconds 
+Total Computation Time for stitch: 68216.6 Microseconds
+Frames Per Second: 14.6592
+
+
+Stitching Frame 61
+Removing barrel distortion: toc: 23882.976000 microseconds 
+Converting to grayscale: toc: 559.370000 microseconds 
+Uploading image to GPU: toc: 410.011000 microseconds 
+FOUND 2282 keypoints on first image
+FOUND 2447 keypoints on second image
+Detect and Describe: toc: 61109.081000 microseconds 
+Match Keypoints: toc: 2915.353000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 5183.158000 microseconds 
+Stitch Image: toc: 996.309000 microseconds 
+Total Computation Time for stitch: 70216.4 Microseconds
+Frames Per Second: 14.2417
+
+
+Stitching Frame 62
+Removing barrel distortion: toc: 16784.817000 microseconds 
+Converting to grayscale: toc: 571.138000 microseconds 
+Uploading image to GPU: toc: 324.431000 microseconds 
+FOUND 2282 keypoints on first image
+FOUND 2458 keypoints on second image
+Detect and Describe: toc: 50844.540000 microseconds 
+Match Keypoints: toc: 2692.786000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 587.879000 microseconds 
+Stitch Image: toc: 788.150000 microseconds 
+Total Computation Time for stitch: 54924.5 Microseconds
+Frames Per Second: 18.2068
+
+
+Stitching Frame 63
+Removing barrel distortion: toc: 17325.212000 microseconds 
+Converting to grayscale: toc: 507.238000 microseconds 
+Uploading image to GPU: toc: 338.797000 microseconds 
+FOUND 2276 keypoints on first image
+FOUND 2456 keypoints on second image
+Detect and Describe: toc: 59104.732000 microseconds 
+Match Keypoints: toc: 2983.057000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 764.745000 microseconds 
+Stitch Image: toc: 1010.071000 microseconds 
+Total Computation Time for stitch: 63876.2 Microseconds
+Frames Per Second: 15.6553
+
+
+Stitching Frame 64
+Removing barrel distortion: toc: 17045.604000 microseconds 
+Converting to grayscale: toc: 573.851000 microseconds 
+Uploading image to GPU: toc: 451.273000 microseconds 
+FOUND 2286 keypoints on first image
+FOUND 2426 keypoints on second image
+Detect and Describe: toc: 54865.217000 microseconds 
+Match Keypoints: toc: 2652.054000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 631.475000 microseconds 
+Stitch Image: toc: 1078.486000 microseconds 
+Total Computation Time for stitch: 59239.4 Microseconds
+Frames Per Second: 16.8807
+
+
+Stitching Frame 65
+Removing barrel distortion: toc: 16856.206000 microseconds 
+Converting to grayscale: toc: 545.217000 microseconds 
+Uploading image to GPU: toc: 330.781000 microseconds 
+FOUND 2290 keypoints on first image
+FOUND 2428 keypoints on second image
+Detect and Describe: toc: 51553.944000 microseconds 
+Match Keypoints: toc: 2779.790000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 604.920000 microseconds 
+Stitch Image: toc: 861.490000 microseconds 
+Total Computation Time for stitch: 55811.2 Microseconds
+Frames Per Second: 17.9176
+
+
+Stitching Frame 66
+Removing barrel distortion: toc: 17372.880000 microseconds 
+Converting to grayscale: toc: 674.663000 microseconds 
+Uploading image to GPU: toc: 353.394000 microseconds 
+FOUND 2271 keypoints on first image
+FOUND 2458 keypoints on second image
+Detect and Describe: toc: 59232.353000 microseconds 
+Match Keypoints: toc: 2818.025000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 607.128000 microseconds 
+Stitch Image: toc: 776.520000 microseconds 
+Total Computation Time for stitch: 63445.5 Microseconds
+Frames Per Second: 15.7615
+
+
+Stitching Frame 67
+Removing barrel distortion: toc: 17270.986000 microseconds 
+Converting to grayscale: toc: 682.863000 microseconds 
+Uploading image to GPU: toc: 348.175000 microseconds 
+FOUND 2254 keypoints on first image
+FOUND 2422 keypoints on second image
+Detect and Describe: toc: 60886.155000 microseconds 
+Match Keypoints: toc: 2581.941000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 596.800000 microseconds 
+Stitch Image: toc: 792.356000 microseconds 
+Total Computation Time for stitch: 64870.1 Microseconds
+Frames Per Second: 15.4154
+
+
+Stitching Frame 68
+Removing barrel distortion: toc: 17329.453000 microseconds 
+Converting to grayscale: toc: 685.564000 microseconds 
+Uploading image to GPU: toc: 349.803000 microseconds 
+FOUND 2254 keypoints on first image
+FOUND 2417 keypoints on second image
+Detect and Describe: toc: 61405.523000 microseconds 
+Match Keypoints: toc: 2979.656000 microseconds 
+X Bound: 821  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 656.244000 microseconds 
+Stitch Image: toc: 996.592000 microseconds 
+Total Computation Time for stitch: 66049.7 Microseconds
+Frames Per Second: 15.1401
+
+
+Stitching Frame 69
+Removing barrel distortion: toc: 16764.547000 microseconds 
+Converting to grayscale: toc: 542.727000 microseconds 
+Uploading image to GPU: toc: 332.849000 microseconds 
+FOUND 2302 keypoints on first image
+FOUND 2419 keypoints on second image
+Detect and Describe: toc: 51204.747000 microseconds 
+Match Keypoints: toc: 2987.137000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 623.137000 microseconds 
+Stitch Image: toc: 799.068000 microseconds 
+Total Computation Time for stitch: 55625.9 Microseconds
+Frames Per Second: 17.9772
+
+
+Stitching Frame 70
+Removing barrel distortion: toc: 17399.924000 microseconds 
+Converting to grayscale: toc: 719.586000 microseconds 
+Uploading image to GPU: toc: 655.102000 microseconds 
+FOUND 2279 keypoints on first image
+FOUND 2384 keypoints on second image
+Detect and Describe: toc: 68865.531000 microseconds 
+Match Keypoints: toc: 2881.949000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 791.603000 microseconds 
+Stitch Image: toc: 1297.588000 microseconds 
+Total Computation Time for stitch: 73849.8 Microseconds
+Frames Per Second: 13.541
+
+
+Stitching Frame 71
+Removing barrel distortion: toc: 24035.128000 microseconds 
+Converting to grayscale: toc: 554.655000 microseconds 
+Uploading image to GPU: toc: 348.806000 microseconds 
+FOUND 2285 keypoints on first image
+FOUND 2384 keypoints on second image
+Detect and Describe: toc: 59802.265000 microseconds 
+Match Keypoints: toc: 3099.445000 microseconds 
+X Bound: 819  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 4309.349000 microseconds 
+Stitch Image: toc: 807.567000 microseconds 
+Total Computation Time for stitch: 68032.8 Microseconds
+Frames Per Second: 14.6988
+
+
+Stitching Frame 72
+Removing barrel distortion: toc: 23993.553000 microseconds 
+Converting to grayscale: toc: 553.525000 microseconds 
+Uploading image to GPU: toc: 400.151000 microseconds 
+FOUND 2275 keypoints on first image
+FOUND 2395 keypoints on second image
+Detect and Describe: toc: 60527.313000 microseconds 
+Match Keypoints: toc: 2773.290000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 596.205000 microseconds 
+Stitch Image: toc: 776.207000 microseconds 
+Total Computation Time for stitch: 64685 Microseconds
+Frames Per Second: 15.4595
+
+
+Stitching Frame 73
+Removing barrel distortion: toc: 17317.786000 microseconds 
+Converting to grayscale: toc: 612.585000 microseconds 
+Uploading image to GPU: toc: 349.200000 microseconds 
+FOUND 2317 keypoints on first image
+FOUND 2427 keypoints on second image
+Detect and Describe: toc: 61587.642000 microseconds 
+Match Keypoints: toc: 2710.874000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 707.353000 microseconds 
+Stitch Image: toc: 6335.362000 microseconds 
+Total Computation Time for stitch: 71353.4 Microseconds
+Frames Per Second: 14.0148
+
+
+Stitching Frame 74
+Removing barrel distortion: toc: 16812.711000 microseconds 
+Converting to grayscale: toc: 587.388000 microseconds 
+Uploading image to GPU: toc: 428.789000 microseconds 
+FOUND 2317 keypoints on first image
+FOUND 2418 keypoints on second image
+Detect and Describe: toc: 53782.406000 microseconds 
+Match Keypoints: toc: 3101.964000 microseconds 
+X Bound: 819  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 593.428000 microseconds 
+Stitch Image: toc: 793.848000 microseconds 
+Total Computation Time for stitch: 58283.4 Microseconds
+Frames Per Second: 17.1575
+
+
+Stitching Frame 75
+Removing barrel distortion: toc: 17303.251000 microseconds 
+Converting to grayscale: toc: 682.013000 microseconds 
+Uploading image to GPU: toc: 343.831000 microseconds 
+FOUND 2310 keypoints on first image
+FOUND 2424 keypoints on second image
+Detect and Describe: toc: 60672.069000 microseconds 
+Match Keypoints: toc: 2740.398000 microseconds 
+X Bound: 819  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1388.601000 microseconds 
+Stitch Image: toc: 1057.543000 microseconds 
+Total Computation Time for stitch: 65874.7 Microseconds
+Frames Per Second: 15.1803
+
+
+Stitching Frame 76
+Removing barrel distortion: toc: 16868.431000 microseconds 
+Converting to grayscale: toc: 541.231000 microseconds 
+Uploading image to GPU: toc: 350.982000 microseconds 
+FOUND 2304 keypoints on first image
+FOUND 2397 keypoints on second image
+Detect and Describe: toc: 57585.479000 microseconds 
+Match Keypoints: toc: 3799.227000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 684.347000 microseconds 
+Stitch Image: toc: 783.386000 microseconds 
+Total Computation Time for stitch: 62865.1 Microseconds
+Frames Per Second: 15.9071
+
+
+Stitching Frame 77
+Removing barrel distortion: toc: 17714.407000 microseconds 
+Converting to grayscale: toc: 572.311000 microseconds 
+Uploading image to GPU: toc: 410.153000 microseconds 
+FOUND 2297 keypoints on first image
+FOUND 2404 keypoints on second image
+Detect and Describe: toc: 63950.757000 microseconds 
+Match Keypoints: toc: 2996.929000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 705.501000 microseconds 
+Stitch Image: toc: 803.371000 microseconds 
+Total Computation Time for stitch: 68469.2 Microseconds
+Frames Per Second: 14.6051
+
+
+Stitching Frame 78
+Removing barrel distortion: toc: 17408.372000 microseconds 
+Converting to grayscale: toc: 578.238000 microseconds 
+Uploading image to GPU: toc: 342.816000 microseconds 
+FOUND 2269 keypoints on first image
+FOUND 2382 keypoints on second image
+Detect and Describe: toc: 62092.840000 microseconds 
+Match Keypoints: toc: 2667.170000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 597.934000 microseconds 
+Stitch Image: toc: 777.662000 microseconds 
+Total Computation Time for stitch: 66146.7 Microseconds
+Frames Per Second: 15.1179
+
+
+Stitching Frame 79
+Removing barrel distortion: toc: 24247.706000 microseconds 
+Converting to grayscale: toc: 1574.166000 microseconds 
+Uploading image to GPU: toc: 408.048000 microseconds 
+FOUND 2253 keypoints on first image
+FOUND 2386 keypoints on second image
+Detect and Describe: toc: 59830.426000 microseconds 
+Match Keypoints: toc: 2815.233000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 619.321000 microseconds 
+Stitch Image: toc: 802.536000 microseconds 
+Total Computation Time for stitch: 64079.5 Microseconds
+Frames Per Second: 15.6056
+
+
+Stitching Frame 80
+Removing barrel distortion: toc: 24562.202000 microseconds 
+Converting to grayscale: toc: 678.241000 microseconds 
+Uploading image to GPU: toc: 354.862000 microseconds 
+FOUND 2252 keypoints on first image
+FOUND 2423 keypoints on second image
+Detect and Describe: toc: 62375.504000 microseconds 
+Match Keypoints: toc: 2879.575000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 744.718000 microseconds 
+Stitch Image: toc: 1012.111000 microseconds 
+Total Computation Time for stitch: 67024.3 Microseconds
+Frames Per Second: 14.92
+
+
+Stitching Frame 81
+Removing barrel distortion: toc: 16803.586000 microseconds 
+Converting to grayscale: toc: 527.104000 microseconds 
+Uploading image to GPU: toc: 339.367000 microseconds 
+FOUND 2259 keypoints on first image
+FOUND 2436 keypoints on second image
+Detect and Describe: toc: 50660.662000 microseconds 
+Match Keypoints: toc: 2732.639000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 596.644000 microseconds 
+Stitch Image: toc: 777.356000 microseconds 
+Total Computation Time for stitch: 54779.4 Microseconds
+Frames Per Second: 18.255
+
+
+Stitching Frame 82
+Removing barrel distortion: toc: 17627.037000 microseconds 
+Converting to grayscale: toc: 526.644000 microseconds 
+Uploading image to GPU: toc: 370.326000 microseconds 
+FOUND 2247 keypoints on first image
+FOUND 2428 keypoints on second image
+Detect and Describe: toc: 60568.831000 microseconds 
+Match Keypoints: toc: 2764.311000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 658.927000 microseconds 
+Stitch Image: toc: 2052.079000 microseconds 
+Total Computation Time for stitch: 66067.4 Microseconds
+Frames Per Second: 15.1361
+
+
+Stitching Frame 83
+Removing barrel distortion: toc: 17303.715000 microseconds 
+Converting to grayscale: toc: 565.526000 microseconds 
+Uploading image to GPU: toc: 605.207000 microseconds 
+FOUND 2271 keypoints on first image
+FOUND 2423 keypoints on second image
+Detect and Describe: toc: 56483.247000 microseconds 
+Match Keypoints: toc: 2730.106000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 713.448000 microseconds 
+Stitch Image: toc: 996.488000 microseconds 
+Total Computation Time for stitch: 60935.1 Microseconds
+Frames Per Second: 16.4109
+
+
+Stitching Frame 84
+Removing barrel distortion: toc: 16794.137000 microseconds 
+Converting to grayscale: toc: 577.417000 microseconds 
+Uploading image to GPU: toc: 417.142000 microseconds 
+FOUND 2266 keypoints on first image
+FOUND 2418 keypoints on second image
+Detect and Describe: toc: 57104.597000 microseconds 
+Match Keypoints: toc: 2817.840000 microseconds 
+X Bound: 822  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 708.001000 microseconds 
+Stitch Image: toc: 815.702000 microseconds 
+Total Computation Time for stitch: 61461.9 Microseconds
+Frames Per Second: 16.2702
+
+
+Stitching Frame 85
+Removing barrel distortion: toc: 17349.595000 microseconds 
+Converting to grayscale: toc: 632.445000 microseconds 
+Uploading image to GPU: toc: 359.350000 microseconds 
+FOUND 2283 keypoints on first image
+FOUND 2429 keypoints on second image
+Detect and Describe: toc: 58979.825000 microseconds 
+Match Keypoints: toc: 2793.395000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 596.642000 microseconds 
+Stitch Image: toc: 780.870000 microseconds 
+Total Computation Time for stitch: 63162.2 Microseconds
+Frames Per Second: 15.8322
+
+
+Stitching Frame 86
+Removing barrel distortion: toc: 17312.511000 microseconds 
+Converting to grayscale: toc: 688.913000 microseconds 
+Uploading image to GPU: toc: 337.306000 microseconds 
+FOUND 2283 keypoints on first image
+FOUND 2458 keypoints on second image
+Detect and Describe: toc: 59739.072000 microseconds 
+Match Keypoints: toc: 2727.231000 microseconds 
+X Bound: 819  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 595.084000 microseconds 
+Stitch Image: toc: 799.551000 microseconds 
+Total Computation Time for stitch: 63872.2 Microseconds
+Frames Per Second: 15.6563
+
+
+Stitching Frame 87
+Removing barrel distortion: toc: 17362.142000 microseconds 
+Converting to grayscale: toc: 687.073000 microseconds 
+Uploading image to GPU: toc: 346.409000 microseconds 
+FOUND 2352 keypoints on first image
+FOUND 2446 keypoints on second image
+Detect and Describe: toc: 60248.906000 microseconds 
+Match Keypoints: toc: 2849.827000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 639.154000 microseconds 
+Stitch Image: toc: 780.057000 microseconds 
+Total Computation Time for stitch: 64529.9 Microseconds
+Frames Per Second: 15.4967
+
+
+Stitching Frame 88
+Removing barrel distortion: toc: 17452.860000 microseconds 
+Converting to grayscale: toc: 525.188000 microseconds 
+Uploading image to GPU: toc: 348.628000 microseconds 
+FOUND 2259 keypoints on first image
+FOUND 2390 keypoints on second image
+Detect and Describe: toc: 59261.738000 microseconds 
+Match Keypoints: toc: 3417.790000 microseconds 
+X Bound: 820  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 793.440000 microseconds 
+Stitch Image: toc: 1026.382000 microseconds 
+Total Computation Time for stitch: 64515.7 Microseconds
+Frames Per Second: 15.5001
+
+
+Stitching Frame 89
+Removing barrel distortion: toc: 16974.622000 microseconds 
+Converting to grayscale: toc: 536.970000 microseconds 
+Uploading image to GPU: toc: 334.885000 microseconds 
+FOUND 2220 keypoints on first image
+FOUND 2375 keypoints on second image
+Detect and Describe: toc: 53394.617000 microseconds 
+Match Keypoints: toc: 4154.818000 microseconds 
+X Bound: 822  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 700.803000 microseconds 
+Stitch Image: toc: 829.944000 microseconds 
+Total Computation Time for stitch: 59095.5 Microseconds
+Frames Per Second: 16.9217
+
+
+Stitching Frame 90
+Removing barrel distortion: toc: 24108.009000 microseconds 
+Converting to grayscale: toc: 670.120000 microseconds 
+Uploading image to GPU: toc: 388.945000 microseconds 
+FOUND 2275 keypoints on first image
+FOUND 2408 keypoints on second image
+Detect and Describe: toc: 69297.629000 microseconds 
+Match Keypoints: toc: 2912.516000 microseconds 
+X Bound: 820  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 608.247000 microseconds 
+Stitch Image: toc: 781.484000 microseconds 
+Total Computation Time for stitch: 73611.5 Microseconds
+Frames Per Second: 13.5848
+
+
+Stitching Frame 91
+Removing barrel distortion: toc: 23937.596000 microseconds 
+Converting to grayscale: toc: 739.916000 microseconds 
+Uploading image to GPU: toc: 373.525000 microseconds 
+FOUND 2220 keypoints on first image
+FOUND 2368 keypoints on second image
+Detect and Describe: toc: 58848.252000 microseconds 
+Match Keypoints: toc: 2631.801000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 606.303000 microseconds 
+Stitch Image: toc: 816.621000 microseconds 
+Total Computation Time for stitch: 62914.7 Microseconds
+Frames Per Second: 15.8945
+
+
+Stitching Frame 92
+Removing barrel distortion: toc: 17381.276000 microseconds 
+Converting to grayscale: toc: 678.268000 microseconds 
+Uploading image to GPU: toc: 352.561000 microseconds 
+FOUND 2233 keypoints on first image
+FOUND 2360 keypoints on second image
+Detect and Describe: toc: 59761.595000 microseconds 
+Match Keypoints: toc: 3009.125000 microseconds 
+X Bound: 820  Y Bound: 522  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 599.955000 microseconds 
+Stitch Image: toc: 781.242000 microseconds 
+Total Computation Time for stitch: 64165.9 Microseconds
+Frames Per Second: 15.5846
+
+
+Stitching Frame 93
+Removing barrel distortion: toc: 23192.616000 microseconds 
+Converting to grayscale: toc: 562.171000 microseconds 
+Uploading image to GPU: toc: 339.656000 microseconds 
+FOUND 2299 keypoints on first image
+FOUND 2376 keypoints on second image
+Detect and Describe: toc: 56157.556000 microseconds 
+Match Keypoints: toc: 3143.978000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 576.902000 microseconds 
+Stitch Image: toc: 793.967000 microseconds 
+Total Computation Time for stitch: 60684.3 Microseconds
+Frames Per Second: 16.4787
+
+
+Stitching Frame 94
+Removing barrel distortion: toc: 17310.797000 microseconds 
+Converting to grayscale: toc: 702.803000 microseconds 
+Uploading image to GPU: toc: 355.811000 microseconds 
+FOUND 2273 keypoints on first image
+FOUND 2357 keypoints on second image
+Detect and Describe: toc: 61608.637000 microseconds 
+Match Keypoints: toc: 2836.096000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 703.930000 microseconds 
+Stitch Image: toc: 999.607000 microseconds 
+Total Computation Time for stitch: 66160.2 Microseconds
+Frames Per Second: 15.1148
+
+
+Stitching Frame 95
+Removing barrel distortion: toc: 17094.882000 microseconds 
+Converting to grayscale: toc: 531.027000 microseconds 
+Uploading image to GPU: toc: 337.079000 microseconds 
+FOUND 2270 keypoints on first image
+FOUND 2361 keypoints on second image
+Detect and Describe: toc: 52757.105000 microseconds 
+Match Keypoints: toc: 2999.455000 microseconds 
+X Bound: 822  Y Bound: 525  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 706.057000 microseconds 
+Stitch Image: toc: 811.447000 microseconds 
+Total Computation Time for stitch: 57290.1 Microseconds
+Frames Per Second: 17.455
+
+
+Stitching Frame 96
+Removing barrel distortion: toc: 18889.789000 microseconds 
+Converting to grayscale: toc: 588.921000 microseconds 
+Uploading image to GPU: toc: 373.416000 microseconds 
+FOUND 2108 keypoints on first image
+FOUND 2297 keypoints on second image
+Detect and Describe: toc: 60938.172000 microseconds 
+Match Keypoints: toc: 3489.640000 microseconds 
+X Bound: 818  Y Bound: 528  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 674.387000 microseconds 
+Stitch Image: toc: 802.534000 microseconds 
+Total Computation Time for stitch: 65917.9 Microseconds
+Frames Per Second: 15.1704
+
+
+Stitching Frame 97
+Removing barrel distortion: toc: 18880.992000 microseconds 
+Converting to grayscale: toc: 529.041000 microseconds 
+Uploading image to GPU: toc: 350.322000 microseconds 
+FOUND 2290 keypoints on first image
+FOUND 2316 keypoints on second image
+Detect and Describe: toc: 61212.257000 microseconds 
+Match Keypoints: toc: 2925.823000 microseconds 
+X Bound: 818  Y Bound: 525  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 593.344000 microseconds 
+Stitch Image: toc: 792.801000 microseconds 
+Total Computation Time for stitch: 65535.7 Microseconds
+Frames Per Second: 15.2589
+
+
+Stitching Frame 98
+Removing barrel distortion: toc: 19566.538000 microseconds 
+Converting to grayscale: toc: 598.351000 microseconds 
+Uploading image to GPU: toc: 401.461000 microseconds 
+FOUND 2291 keypoints on first image
+FOUND 2346 keypoints on second image
+Detect and Describe: toc: 59047.700000 microseconds 
+Match Keypoints: toc: 3014.039000 microseconds 
+X Bound: 818  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 609.747000 microseconds 
+Stitch Image: toc: 792.782000 microseconds 
+Total Computation Time for stitch: 63475.5 Microseconds
+Frames Per Second: 15.7541
+
+
+Stitching Frame 99
+Removing barrel distortion: toc: 17310.463000 microseconds 
+Converting to grayscale: toc: 628.235000 microseconds 
+Uploading image to GPU: toc: 350.922000 microseconds 
+FOUND 2253 keypoints on first image
+FOUND 2196 keypoints on second image
+Detect and Describe: toc: 58319.390000 microseconds 
+Match Keypoints: toc: 2953.437000 microseconds 
+X Bound: 820  Y Bound: 520  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 643.407000 microseconds 
+Stitch Image: toc: 778.805000 microseconds 
+Total Computation Time for stitch: 62706.6 Microseconds
+Frames Per Second: 15.9473
+
+
+Stitching Frame 100
+Removing barrel distortion: toc: 21962.414000 microseconds 
+Converting to grayscale: toc: 513.006000 microseconds 
+Uploading image to GPU: toc: 335.202000 microseconds 
+FOUND 2195 keypoints on first image
+FOUND 2379 keypoints on second image
+Detect and Describe: toc: 74734.341000 microseconds 
+Match Keypoints: toc: 2890.280000 microseconds 
+X Bound: 820  Y Bound: 525  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 647.650000 microseconds 
+Stitch Image: toc: 794.818000 microseconds 
+Total Computation Time for stitch: 79078.7 Microseconds
+Frames Per Second: 12.6456
+
+
+Stitching Frame 101
+Removing barrel distortion: toc: 17706.447000 microseconds 
+Converting to grayscale: toc: 516.852000 microseconds 
+Uploading image to GPU: toc: 341.033000 microseconds 
+FOUND 2288 keypoints on first image
+FOUND 2382 keypoints on second image
+Detect and Describe: toc: 61152.535000 microseconds 
+Match Keypoints: toc: 2707.482000 microseconds 
+X Bound: 821  Y Bound: 524  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 573.853000 microseconds 
+Stitch Image: toc: 800.953000 microseconds 
+Total Computation Time for stitch: 65246.4 Microseconds
+Frames Per Second: 15.3265
+
+
+Stitching Frame 102
+Removing barrel distortion: toc: 23975.700000 microseconds 
+Converting to grayscale: toc: 734.404000 microseconds 
+Uploading image to GPU: toc: 424.825000 microseconds 
+FOUND 2309 keypoints on first image
+FOUND 2381 keypoints on second image
+Detect and Describe: toc: 68487.240000 microseconds 
+Match Keypoints: toc: 2882.650000 microseconds 
+X Bound: 825  Y Bound: 528  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 596.731000 microseconds 
+Stitch Image: toc: 798.934000 microseconds 
+Total Computation Time for stitch: 72777.1 Microseconds
+Frames Per Second: 13.7406
+
+
+Stitching Frame 103
+Removing barrel distortion: toc: 18772.954000 microseconds 
+Converting to grayscale: toc: 560.214000 microseconds 
+Uploading image to GPU: toc: 377.696000 microseconds 
+FOUND 2200 keypoints on first image
+FOUND 2304 keypoints on second image
+Detect and Describe: toc: 57548.474000 microseconds 
+Match Keypoints: toc: 3085.930000 microseconds 
+X Bound: 822  Y Bound: 529  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 595.238000 microseconds 
+Stitch Image: toc: 795.516000 microseconds 
+Total Computation Time for stitch: 62036.3 Microseconds
+Frames Per Second: 16.1196
+
+
+Stitching Frame 104
+Removing barrel distortion: toc: 18106.190000 microseconds 
+Converting to grayscale: toc: 563.817000 microseconds 
+Uploading image to GPU: toc: 363.082000 microseconds 
+FOUND 2224 keypoints on first image
+FOUND 2360 keypoints on second image
+Detect and Describe: toc: 58374.304000 microseconds 
+Match Keypoints: toc: 2696.803000 microseconds 
+X Bound: 820  Y Bound: 520  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 612.477000 microseconds 
+Stitch Image: toc: 818.637000 microseconds 
+Total Computation Time for stitch: 62514.1 Microseconds
+Frames Per Second: 15.9964
+
+
+Stitching Frame 105
+Removing barrel distortion: toc: 17841.807000 microseconds 
+Converting to grayscale: toc: 572.153000 microseconds 
+Uploading image to GPU: toc: 495.486000 microseconds 
+FOUND 2262 keypoints on first image
+FOUND 2303 keypoints on second image
+Detect and Describe: toc: 66037.934000 microseconds 
+Match Keypoints: toc: 3187.227000 microseconds 
+X Bound: 818  Y Bound: 518  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 590.916000 microseconds 
+Stitch Image: toc: 793.614000 microseconds 
+Total Computation Time for stitch: 70621.6 Microseconds
+Frames Per Second: 14.16
+
+
+Stitching Frame 106
+Removing barrel distortion: toc: 22055.022000 microseconds 
+Converting to grayscale: toc: 660.287000 microseconds 
+Uploading image to GPU: toc: 390.584000 microseconds 
+FOUND 2059 keypoints on first image
+FOUND 2167 keypoints on second image
+Detect and Describe: toc: 56323.272000 microseconds 
+Match Keypoints: toc: 2673.465000 microseconds 
+X Bound: 822  Y Bound: 516  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 588.627000 microseconds 
+Stitch Image: toc: 838.394000 microseconds 
+Total Computation Time for stitch: 60435.3 Microseconds
+Frames Per Second: 16.5466
+
+
+Stitching Frame 107
+Removing barrel distortion: toc: 18622.145000 microseconds 
+Converting to grayscale: toc: 669.834000 microseconds 
+Uploading image to GPU: toc: 458.045000 microseconds 
+FOUND 2011 keypoints on first image
+FOUND 2162 keypoints on second image
+Detect and Describe: toc: 61253.643000 microseconds 
+Match Keypoints: toc: 3763.616000 microseconds 
+X Bound: 828  Y Bound: 534  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 732.397000 microseconds 
+Stitch Image: toc: 827.712000 microseconds 
+Total Computation Time for stitch: 66590.9 Microseconds
+Frames Per Second: 15.0171
+
+
+Stitching Frame 108
+Removing barrel distortion: toc: 17552.297000 microseconds 
+Converting to grayscale: toc: 966.465000 microseconds 
+Uploading image to GPU: toc: 455.089000 microseconds 
+FOUND 1901 keypoints on first image
+FOUND 2218 keypoints on second image
+Detect and Describe: toc: 61045.973000 microseconds 
+Match Keypoints: toc: 2328.725000 microseconds 
+X Bound: 833  Y Bound: 533  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 596.950000 microseconds 
+Stitch Image: toc: 806.146000 microseconds 
+Total Computation Time for stitch: 64789.5 Microseconds
+Frames Per Second: 15.4346
+
+
+Stitching Frame 109
+Removing barrel distortion: toc: 18411.248000 microseconds 
+Converting to grayscale: toc: 548.330000 microseconds 
+Uploading image to GPU: toc: 378.823000 microseconds 
+FOUND 1752 keypoints on first image
+FOUND 2212 keypoints on second image
+Detect and Describe: toc: 55639.948000 microseconds 
+Match Keypoints: toc: 3113.706000 microseconds 
+X Bound: 833  Y Bound: 539  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 707.338000 microseconds 
+Stitch Image: toc: 832.900000 microseconds 
+Total Computation Time for stitch: 60307.2 Microseconds
+Frames Per Second: 16.5818
+
+
+Stitching Frame 110
+Removing barrel distortion: toc: 18724.071000 microseconds 
+Converting to grayscale: toc: 513.792000 microseconds 
+Uploading image to GPU: toc: 367.249000 microseconds 
+FOUND 1752 keypoints on first image
+FOUND 2049 keypoints on second image
+Detect and Describe: toc: 55526.490000 microseconds 
+Match Keypoints: toc: 2029.967000 microseconds 
+X Bound: 822  Y Bound: 514  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 581.396000 microseconds 
+Stitch Image: toc: 777.524000 microseconds 
+Total Computation Time for stitch: 58927.1 Microseconds
+Frames Per Second: 16.9701
+
+
+Stitching Frame 111
+Removing barrel distortion: toc: 18844.683000 microseconds 
+Converting to grayscale: toc: 637.306000 microseconds 
+Uploading image to GPU: toc: 380.635000 microseconds 
+FOUND 1630 keypoints on first image
+FOUND 2068 keypoints on second image
+Detect and Describe: toc: 50143.678000 microseconds 
+Match Keypoints: toc: 1993.388000 microseconds 
+X Bound: 824  Y Bound: 520  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 615.703000 microseconds 
+Stitch Image: toc: 924.963000 microseconds 
+Total Computation Time for stitch: 53690.6 Microseconds
+Frames Per Second: 18.6252
+
+
+Stitching Frame 112
+Removing barrel distortion: toc: 17511.162000 microseconds 
+Converting to grayscale: toc: 520.285000 microseconds 
+Uploading image to GPU: toc: 343.842000 microseconds 
+FOUND 1795 keypoints on first image
+FOUND 2156 keypoints on second image
+Detect and Describe: toc: 60843.871000 microseconds 
+Match Keypoints: toc: 2163.135000 microseconds 
+X Bound: 818  Y Bound: 518  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 667.057000 microseconds 
+Stitch Image: toc: 784.141000 microseconds 
+Total Computation Time for stitch: 64470 Microseconds
+Frames Per Second: 15.5111
+
+
+Stitching Frame 113
+Removing barrel distortion: toc: 25060.545000 microseconds 
+Converting to grayscale: toc: 1545.851000 microseconds 
+Uploading image to GPU: toc: 2108.057000 microseconds 
+FOUND 1688 keypoints on first image
+FOUND 2154 keypoints on second image
+Detect and Describe: toc: 52757.904000 microseconds 
+Match Keypoints: toc: 2144.367000 microseconds 
+X Bound: 828  Y Bound: 531  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 608.049000 microseconds 
+Stitch Image: toc: 793.714000 microseconds 
+Total Computation Time for stitch: 56315.8 Microseconds
+Frames Per Second: 17.757
+
+
+Stitching Frame 114
+Removing barrel distortion: toc: 18565.611000 microseconds 
+Converting to grayscale: toc: 597.539000 microseconds 
+Uploading image to GPU: toc: 358.198000 microseconds 
+FOUND 1385 keypoints on first image
+FOUND 2064 keypoints on second image
+Detect and Describe: toc: 54557.328000 microseconds 
+Match Keypoints: toc: 2729.994000 microseconds 
+X Bound: 815  Y Bound: 539  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 580.371000 microseconds 
+Stitch Image: toc: 809.110000 microseconds 
+Total Computation Time for stitch: 58688 Microseconds
+Frames Per Second: 17.0393
+
+
+Stitching Frame 115
+Removing barrel distortion: toc: 18375.152000 microseconds 
+Converting to grayscale: toc: 529.875000 microseconds 
+Uploading image to GPU: toc: 393.464000 microseconds 
+FOUND 1385 keypoints on first image
+FOUND 1638 keypoints on second image
+Detect and Describe: toc: 52231.091000 microseconds 
+Match Keypoints: toc: 1876.300000 microseconds 
+X Bound: 804  Y Bound: 532  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 582.423000 microseconds 
+Stitch Image: toc: 777.645000 microseconds 
+Total Computation Time for stitch: 55481.3 Microseconds
+Frames Per Second: 18.0241
+
+
+Stitching Frame 116
+Removing barrel distortion: toc: 18640.006000 microseconds 
+Converting to grayscale: toc: 634.878000 microseconds 
+Uploading image to GPU: toc: 373.081000 microseconds 
+FOUND 1394 keypoints on first image
+FOUND 1668 keypoints on second image
+Detect and Describe: toc: 49763.272000 microseconds 
+Match Keypoints: toc: 2607.028000 microseconds 
+X Bound: 829  Y Bound: 521  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 582.595000 microseconds 
+Stitch Image: toc: 793.795000 microseconds 
+Total Computation Time for stitch: 53760.8 Microseconds
+Frames Per Second: 18.6009
+
+
+Stitching Frame 117
+Removing barrel distortion: toc: 18401.149000 microseconds 
+Converting to grayscale: toc: 522.262000 microseconds 
+Uploading image to GPU: toc: 359.493000 microseconds 
+FOUND 1461 keypoints on first image
+FOUND 1514 keypoints on second image
+Detect and Describe: toc: 47992.550000 microseconds 
+Match Keypoints: toc: 2120.755000 microseconds 
+X Bound: 823  Y Bound: 523  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 570.168000 microseconds 
+Stitch Image: toc: 797.746000 microseconds 
+Total Computation Time for stitch: 51493.4 Microseconds
+Frames Per Second: 19.42
+
+
+Stitching Frame 118
+Removing barrel distortion: toc: 17649.616000 microseconds 
+Converting to grayscale: toc: 591.593000 microseconds 
+Uploading image to GPU: toc: 358.722000 microseconds 
+FOUND 1177 keypoints on first image
+FOUND 1297 keypoints on second image
+Detect and Describe: toc: 48555.466000 microseconds 
+Match Keypoints: toc: 2245.928000 microseconds 
+X Bound: 825  Y Bound: 526  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 580.846000 microseconds 
+Stitch Image: toc: 803.060000 microseconds 
+Total Computation Time for stitch: 52196.8 Microseconds
+Frames Per Second: 19.1583
+
+
+Stitching Frame 119
+Removing barrel distortion: toc: 22697.080000 microseconds 
+Converting to grayscale: toc: 517.852000 microseconds 
+Uploading image to GPU: toc: 411.484000 microseconds 
+FOUND 1054 keypoints on first image
+FOUND 1297 keypoints on second image
+Detect and Describe: toc: 43496.039000 microseconds 
+Match Keypoints: toc: 4212.934000 microseconds 
+X Bound: 788  Y Bound: 517  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 571.609000 microseconds 
+Stitch Image: toc: 768.024000 microseconds 
+Total Computation Time for stitch: 49060.3 Microseconds
+Frames Per Second: 20.3831
+
+
+Stitching Frame 120
+Removing barrel distortion: toc: 22487.084000 microseconds 
+Converting to grayscale: toc: 606.649000 microseconds 
+Uploading image to GPU: toc: 378.806000 microseconds 
+FOUND 1104 keypoints on first image
+FOUND 1054 keypoints on second image
+Detect and Describe: toc: 47956.266000 microseconds 
+Match Keypoints: toc: 3269.001000 microseconds 
+X Bound: 785  Y Bound: 512  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 684.685000 microseconds 
+Stitch Image: toc: 765.634000 microseconds 
+Total Computation Time for stitch: 52690 Microseconds
+Frames Per Second: 18.9789
+
+
+Stitching Frame 121
+Removing barrel distortion: toc: 24673.887000 microseconds 
+Converting to grayscale: toc: 568.936000 microseconds 
+Uploading image to GPU: toc: 517.238000 microseconds 
+FOUND 1133 keypoints on first image
+FOUND 953 keypoints on second image
+Detect and Describe: toc: 47164.528000 microseconds 
+Match Keypoints: toc: 7482.374000 microseconds 
+X Bound: 788  Y Bound: 505  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1156.017000 microseconds 
+Stitch Image: toc: 5169.955000 microseconds 
+Total Computation Time for stitch: 60985.8 Microseconds
+Frames Per Second: 16.3973
+
+
+Stitching Frame 122
+Removing barrel distortion: toc: 22284.832000 microseconds 
+Converting to grayscale: toc: 571.842000 microseconds 
+Uploading image to GPU: toc: 399.954000 microseconds 
+FOUND 1133 keypoints on first image
+FOUND 842 keypoints on second image
+Detect and Describe: toc: 44193.664000 microseconds 
+Match Keypoints: toc: 11465.067000 microseconds 
+X Bound: 826  Y Bound: 535  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 580.884000 microseconds 
+Stitch Image: toc: 818.507000 microseconds 
+Total Computation Time for stitch: 57070.2 Microseconds
+Frames Per Second: 17.5223
+
+
+Stitching Frame 123
+Removing barrel distortion: toc: 18173.586000 microseconds 
+Converting to grayscale: toc: 562.677000 microseconds 
+Uploading image to GPU: toc: 346.647000 microseconds 
+FOUND 1129 keypoints on first image
+FOUND 739 keypoints on second image
+Detect and Describe: toc: 47952.688000 microseconds 
+Match Keypoints: toc: 40825.949000 microseconds 
+X Bound: 838  Y Bound: 540  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 614.948000 microseconds 
+Stitch Image: toc: 821.970000 microseconds 
+Total Computation Time for stitch: 90227.8 Microseconds
+Frames Per Second: 11.0831
+
+
+Stitching Frame 124
+Removing barrel distortion: toc: 18573.431000 microseconds 
+Converting to grayscale: toc: 560.443000 microseconds 
+Uploading image to GPU: toc: 357.022000 microseconds 
+FOUND 1080 keypoints on first image
+FOUND 508 keypoints on second image
+Detect and Describe: toc: 44222.854000 microseconds 
+Match Keypoints: toc: 40998.411000 microseconds 
+X Bound: 845  Y Bound: 526  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 699.269000 microseconds 
+Stitch Image: toc: 817.540000 microseconds 
+Total Computation Time for stitch: 86752.2 Microseconds
+Frames Per Second: 11.5271
+
+
+Stitching Frame 125
+Removing barrel distortion: toc: 18584.461000 microseconds 
+Converting to grayscale: toc: 639.256000 microseconds 
+Uploading image to GPU: toc: 348.700000 microseconds 
+FOUND 892 keypoints on first image
+FOUND 507 keypoints on second image
+Detect and Describe: toc: 39839.590000 microseconds 
+Match Keypoints: toc: 21129.430000 microseconds 
+X Bound: 783  Y Bound: 530  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1717.307000 microseconds 
+Stitch Image: toc: 810.003000 microseconds 
+Total Computation Time for stitch: 63510.2 Microseconds
+Frames Per Second: 15.7455
+
+
+Stitching Frame 126
+Removing barrel distortion: toc: 18745.761000 microseconds 
+Converting to grayscale: toc: 599.275000 microseconds 
+Uploading image to GPU: toc: 378.520000 microseconds 
+FOUND 790 keypoints on first image
+FOUND 368 keypoints on second image
+Detect and Describe: toc: 37637.406000 microseconds 
+Match Keypoints: toc: 22486.715000 microseconds 
+X Bound: 801  Y Bound: 517  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 1125.759000 microseconds 
+Stitch Image: toc: 816.572000 microseconds 
+Total Computation Time for stitch: 62080.8 Microseconds
+Frames Per Second: 16.1081
+
+
+Stitching Frame 127
+Removing barrel distortion: toc: 19607.309000 microseconds 
+Converting to grayscale: toc: 681.724000 microseconds 
+Uploading image to GPU: toc: 399.921000 microseconds 
+FOUND 573 keypoints on first image
+FOUND 236 keypoints on second image
+Detect and Describe: toc: 35019.635000 microseconds 
+Match Keypoints: toc: 38179.433000 microseconds 
+X Bound: 787  Y Bound: 534  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 589.638000 microseconds 
+Stitch Image: toc: 787.534000 microseconds 
+Total Computation Time for stitch: 74587.7 Microseconds
+Frames Per Second: 13.407
+
+
+Stitching Frame 128
+Removing barrel distortion: toc: 18554.854000 microseconds 
+Converting to grayscale: toc: 561.538000 microseconds 
+Uploading image to GPU: toc: 360.967000 microseconds 
+FOUND 573 keypoints on first image
+FOUND 86 keypoints on second image
+Detect and Describe: toc: 36465.478000 microseconds 
+Match Keypoints: toc: 38606.023000 microseconds 
+X Bound: 640  Y Bound: 480  X Shift: 0  Y Shift: 0
+Apply Homography: toc: 549.339000 microseconds 
+Stitch Image: toc: 378.323000 microseconds 
+Total Computation Time for stitch: 76011.1 Microseconds
+Frames Per Second: 13.156
+
+
+Stitching Frame 129
+Removing barrel distortion: toc: 17503.220000 microseconds 
+Converting to grayscale: toc: 645.757000 microseconds 
+Uploading image to GPU: toc: 391.788000 microseconds 
+FOUND 426 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 33521.451000 microseconds 
+No valid Homography
+Match Keypoints: toc: 9.885000 microseconds 
+stitching failed
+
+
+Stitching Frame 130
+Removing barrel distortion: toc: 16775.202000 microseconds 
+Converting to grayscale: toc: 533.896000 microseconds 
+Uploading image to GPU: toc: 336.426000 microseconds 
+FOUND 335 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28853.287000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.140000 microseconds 
+stitching failed
+
+
+Stitching Frame 131
+Removing barrel distortion: toc: 17115.687000 microseconds 
+Converting to grayscale: toc: 544.318000 microseconds 
+Uploading image to GPU: toc: 337.705000 microseconds 
+FOUND 263 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28629.648000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.300000 microseconds 
+stitching failed
+
+
+Stitching Frame 132
+Removing barrel distortion: toc: 16848.444000 microseconds 
+Converting to grayscale: toc: 528.779000 microseconds 
+Uploading image to GPU: toc: 339.444000 microseconds 
+FOUND 128 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28520.411000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.488000 microseconds 
+stitching failed
+
+
+Stitching Frame 133
+Removing barrel distortion: toc: 16762.428000 microseconds 
+Converting to grayscale: toc: 525.935000 microseconds 
+Uploading image to GPU: toc: 379.057000 microseconds 
+FOUND 14 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32856.025000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.719000 microseconds 
+stitching failed
+
+
+Stitching Frame 134
+Removing barrel distortion: toc: 16794.796000 microseconds 
+Converting to grayscale: toc: 537.750000 microseconds 
+Uploading image to GPU: toc: 471.196000 microseconds 
+FOUND 14 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 33068.147000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.116000 microseconds 
+stitching failed
+
+
+Stitching Frame 135
+Removing barrel distortion: toc: 16873.181000 microseconds 
+Converting to grayscale: toc: 525.940000 microseconds 
+Uploading image to GPU: toc: 342.240000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 31204.930000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.474000 microseconds 
+stitching failed
+
+
+Stitching Frame 136
+Removing barrel distortion: toc: 17000.399000 microseconds 
+Converting to grayscale: toc: 533.163000 microseconds 
+Uploading image to GPU: toc: 339.828000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27883.689000 microseconds 
+No valid Homography
+Match Keypoints: toc: 19.545000 microseconds 
+stitching failed
+
+
+Stitching Frame 137
+Removing barrel distortion: toc: 16830.631000 microseconds 
+Converting to grayscale: toc: 566.849000 microseconds 
+Uploading image to GPU: toc: 337.227000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28013.382000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.360000 microseconds 
+stitching failed
+
+
+Stitching Frame 138
+Removing barrel distortion: toc: 16913.078000 microseconds 
+Converting to grayscale: toc: 536.858000 microseconds 
+Uploading image to GPU: toc: 347.052000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29418.712000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.209000 microseconds 
+stitching failed
+
+
+Stitching Frame 139
+Removing barrel distortion: toc: 17267.809000 microseconds 
+Converting to grayscale: toc: 669.342000 microseconds 
+Uploading image to GPU: toc: 343.952000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27937.051000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.893000 microseconds 
+stitching failed
+
+
+Stitching Frame 140
+Removing barrel distortion: toc: 16960.299000 microseconds 
+Converting to grayscale: toc: 541.288000 microseconds 
+Uploading image to GPU: toc: 416.174000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 35876.231000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.027000 microseconds 
+stitching failed
+
+
+Stitching Frame 141
+Removing barrel distortion: toc: 16676.769000 microseconds 
+Converting to grayscale: toc: 565.272000 microseconds 
+Uploading image to GPU: toc: 426.849000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 34860.967000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.210000 microseconds 
+stitching failed
+
+
+Stitching Frame 142
+Removing barrel distortion: toc: 16707.062000 microseconds 
+Converting to grayscale: toc: 538.364000 microseconds 
+Uploading image to GPU: toc: 417.804000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 33027.420000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.891000 microseconds 
+stitching failed
+
+
+Stitching Frame 143
+Removing barrel distortion: toc: 16796.669000 microseconds 
+Converting to grayscale: toc: 538.055000 microseconds 
+Uploading image to GPU: toc: 337.522000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27862.148000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.535000 microseconds 
+stitching failed
+
+
+Stitching Frame 144
+Removing barrel distortion: toc: 17180.754000 microseconds 
+Converting to grayscale: toc: 535.826000 microseconds 
+Uploading image to GPU: toc: 363.032000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32632.427000 microseconds 
+No valid Homography
+Match Keypoints: toc: 15.432000 microseconds 
+stitching failed
+
+
+Stitching Frame 145
+Removing barrel distortion: toc: 16851.081000 microseconds 
+Converting to grayscale: toc: 535.761000 microseconds 
+Uploading image to GPU: toc: 337.302000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27912.823000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.258000 microseconds 
+stitching failed
+
+
+Stitching Frame 146
+Removing barrel distortion: toc: 16794.439000 microseconds 
+Converting to grayscale: toc: 533.111000 microseconds 
+Uploading image to GPU: toc: 337.474000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27887.223000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.962000 microseconds 
+stitching failed
+
+
+Stitching Frame 147
+Removing barrel distortion: toc: 17210.138000 microseconds 
+Converting to grayscale: toc: 521.917000 microseconds 
+Uploading image to GPU: toc: 341.386000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27908.026000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.102000 microseconds 
+stitching failed
+
+
+Stitching Frame 148
+Removing barrel distortion: toc: 16911.928000 microseconds 
+Converting to grayscale: toc: 525.977000 microseconds 
+Uploading image to GPU: toc: 337.332000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27898.078000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.071000 microseconds 
+stitching failed
+
+
+Stitching Frame 149
+Removing barrel distortion: toc: 16955.417000 microseconds 
+Converting to grayscale: toc: 597.650000 microseconds 
+Uploading image to GPU: toc: 337.192000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27885.349000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.372000 microseconds 
+stitching failed
+
+
+Stitching Frame 150
+Removing barrel distortion: toc: 16832.899000 microseconds 
+Converting to grayscale: toc: 529.528000 microseconds 
+Uploading image to GPU: toc: 340.197000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27876.354000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.159000 microseconds 
+stitching failed
+
+
+Stitching Frame 151
+Removing barrel distortion: toc: 16962.109000 microseconds 
+Converting to grayscale: toc: 532.038000 microseconds 
+Uploading image to GPU: toc: 340.725000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29332.553000 microseconds 
+No valid Homography
+Match Keypoints: toc: 10.341000 microseconds 
+stitching failed
+
+
+Stitching Frame 152
+Removing barrel distortion: toc: 16872.625000 microseconds 
+Converting to grayscale: toc: 603.203000 microseconds 
+Uploading image to GPU: toc: 338.962000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29470.489000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.239000 microseconds 
+stitching failed
+
+
+Stitching Frame 153
+Removing barrel distortion: toc: 16738.303000 microseconds 
+Converting to grayscale: toc: 539.611000 microseconds 
+Uploading image to GPU: toc: 330.826000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29531.255000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.420000 microseconds 
+stitching failed
+
+
+Stitching Frame 154
+Removing barrel distortion: toc: 17088.190000 microseconds 
+Converting to grayscale: toc: 532.989000 microseconds 
+Uploading image to GPU: toc: 335.064000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 30287.664000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.522000 microseconds 
+stitching failed
+
+
+Stitching Frame 155
+Removing barrel distortion: toc: 17309.733000 microseconds 
+Converting to grayscale: toc: 635.253000 microseconds 
+Uploading image to GPU: toc: 341.522000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28116.401000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.296000 microseconds 
+stitching failed
+
+
+Stitching Frame 156
+Removing barrel distortion: toc: 16764.693000 microseconds 
+Converting to grayscale: toc: 534.115000 microseconds 
+Uploading image to GPU: toc: 338.396000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27914.923000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.126000 microseconds 
+stitching failed
+
+
+Stitching Frame 157
+Removing barrel distortion: toc: 16873.274000 microseconds 
+Converting to grayscale: toc: 533.841000 microseconds 
+Uploading image to GPU: toc: 337.560000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29386.066000 microseconds 
+No valid Homography
+Match Keypoints: toc: 10.682000 microseconds 
+stitching failed
+
+
+Stitching Frame 158
+Removing barrel distortion: toc: 16745.465000 microseconds 
+Converting to grayscale: toc: 534.964000 microseconds 
+Uploading image to GPU: toc: 338.273000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27904.608000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.259000 microseconds 
+stitching failed
+
+
+Stitching Frame 159
+Removing barrel distortion: toc: 16748.018000 microseconds 
+Converting to grayscale: toc: 534.146000 microseconds 
+Uploading image to GPU: toc: 338.122000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27886.449000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.418000 microseconds 
+stitching failed
+
+
+Stitching Frame 160
+Removing barrel distortion: toc: 17183.431000 microseconds 
+Converting to grayscale: toc: 540.711000 microseconds 
+Uploading image to GPU: toc: 403.634000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 36985.105000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.506000 microseconds 
+stitching failed
+
+
+Stitching Frame 161
+Removing barrel distortion: toc: 17100.357000 microseconds 
+Converting to grayscale: toc: 541.489000 microseconds 
+Uploading image to GPU: toc: 409.867000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32887.099000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.129000 microseconds 
+stitching failed
+
+
+Stitching Frame 162
+Removing barrel distortion: toc: 17047.347000 microseconds 
+Converting to grayscale: toc: 610.145000 microseconds 
+Uploading image to GPU: toc: 333.091000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 33327.829000 microseconds 
+No valid Homography
+Match Keypoints: toc: 10.186000 microseconds 
+stitching failed
+
+
+Stitching Frame 163
+Removing barrel distortion: toc: 16861.236000 microseconds 
+Converting to grayscale: toc: 535.632000 microseconds 
+Uploading image to GPU: toc: 337.124000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29162.576000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.131000 microseconds 
+stitching failed
+
+
+Stitching Frame 164
+Removing barrel distortion: toc: 17060.127000 microseconds 
+Converting to grayscale: toc: 660.711000 microseconds 
+Uploading image to GPU: toc: 406.786000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 31338.678000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.093000 microseconds 
+stitching failed
+
+
+Stitching Frame 165
+Removing barrel distortion: toc: 16895.014000 microseconds 
+Converting to grayscale: toc: 530.560000 microseconds 
+Uploading image to GPU: toc: 348.258000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27891.103000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.931000 microseconds 
+stitching failed
+
+
+Stitching Frame 166
+Removing barrel distortion: toc: 16803.682000 microseconds 
+Converting to grayscale: toc: 532.619000 microseconds 
+Uploading image to GPU: toc: 337.124000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27915.717000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.156000 microseconds 
+stitching failed
+
+
+Stitching Frame 167
+Removing barrel distortion: toc: 16795.430000 microseconds 
+Converting to grayscale: toc: 537.267000 microseconds 
+Uploading image to GPU: toc: 336.027000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27903.294000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.386000 microseconds 
+stitching failed
+
+
+Stitching Frame 168
+Removing barrel distortion: toc: 17084.456000 microseconds 
+Converting to grayscale: toc: 526.315000 microseconds 
+Uploading image to GPU: toc: 342.397000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28055.751000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.469000 microseconds 
+stitching failed
+
+
+Stitching Frame 169
+Removing barrel distortion: toc: 17044.719000 microseconds 
+Converting to grayscale: toc: 526.177000 microseconds 
+Uploading image to GPU: toc: 342.551000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27907.676000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.178000 microseconds 
+stitching failed
+
+
+Stitching Frame 170
+Removing barrel distortion: toc: 16871.583000 microseconds 
+Converting to grayscale: toc: 546.296000 microseconds 
+Uploading image to GPU: toc: 366.739000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27891.821000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.183000 microseconds 
+stitching failed
+
+
+Stitching Frame 171
+Removing barrel distortion: toc: 17137.474000 microseconds 
+Converting to grayscale: toc: 541.817000 microseconds 
+Uploading image to GPU: toc: 371.394000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 35041.460000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.153000 microseconds 
+stitching failed
+
+
+Stitching Frame 172
+Removing barrel distortion: toc: 17680.228000 microseconds 
+Converting to grayscale: toc: 584.787000 microseconds 
+Uploading image to GPU: toc: 411.035000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 31202.600000 microseconds 
+No valid Homography
+Match Keypoints: toc: 14.155000 microseconds 
+stitching failed
+
+
+Stitching Frame 173
+Removing barrel distortion: toc: 17648.697000 microseconds 
+Converting to grayscale: toc: 585.494000 microseconds 
+Uploading image to GPU: toc: 335.544000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 30906.259000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.994000 microseconds 
+stitching failed
+
+
+Stitching Frame 174
+Removing barrel distortion: toc: 17741.769000 microseconds 
+Converting to grayscale: toc: 565.389000 microseconds 
+Uploading image to GPU: toc: 343.462000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 30790.658000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.482000 microseconds 
+stitching failed
+
+
+Stitching Frame 175
+Removing barrel distortion: toc: 17790.509000 microseconds 
+Converting to grayscale: toc: 551.673000 microseconds 
+Uploading image to GPU: toc: 352.545000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 31559.804000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.991000 microseconds 
+stitching failed
+
+
+Stitching Frame 176
+Removing barrel distortion: toc: 17503.333000 microseconds 
+Converting to grayscale: toc: 548.930000 microseconds 
+Uploading image to GPU: toc: 406.077000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 31125.540000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.056000 microseconds 
+stitching failed
+
+
+Stitching Frame 177
+Removing barrel distortion: toc: 17493.918000 microseconds 
+Converting to grayscale: toc: 636.332000 microseconds 
+Uploading image to GPU: toc: 340.795000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 30229.383000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.874000 microseconds 
+stitching failed
+
+
+Stitching Frame 178
+Removing barrel distortion: toc: 17757.057000 microseconds 
+Converting to grayscale: toc: 591.023000 microseconds 
+Uploading image to GPU: toc: 368.687000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32233.819000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.891000 microseconds 
+stitching failed
+
+
+Stitching Frame 179
+Removing barrel distortion: toc: 17550.296000 microseconds 
+Converting to grayscale: toc: 524.369000 microseconds 
+Uploading image to GPU: toc: 373.919000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32521.069000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.597000 microseconds 
+stitching failed
+
+
+Stitching Frame 180
+Removing barrel distortion: toc: 17375.492000 microseconds 
+Converting to grayscale: toc: 669.088000 microseconds 
+Uploading image to GPU: toc: 351.304000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29797.221000 microseconds 
+No valid Homography
+Match Keypoints: toc: 20.235000 microseconds 
+stitching failed
+
+
+Stitching Frame 181
+Removing barrel distortion: toc: 17528.595000 microseconds 
+Converting to grayscale: toc: 817.536000 microseconds 
+Uploading image to GPU: toc: 722.676000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 34959.625000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.210000 microseconds 
+stitching failed
+
+
+Stitching Frame 182
+Removing barrel distortion: toc: 17207.021000 microseconds 
+Converting to grayscale: toc: 579.215000 microseconds 
+Uploading image to GPU: toc: 353.399000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32360.316000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.245000 microseconds 
+stitching failed
+
+
+Stitching Frame 183
+Removing barrel distortion: toc: 17354.554000 microseconds 
+Converting to grayscale: toc: 597.567000 microseconds 
+Uploading image to GPU: toc: 428.305000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 37166.021000 microseconds 
+No valid Homography
+Match Keypoints: toc: 14.449000 microseconds 
+stitching failed
+
+
+Stitching Frame 184
+Removing barrel distortion: toc: 19290.789000 microseconds 
+Converting to grayscale: toc: 551.061000 microseconds 
+Uploading image to GPU: toc: 332.948000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 38690.214000 microseconds 
+No valid Homography
+Match Keypoints: toc: 10.845000 microseconds 
+stitching failed
+
+
+Stitching Frame 185
+Removing barrel distortion: toc: 17928.228000 microseconds 
+Converting to grayscale: toc: 499.468000 microseconds 
+Uploading image to GPU: toc: 438.704000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 35270.813000 microseconds 
+No valid Homography
+Match Keypoints: toc: 12.955000 microseconds 
+stitching failed
+
+
+Stitching Frame 186
+Removing barrel distortion: toc: 18072.984000 microseconds 
+Converting to grayscale: toc: 497.268000 microseconds 
+Uploading image to GPU: toc: 336.022000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28808.370000 microseconds 
+No valid Homography
+Match Keypoints: toc: 9.013000 microseconds 
+stitching failed
+
+
+Stitching Frame 187
+Removing barrel distortion: toc: 17362.708000 microseconds 
+Converting to grayscale: toc: 593.749000 microseconds 
+Uploading image to GPU: toc: 367.359000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28213.455000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.030000 microseconds 
+stitching failed
+
+
+Stitching Frame 188
+Removing barrel distortion: toc: 17459.132000 microseconds 
+Converting to grayscale: toc: 558.045000 microseconds 
+Uploading image to GPU: toc: 356.023000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27881.617000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.952000 microseconds 
+stitching failed
+
+
+Stitching Frame 189
+Removing barrel distortion: toc: 17195.658000 microseconds 
+Converting to grayscale: toc: 532.123000 microseconds 
+Uploading image to GPU: toc: 335.665000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 34340.097000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.258000 microseconds 
+stitching failed
+
+
+Stitching Frame 190
+Removing barrel distortion: toc: 17121.828000 microseconds 
+Converting to grayscale: toc: 542.148000 microseconds 
+Uploading image to GPU: toc: 349.561000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32502.449000 microseconds 
+No valid Homography
+Match Keypoints: toc: 9.158000 microseconds 
+stitching failed
+
+
+Stitching Frame 191
+Removing barrel distortion: toc: 17275.789000 microseconds 
+Converting to grayscale: toc: 557.125000 microseconds 
+Uploading image to GPU: toc: 367.098000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32446.186000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.559000 microseconds 
+stitching failed
+
+
+Stitching Frame 192
+Removing barrel distortion: toc: 17374.961000 microseconds 
+Converting to grayscale: toc: 531.922000 microseconds 
+Uploading image to GPU: toc: 364.696000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 31256.518000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.527000 microseconds 
+stitching failed
+
+
+Stitching Frame 193
+Removing barrel distortion: toc: 17062.184000 microseconds 
+Converting to grayscale: toc: 535.619000 microseconds 
+Uploading image to GPU: toc: 335.956000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27957.771000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.194000 microseconds 
+stitching failed
+
+
+Stitching Frame 194
+Removing barrel distortion: toc: 17134.587000 microseconds 
+Converting to grayscale: toc: 537.718000 microseconds 
+Uploading image to GPU: toc: 341.298000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28055.890000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.977000 microseconds 
+stitching failed
+
+
+Stitching Frame 195
+Removing barrel distortion: toc: 17493.395000 microseconds 
+Converting to grayscale: toc: 624.216000 microseconds 
+Uploading image to GPU: toc: 357.563000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29694.916000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.323000 microseconds 
+stitching failed
+
+
+Stitching Frame 196
+Removing barrel distortion: toc: 17167.105000 microseconds 
+Converting to grayscale: toc: 540.241000 microseconds 
+Uploading image to GPU: toc: 333.718000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27917.280000 microseconds 
+No valid Homography
+Match Keypoints: toc: 14.811000 microseconds 
+stitching failed
+
+
+Stitching Frame 197
+Removing barrel distortion: toc: 17109.044000 microseconds 
+Converting to grayscale: toc: 532.379000 microseconds 
+Uploading image to GPU: toc: 333.370000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27926.259000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.980000 microseconds 
+stitching failed
+
+
+Stitching Frame 198
+Removing barrel distortion: toc: 17072.127000 microseconds 
+Converting to grayscale: toc: 524.321000 microseconds 
+Uploading image to GPU: toc: 338.021000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29646.397000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.225000 microseconds 
+stitching failed
+
+
+Stitching Frame 199
+Removing barrel distortion: toc: 17226.326000 microseconds 
+Converting to grayscale: toc: 550.974000 microseconds 
+Uploading image to GPU: toc: 330.476000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 29666.022000 microseconds 
+No valid Homography
+Match Keypoints: toc: 13.358000 microseconds 
+stitching failed
+
+
+Stitching Frame 200
+Removing barrel distortion: toc: 21026.076000 microseconds 
+Converting to grayscale: toc: 823.115000 microseconds 
+Uploading image to GPU: toc: 412.297000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 32270.807000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.464000 microseconds 
+stitching failed
+
+
+Stitching Frame 201
+Removing barrel distortion: toc: 24285.043000 microseconds 
+Converting to grayscale: toc: 871.478000 microseconds 
+Uploading image to GPU: toc: 496.063000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 36964.837000 microseconds 
+No valid Homography
+Match Keypoints: toc: 9.929000 microseconds 
+stitching failed
+
+
+Stitching Frame 202
+Removing barrel distortion: toc: 18567.889000 microseconds 
+Converting to grayscale: toc: 535.279000 microseconds 
+Uploading image to GPU: toc: 335.110000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 30659.748000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.151000 microseconds 
+stitching failed
+
+
+Stitching Frame 203
+Removing barrel distortion: toc: 18422.315000 microseconds 
+Converting to grayscale: toc: 517.922000 microseconds 
+Uploading image to GPU: toc: 371.595000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 48206.999000 microseconds 
+No valid Homography
+Match Keypoints: toc: 11.724000 microseconds 
+stitching failed
+
+
+Stitching Frame 204
+Removing barrel distortion: toc: 42376.060000 microseconds 
+Converting to grayscale: toc: 2152.268000 microseconds 
+Uploading image to GPU: toc: 402.007000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 30007.754000 microseconds 
+No valid Homography
+Match Keypoints: toc: 32.431000 microseconds 
+stitching failed
+
+
+Stitching Frame 205
+Removing barrel distortion: toc: 24979.622000 microseconds 
+Converting to grayscale: toc: 626.383000 microseconds 
+Uploading image to GPU: toc: 561.043000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 57162.522000 microseconds 
+No valid Homography
+Match Keypoints: toc: 33.938000 microseconds 
+stitching failed
+
+
+Stitching Frame 206
+Removing barrel distortion: toc: 27042.883000 microseconds 
+Converting to grayscale: toc: 494.746000 microseconds 
+Uploading image to GPU: toc: 392.917000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 31324.786000 microseconds 
+No valid Homography
+Match Keypoints: toc: 17.854000 microseconds 
+stitching failed
+
+
+Stitching Frame 207
+Removing barrel distortion: toc: 26514.287000 microseconds 
+Converting to grayscale: toc: 778.645000 microseconds 
+Uploading image to GPU: toc: 470.120000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 33030.306000 microseconds 
+No valid Homography
+Match Keypoints: toc: 12.114000 microseconds 
+stitching failed
+
+
+Stitching Frame 208
+Removing barrel distortion: toc: 24407.755000 microseconds 
+Converting to grayscale: toc: 570.614000 microseconds 
+Uploading image to GPU: toc: 601.155000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 36769.409000 microseconds 
+No valid Homography
+Match Keypoints: toc: 37.436000 microseconds 
+stitching failed
+
+
+Stitching Frame 209
+Removing barrel distortion: toc: 24400.400000 microseconds 
+Converting to grayscale: toc: 572.789000 microseconds 
+Uploading image to GPU: toc: 722.600000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 44396.367000 microseconds 
+No valid Homography
+Match Keypoints: toc: 14.067000 microseconds 
+stitching failed
+
+
+Stitching Frame 210
+Removing barrel distortion: toc: 25866.739000 microseconds 
+Converting to grayscale: toc: 560.904000 microseconds 
+Uploading image to GPU: toc: 438.718000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 43935.231000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.570000 microseconds 
+stitching failed
+
+
+Stitching Frame 211
+Removing barrel distortion: toc: 16747.985000 microseconds 
+Converting to grayscale: toc: 535.776000 microseconds 
+Uploading image to GPU: toc: 337.909000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27865.577000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.292000 microseconds 
+stitching failed
+
+
+Stitching Frame 212
+Removing barrel distortion: toc: 16746.146000 microseconds 
+Converting to grayscale: toc: 529.392000 microseconds 
+Uploading image to GPU: toc: 340.794000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27843.197000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.414000 microseconds 
+stitching failed
+
+
+Stitching Frame 213
+Removing barrel distortion: toc: 16838.672000 microseconds 
+Converting to grayscale: toc: 534.391000 microseconds 
+Uploading image to GPU: toc: 339.667000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27890.073000 microseconds 
+No valid Homography
+Match Keypoints: toc: 5.826000 microseconds 
+stitching failed
+
+
+Stitching Frame 214
+Removing barrel distortion: toc: 16750.807000 microseconds 
+Converting to grayscale: toc: 538.701000 microseconds 
+Uploading image to GPU: toc: 339.908000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27881.027000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.365000 microseconds 
+stitching failed
+
+
+Stitching Frame 215
+Removing barrel distortion: toc: 16900.784000 microseconds 
+Converting to grayscale: toc: 535.971000 microseconds 
+Uploading image to GPU: toc: 334.050000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27840.788000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.212000 microseconds 
+stitching failed
+
+
+Stitching Frame 216
+Removing barrel distortion: toc: 16757.343000 microseconds 
+Converting to grayscale: toc: 531.993000 microseconds 
+Uploading image to GPU: toc: 339.245000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28253.556000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.347000 microseconds 
+stitching failed
+
+
+Stitching Frame 217
+Removing barrel distortion: toc: 16793.746000 microseconds 
+Converting to grayscale: toc: 539.053000 microseconds 
+Uploading image to GPU: toc: 336.011000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27893.337000 microseconds 
+No valid Homography
+Match Keypoints: toc: 8.812000 microseconds 
+stitching failed
+
+
+Stitching Frame 218
+Removing barrel distortion: toc: 16741.445000 microseconds 
+Converting to grayscale: toc: 536.592000 microseconds 
+Uploading image to GPU: toc: 338.699000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27880.837000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.014000 microseconds 
+stitching failed
+
+
+Stitching Frame 219
+Removing barrel distortion: toc: 16755.777000 microseconds 
+Converting to grayscale: toc: 535.240000 microseconds 
+Uploading image to GPU: toc: 338.531000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27897.202000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.723000 microseconds 
+stitching failed
+
+
+Stitching Frame 220
+Removing barrel distortion: toc: 16756.256000 microseconds 
+Converting to grayscale: toc: 535.457000 microseconds 
+Uploading image to GPU: toc: 338.986000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27873.425000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.751000 microseconds 
+stitching failed
+
+
+Stitching Frame 221
+Removing barrel distortion: toc: 16732.839000 microseconds 
+Converting to grayscale: toc: 537.696000 microseconds 
+Uploading image to GPU: toc: 339.097000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27872.586000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.998000 microseconds 
+stitching failed
+
+
+Stitching Frame 222
+Removing barrel distortion: toc: 16787.156000 microseconds 
+Converting to grayscale: toc: 537.719000 microseconds 
+Uploading image to GPU: toc: 350.063000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27902.264000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.849000 microseconds 
+stitching failed
+
+
+Stitching Frame 223
+Removing barrel distortion: toc: 16795.253000 microseconds 
+Converting to grayscale: toc: 551.873000 microseconds 
+Uploading image to GPU: toc: 339.285000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 27884.286000 microseconds 
+No valid Homography
+Match Keypoints: toc: 6.955000 microseconds 
+stitching failed
+
+
+Stitching Frame 224
+Removing barrel distortion: toc: 16713.529000 microseconds 
+Converting to grayscale: toc: 598.162000 microseconds 
+Uploading image to GPU: toc: 423.034000 microseconds 
+FOUND 0 keypoints on first image
+FOUND 0 keypoints on second image
+Detect and Describe: toc: 28581.371000 microseconds 
+No valid Homography
+Match Keypoints: toc: 7.954000 microseconds 
+stitching failed

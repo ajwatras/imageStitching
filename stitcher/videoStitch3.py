@@ -62,20 +62,20 @@ im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so tha
 #vidcap3 = cv2.VideoCapture('../data/testVideo/office/output3.avi')
 #vidcap4 = cv2.VideoCapture('../data/testVideo/office/output4.avi')
 
-#vidcap1 = cv2.VideoCapture('../data/testVideo/chopsticker2/output1.avi')
-#vidcap2 = cv2.VideoCapture('../data/testVideo/chopsticker2/output2.avi')
-#vidcap3 = cv2.VideoCapture('../data/testVideo/chopsticker2/output3.avi')
-#vidcap4 = cv2.VideoCapture('../data/testVideo/chopsticker2/output4.avi')
+vidcap1 = cv2.VideoCapture('../data/testVideo/chopsticker2/output1.avi')
+vidcap2 = cv2.VideoCapture('../data/testVideo/chopsticker2/output2.avi')
+vidcap3 = cv2.VideoCapture('../data/testVideo/chopsticker2/output3.avi')
+vidcap4 = cv2.VideoCapture('../data/testVideo/chopsticker2/output4.avi')
 
 #vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
 #vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
 #vidcap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
 #vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 
-vidcap1 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output1.avi')
-vidcap2 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output2.avi')
-vidcap3 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output3.avi')
-vidcap4 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output4.avi')
+#vidcap1 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output1.avi')
+#vidcap2 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output2.avi')
+#vidcap3 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output3.avi')
+#vidcap4 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output4.avi')
 
 #vidcap1 = cv2.VideoCapture(1)
 #vidcap2 = cv2.VideoCapture(2)
@@ -107,10 +107,12 @@ for k in range(0,CALWINDOW):
 	image4 = image4[bot_edge:top_edge,left_edge:right_edge]
 
 	# Remove radial distortion based on pre-calibrated camera values
+	t = time.time();
 	image1 = cv2.undistort(image1,mtx,radial_dst,None,mtx)
 	image2 = cv2.undistort(image2,mtx,radial_dst,None,mtx)
 	image3 = cv2.undistort(image3,mtx,radial_dst,None,mtx)
 	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
+	print "Correcting for Barrel Distortion: ", time.time() - t;
 	
 	#flip left right
 	#image1 = np.fliplr(image1)
@@ -197,7 +199,7 @@ while ((success1 & success2) & (success3 & success4)):
 	result_window = result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:]
         result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:] = resultA*mask2+ result_window*np.logical_not(mask2)
         
-        #result,fgbg1B = stitch.reStitch(result1,result2,result,fgbg1B,seam1,[out_pos[0] - coord_shift1[0],out_pos[1]-coord_shift1[1]])
+       # result,fgbg1B = stitch.reStitch(result1,result2,result,fgbg1B,seam1,[out_pos[0] - coord_shift1[0],out_pos[1]-coord_shift1[1]])
 
         
         print "\nB:"
@@ -205,18 +207,18 @@ while ((success1 & success2) & (success3 & success4)):
 	resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
 	#seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])	# Locate the seam between the two images.
         
-        if (out_pos[0]-coord_shift2[0] < 0):
-            shift = -(out_pos[0]-coord_shift2[0])
+    #    if (out_pos[0]-coord_shift2[0] < 0):
+    #        shift = -(out_pos[0]-coord_shift2[0])
             
-            print "Shifting: ", shift
+    #        print "Shifting: ", shift
+    #        
+    #        result1 = result1[shift:,:,:]
+    #        result2 = result2[shift:,:,:]
+    #        resultB = resultB[shift:,:,:]
+    #        mask1 = mask1[shift:,:,:]
+    #       mask2 = mask2[shift:,:,:]
             
-            result1 = result1[shift:,:,:]
-            result2 = result2[shift:,:,:]
-            resultB = resultB[shift:,:,:]
-            mask1 = mask1[shift:,:,:]
-            mask2 = mask2[shift:,:,:]
-            
-            coord_shift2[0] = coord_shift2[0]-shift
+    #        coord_shift2[0] = coord_shift2[0]-shift
             
             
 
