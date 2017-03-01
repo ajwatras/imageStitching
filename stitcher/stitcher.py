@@ -101,12 +101,12 @@ class Stitcher:
         def detectAndDescribe(self, image):
 		# convert the image to grayscale
 		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
- 
+ 	
 		# detect and extract features from the image
 		#descriptor = cv2.xfeatures2d.SIFT_create()
 		descriptor = cv2.xfeatures2d.SURF_create()
 		
-		(kps, features) = descriptor.detectAndCompute(image, None)
+		(kps, features) = descriptor.detectAndCompute(gray, None)
  
 		# convert the keypoints from KeyPoint objects to NumPy
 		# arrays
