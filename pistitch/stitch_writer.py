@@ -3,13 +3,22 @@ import urllib
 import numpy as np
 import stitcher2
 
-OUTPUT_SIZE = [1080,1920,3]
+FULLSTITCH = 0
+OUTPUT_SIZE = [1920,1920,3]
+VIDEOWRITER_OUTPUT_PATH = '../data/stitch_writer/'
 stitch = stitcher2.Stitcher()
 H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
 output_template = np.zeros(OUTPUT_SIZE)
 output_center = np.array([OUTPUT_SIZE[0]/2,OUTPUT_SIZE[1]/2]).astype('int')
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+
+out1 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output1.avi',fourcc, 20.0, (640,480))
+out2 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output2.avi',fourcc, 20.0, (640,480))
+out3 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output3.avi',fourcc, 20.0, (640,480))
+out4 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output4.avi',fourcc, 20.0, (640,480))
+out5 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'stitched.avi',fourcc, 20.0, (1920,1920))
 
 
 stream1=urllib.urlopen('http://10.42.0.105:8060/?action=stream')
@@ -89,27 +98,30 @@ while True:
 	if cv2.waitKey(1) == ord('q'):
             exit(0)
 
+
     if flag1 and flag2 and flag3 and flag4:
         flag1 = False
         flag2 = False
         flag3 = False
         flag4 = False
-        if CALIBRATION = True:
+        if CALIBRATION:
             (result1, vis1,H1,mask11,mask12,coord_shift1) = stitch.stitch([image1, image2], showMatches=True)
             (result2, vis2,H2,mask21,mask22,coord_shift2) = stitch.stitch([image1, image3], showMatches=True)
             (result3, vis3,H3,mask31,mask32,coord_shift3) = stitch.stitch([image1, image4], showMatches=True)
 
-            if (H1 is not 0) and (H2 is not 0) and (H3 is not 0) and (H4 is not 0):
-                Calibration = False
 
-        if CALIBRATION = False:
+            out_pos = output_center - np.array(image1.shape[0:2])/2
+            #if (H1 is not 0) and (H2 is not 0) and (H3 is not 0):
+            CALIBRATION = False
+
+        if not CALIBRATION:
             result = np.zeros(OUTPUT_SIZE)
             print "\nA:"
             result1,result2,mask1,mask2 = stitch.applyHomography(image1,image2,H1)
             resultA = (result2*np.logical_not(mask1) + result1).astype('uint8')
     
             result_window = result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:]
-                result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:] = resultA*mask2+ result_window*np.logical_not(mask2)
+            result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+result1.shape[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+result1.shape[1],:] = resultA*mask2+ result_window*np.logical_not(mask2)
         
             # result,fgbg1B = stitch.reStitch(result1,result2,result,fgbg1B,seam1,[out_pos[0] - coord_shift1[0],out_pos[1]-coord_shift1[1]])
 
@@ -120,7 +132,7 @@ while True:
 
             print out_pos[0]-coord_shift2[0], out_pos[0]-coord_shift2[0]+result1.shape[0]
             result_window = result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:]
-                result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:] =resultB*mask2 + result_window*np.logical_not(mask2)
+            result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:] =resultB*mask2 + result_window*np.logical_not(mask2)
 
             #result,fgbg2B = stitch.reStitch(result1,result2,result,fgbg2B,seam2,[out_pos[0] - coord_shift2[0],out_pos[1]-coord_shift2[1]])
 
@@ -145,6 +157,12 @@ while True:
 
 
             result = result.astype('uint8')
+
+            out1.write(image1)
+            out2.write(image2)
+            out3.write(image3)
+            out4.write(image4)
+            out5.write(result)
 
             cv2.imshow("Result",result)
             if cv2.waitKey(1) == ord('q'):

@@ -12,9 +12,9 @@ output_template = np.zeros(OUTPUT_SIZE)
 output_center = np.array([OUTPUT_SIZE[0]/2,OUTPUT_SIZE[1]/2]).astype('int')
 
 
-stream3=urllib.urlopen('http://10.42.0.105:8060/?action=stream')
+stream1=urllib.urlopen('http://10.42.0.105:8080/?action=stream')
 stream2=urllib.urlopen('http://10.42.0.124:8070/?action=stream')
-stream1=urllib.urlopen('http://10.42.0.104:8080/?action=stream')
+stream3=urllib.urlopen('http://10.42.0.104:8060/?action=stream')
 stream4=urllib.urlopen('http://10.42.0.102:8090/?action=stream')
 
 flag1 = False
