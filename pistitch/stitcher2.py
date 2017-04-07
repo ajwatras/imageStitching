@@ -354,7 +354,7 @@ class Stitcher:
 		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
 		result2 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
 			(x_bound+x_shift,y_bound+y_shift))
-		
+		#result2 = np.zeros([y_bound+y_shift,x_bound+x_shift,3])
 		result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
 		
 		mask1 = (result1 > 0).astype('int')

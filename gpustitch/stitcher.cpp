@@ -278,12 +278,12 @@ public:
 
 		//cout << "X Bound: " << x_Bound << "  Y Bound: " << y_Bound << "  X Shift: " << xShift << "  Y Shift: " << yShift << endl;
 
-		int SIZE_BOUNDS[2] = { 1080, 1920 };
+                int SIZE_BOUNDS[2] = { 1080, 1920 };
 		if ((x_Bound + xShift > SIZE_BOUNDS[0]) || (y_Bound + yShift > SIZE_BOUNDS[1]))
 		{
 			result.status = false;
 			//cout << "X Bound: " << x_Bound << "  Y Bound: " << y_Bound << endl;
-			//cout << "ERROR: Image Too Large" << endl;
+                        //cout << "ERROR: Image Too Large" << endl;
 			
 			return;
 		}

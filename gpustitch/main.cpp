@@ -12,16 +12,16 @@ void fullstitch(Mat img1, Mat img2, GPUResult& result1, ImageStitcher& stitch){
 		vector<GpuMat> images;
 
 		//remove barrel distortion using pre calibrated values
-		cout << "Removing barrel distortion: ";
-		stitch.tic();
-		undistort(img1,fimg1, mtx, radial_dst );
-		undistort(img2,fimg2, mtx, radial_dst );
-		stitch.toc();
+                //cout << "Removing barrel distortion: ";
+                //stitch.tic();
+                undistort(img1,fimg1, mtx, radial_dst );
+                undistort(img2,fimg2, mtx, radial_dst );
+                //stitch.toc();
 		
 		cout << "Converting to grayscale: ";
 		stitch.tic();
-		cvtColor(fimg1,fimg1, CV_BGR2GRAY);
-		cvtColor(fimg2, fimg2, CV_BGR2GRAY);
+                cvtColor(fimg1,fimg1, CV_BGR2GRAY);
+                cvtColor(fimg2, fimg2, CV_BGR2GRAY);
 		stitch.toc();
 
 		cout << "Uploading image to GPU: ";
@@ -48,9 +48,10 @@ int main(int argc, char* argv[]){
 	GPUResult result1;
 
 	// Set up video feed.
-	VideoCapture vid1("output2.avi");
-	VideoCapture vid2("output1.avi");
-
+        VideoCapture vid2("http://10.42.0.105:8050/?action=stream");
+        VideoCapture vid1("http://10.42.0.124:8070/?action=stream");
+        //VideoCapture vid1("output1.avi");
+        //VideoCapture vid2("output2.avi");
 	//Read incoming frame
 	status = vid1.read(img1);
 	vid2.read(img2);
