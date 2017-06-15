@@ -73,17 +73,36 @@ for k in range(0,CALWINDOW):
 	image4 = cv2.undistort(image4,mtx,radial_dst,None,mtx)
 
 	print "\n1:"
-	(result1, vis1,H) = stitch.stitch([image1, image2], showMatches=True)
-	#H1 = H1 + H/CALWINDOW
-	H1 = H
+	(result1, vis1,H,mask11,mask12,coord_shift1) = stitch.stitch([image1, image2], showMatches=True)
+	H1 = H							# Store first Homography
+	seam1 = stitch.locateSeam(mask11[:,:,0],mask12[:,:,0]) 	# Locate the seam between the two images.
+	
+        # Uncomment to Check quality of first calibration stitch
+        #cv2.imshow("result1", result1)
+        #cv2.imshow("vis1",vis1)
+        #cv2.imshow("image3",image3)
+        #cv2.waitKey(0)
+
 	print "\n2:"
-	(result2, vis2,H) = stitch.stitch([result1, image3], showMatches=True)
-	#H2 = H2 + H/CALWINDOW
-	H2 = H
+	(result2, vis2,H,mask21,mask22,coord_shift2) = stitch.stitch([image1, image3], showMatches=True)
+	H2 = H							# Store the second Homography
+	seam2 = stitch.locateSeam(mask21[:,:,0],mask22[:,:,0])	# Locate the seam between the two images.
+	
+	#cv2.imshow("result2",result2)
+	#cv2.imshow("vis2",vis2)
+	#cv2.waitKey(0)
+	
 	print "\n3:"
-	(result3, vis3,H) = stitch.stitch([result2, image4], showMatches=True)
+	(result3, vis3,H,mask31,mask32,coord_shift3) = stitch.stitch([image1,image4], showMatches=True)
 	#H3 = H3+H/CALWINDOW
-	H3 = H
+	H3 = H							# Store the third homography
+        #print mask31,mask32
+	seam3 = stitch.locateSeam(mask31[:,:,0],mask32[:,:,0])	# Locate the seam between the two images.
+	
+	#cv2.imshow("result3",result3)
+	#cv2.imshow("vis3",vis3)
+	#cv2.waitKey(0)
+
 	height = result3.shape[0]
 	width = result3.shape[1]
 	out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (width,height))

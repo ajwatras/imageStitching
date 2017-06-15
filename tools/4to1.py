@@ -8,10 +8,10 @@ import cv2
 #cap3 = cv2.VideoCapture('../data/vidwriter/output3.avi')
 #cap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 
-cap1 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output1.avi')
-cap2 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output2.avi')
-cap3 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output3.avi')
-cap4 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output4.avi')
+cap1 = cv2.VideoCapture('../data/Line_Alignment/output1.avi')
+cap2 = cv2.VideoCapture('../data/Line_Alignment/output2.avi')
+cap3 = cv2.VideoCapture('../data/Line_Alignment/output3.avi')
+cap4 = cv2.VideoCapture('../data/Line_Alignment/output4.avi')
 
 # Define the codec and create VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'XVID')

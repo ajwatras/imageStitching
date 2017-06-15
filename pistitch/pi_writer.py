@@ -1,7 +1,7 @@
 import cv2
 import urllib
 import numpy as np
-import stitcher2
+
 
 
 VIDEOWRITER_OUTPUT_PATH = '../data/pi_writer/'

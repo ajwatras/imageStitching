@@ -1,7 +1,7 @@
 # Use this method to try and call the stitch function to stitch together all four images. (s1-s4). This 3rd iteration will implement foreground re-stitching to try and remove discontinuities near image boundaries. 
 
 # Import the necessary packages
-import stitcher2
+import stitcher
 import argparse
 import imutils
 import cv2
@@ -35,7 +35,7 @@ print [top_edge,bot_edge,left_edge,right_edge]
 
 
 #Initializing Needed Processes and Variables
-stitch = stitcher2.Stitcher()
+stitch = stitcher.Stitcher()
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 out = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (OUTPUT_SIZE[1],OUTPUT_SIZE[0]))
 fgbg1A = cv2.createBackgroundSubtractorMOG2()

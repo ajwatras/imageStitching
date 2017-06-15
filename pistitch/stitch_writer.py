@@ -1,12 +1,12 @@
 import cv2
 import urllib
 import numpy as np
-import stitcher2
+import stitcher
 
 FULLSTITCH = 0
 OUTPUT_SIZE = [1920,1920,3]
 VIDEOWRITER_OUTPUT_PATH = '../data/stitch_writer/'
-stitch = stitcher2.Stitcher()
+stitch = stitcher.Stitcher()
 H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])

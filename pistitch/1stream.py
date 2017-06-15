@@ -1,7 +1,6 @@
 import cv2
 import urllib
 import numpy as np
-import stitcher2
 
 
 stream1=urllib.urlopen('http://10.42.0.105:8060/?action=stream')
