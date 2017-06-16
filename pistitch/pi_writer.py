@@ -13,11 +13,10 @@ out2 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output2.avi',fourcc, 20.0, (640,
 out3 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output3.avi',fourcc, 20.0, (640,480))
 out4 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output4.avi',fourcc, 20.0, (640,480))
 
-
-cap1 = cv2.VideoCapture('http://10.42.0.105:8060/?action=stream')
-cap2 = cv2.VideoCapture('http://10.42.0.124:8070/?action=stream')
-cap3 = cv2.VideoCapture('http://10.42.0.104:8080/?action=stream')
-cap4 = cv2.VideoCapture('http://10.42.0.102:8090/?action=stream')
+cap4 = cv2.VideoCapture('http://10.42.0.106:8060/?action=stream')
+cap3 = cv2.VideoCapture('http://10.42.0.124:8070/?action=stream')
+cap2 = cv2.VideoCapture('http://10.42.0.104:8050/?action=stream')
+cap1 = cv2.VideoCapture('http://10.42.0.102:8090/?action=stream')
 
 
 while cap1.isOpened():

@@ -23,7 +23,316 @@ class Stitcher:
 		# determine if we are using OpenCV v3.X
 		self.isv3 = imutils.is_cv3()
 		
-        def stitch(self, images, ratio=.75, reprojThresh=4.0,
+	def applyHomography(self,imageB,imageA,H):
+	# Detect The appropriate size for the resulting image. 
+		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
+			[imageA.shape[1],imageA.shape[0],1]]).T
+		
+		# print H, corners
+		img_bounds = np.dot(H,corners)
+		
+                x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
+		y_bound = np.divide(img_bounds[1,:],img_bounds[2,:])
+		x_shift = 0
+		y_shift = 0
+		if min(x_bound) < 0:
+			x_shift = -int(min(x_bound))
+		if min(y_bound) < 0:
+			y_shift = -int(min(y_bound))
+		
+		shift_H = np.array([[1,0,x_shift],[0,1,y_shift],[0,0,1]])
+		x_bound = int(max(max(x_bound),imageB.shape[1]))
+		y_bound = int(max(max(y_bound),imageB.shape[0]))
+		
+
+		trans_mat = np.dot(shift_H,H)
+		if (x_bound+x_shift > SIZE_BOUNDS[0]) or (y_bound+y_shift > SIZE_BOUNDS[1]):
+			print "CROPPED IMAGE TO REASONABLE SIZE!"
+			imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
+			
+			if (x_bound+x_shift > SIZE_BOUNDS[0]) and (y_bound+y_shift > SIZE_BOUNDS[1]):
+				result2 = cv2.warpPerspective(imageA, trans_mat, (SIZE_BOUNDS[0],SIZE_BOUNDS[1]))
+			elif ((x_bound+x_shift > SIZE_BOUNDS[0])):
+				result2 = cv2.warpPerspective(imageA, trans_mat, (SIZE_BOUNDS[0],y_bound+y_shift))
+			elif ((y_bound+y_shift > SIZE_BOUNDS[1])):
+				result2 = cv2.warpPerspective(imageA, trans_mat, (x_bound+x_shift,SIZE_BOUNDS[1]))
+			else: 
+				result2 = cv2.warpPerspective(imageA, trans_mat, (x_bound+x_shift,y_bound+y_shift))
+
+
+			result1 = imageB2
+			if (SIZE_BOUNDS[1] - imageB2.shape[0] > 0):
+				print "expanding!"
+				result1 = np.pad(result1,((0,SIZE_BOUNDS[1] - imageB2.shape[0]),(0,0),(0,0)),'constant', constant_values=0) 
+			
+			if (SIZE_BOUNDS[0] - imageB2.shape[1] > 0):
+				print "expanding 2nd"
+				result1 = np.pad(result1,((0,0),(0,SIZE_BOUNDS[0] - imageB2.shape[1] ),(0,0)),'constant', constant_values=0) 
+			
+			print result1.shape, result2.shape[0],result2.shape[1]
+			result1 = result1[0:result2.shape[0],0:result2.shape[1],:]
+			print result1.shape,result2.shape
+
+			#mask1 = (result1 > 0).astype('int')
+			#mask2 = (result2 > 0).astype('int')
+
+			mask1 = self.detectMask(result1)
+			mask2 = self.detectMask(result2)
+
+			return result1,result2,mask1,mask2#,[x_shift,y_shift],trans_mat
+		
+		# Warp Image A and place it in frame.
+		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
+		#print imageA.shape, H,shift_H,np.dot(shift_H,H), (x_bound+x_shift,y_bound+y_shift)
+		result2 = cv2.warpPerspective(imageA, trans_mat, (x_bound+x_shift,y_bound+y_shift))
+		
+		result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
+		
+		#mask1 = (result1 > 0).astype('int')
+		#mask2 = (result2 > 0).astype('int')
+
+		mask1 = self.detectMask(result1)
+		mask2 = self.detectMask(result2)
+
+		return result1,result2,mask1,mask2#,[x_shift,y_shift],trans_mat
+
+	def calcMinDistance(self, pointsA,maskB):
+        # Calculates the distance from point a to the closest nonzero point on maskB.
+                output = np.zeros(len(pointsA))
+                pointsB = np.nonzero(maskB)
+                distance = np.zeros(len(pointsB[0]))
+                
+                for k in range(0,len(output)):
+                    pointA = pointsA[k]
+                    for i in range(0,len(distance)):
+                        distance[i] = ((pointA[0] - pointsB[0][i])**2 + (pointA[1] - pointsB[1][i])**2) ** (0.5)
+                        
+                    output[k] = np.min(distance)
+                
+                return output
+
+	def changeView(unknown,R,t, in_image):
+		ti = time.time()
+		im_lim = in_image.shape
+		# We assume that R is a rotation matrix with each row corresponding to the direction of that axis.   
+		H = np.append(R,t,1)
+		# find new image bounds
+		corners = np.transpose(np.array([[0,0,1,1],[im_lim[1],0,1,1],[im_lim[1],im_lim[0],1,1],[0,im_lim[0],1,1]]))
+		im_bounds = np.dot(H,corners)
+		max_x = round(max(np.divide(im_bounds[0,:],im_bounds[2,:])))
+		max_y = round(max(np.divide(im_bounds[1,:],im_bounds[2,:])))
+
+		output = np.zeros([max_y+1,max_x+1,3], dtype="uint8")
+		# Apply transformation in 3D space
+		for x in range(0,in_image.shape[1]):
+			for y in range(0,in_image.shape[0]):
+				in_pt = np.array([[x],[y],[1],[1]])
+				out_pt = np.dot(H,in_pt)
+				if out_pt[2] != 0:
+					out_x = int(round(out_pt[0]/out_pt[2]))
+					out_y = int(round(out_pt[1]/out_pt[2]))
+					
+					if (out_x >= 0) & (out_y >= 0) & (out_x < max_x+1) & (out_y< max_x + 1):
+						output[out_y,out_x,:] = in_image[y,x,:]
+
+		
+		elapsed = time.time() - ti
+		print " \nWarping Viewpoint: %f Seconds \n " % elapsed
+		return output
+
+	def detectMask(self,image):
+		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+		mask = (gray > 0)
+		mask = np.repeat(mask[:,:,np.newaxis],3,axis=2)
+
+		return mask
+
+	def detectAndDescribe(self, image):
+		# convert the image to grayscale
+		#gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                
+                
+		# detect and extract features from the image
+		#descriptor = cv2.xfeatures2d.SIFT_create()
+		descriptor = cv2.xfeatures2d.SURF_create()
+		
+		(kps, features) = descriptor.detectAndCompute(image, None)
+                
+ 
+                #image_kps = image.copy()
+                #cv2.drawKeypoints(image_kps,kps,image_kps)
+                #cv2.imshow("KPS",image_kps)
+                #cv2.waitKey(0)
+		# convert the keypoints from KeyPoint objects to NumPy
+		# arrays
+		kps = np.float32([kp.pt for kp in kps])
+                
+                #mask = (gray > 0).astype(float)
+                #usable_points = np.nonzero(mask)
+                #usable_points = zip(usable_points[0],usable_points[1])
+                #print "Usable Points",usable_points
+                #print "KeyPoints", kps
+                #kps_final = []
+                #features_final = []
+                #for k in range(0,len(kps)):
+                #    print np.around(kps[k])
+                #    print zip(usable_points[0],usable_points[1])
+                #    print tuple(np.around(kps[k])) in zip(usable_points[0],usable_points[1])
+                #    if tuple(np.around(kps[k])) in usable_points:
+                #        print kps[k],features[k]
+                #        kps_final.append(kps[k])
+                #        features_final.append(features[k])
+                
+                #kps = kps_final
+                #features = features_final
+                
+                #print kps, features
+                
+		# return a tuple of keypoints and features
+		return (kps, features)
+	def drawMatches(self, imageA, imageB, kpsA, kpsB, matches, status):
+		# initialize the output visualization image
+		(hA, wA) = imageA.shape[:2]
+		(hB, wB) = imageB.shape[:2]
+		vis = np.zeros((max(hA, hB), wA + wB, 3), dtype="uint8")
+		vis[0:hA, 0:wA] = imageA
+		vis[0:hB, wA:] = imageB
+ 
+		# loop over the matches
+		for ((trainIdx, queryIdx), s) in zip(matches, status):
+			# only process the match if the keypoint was successfully
+			# matched
+			if s == 1:
+				# draw the match
+				ptA = (int(kpsA[queryIdx][0]), int(kpsA[queryIdx][1]))
+				ptB = (int(kpsB[trainIdx][0]) + wA, int(kpsB[trainIdx][1]))
+				cv2.line(vis, ptA, ptB, (0, 255, 0), 1)
+ 
+		# return the visualization
+		return vis
+
+	def locateSeam(self, maskA, maskB):	
+		out_mask = np.zeros(maskA.shape).astype('uint8')
+		contour_copy = np.zeros(maskA.shape).astype('uint8')
+		contour_copy[:] = maskA[:].astype('uint8')
+		im2, contours, hierarchy = cv2.findContours(contour_copy,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+		cv2.drawContours(out_mask,contours,-1,(255,255,0),1)
+		out_mask = np.logical_and(out_mask,maskB).astype('float')
+		return out_mask
+            
+
+
+	def matchKeypoints(self, kpsA, kpsB, featuresA, featuresB,ratio, reprojThresh):
+		# compute the raw matches and initialize the list of actual
+		# matches
+		t=time.time()
+		#matcher = cv2.DescriptorMatcher_create("BruteForce-L1")     # replaces "BruteForce" because L1 seems to give slightly better results. 
+		matcher = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
+		if (featuresA is None) or (featuresB is None):
+                    print "Need to provide two sets of features"
+                    if (featuresA is None):
+                        print "FeaturesA missing"
+                    if (featuresB is None):
+                        print "featureB missing"
+                    #cv2.waitKey(0)
+                    return None
+                if (featuresA is []) or (featuresB is []):
+                    print "Need to provide two sets of features"
+                    if (featuresA is None):
+                        print "FeaturesA missing"
+                    if (featuresB is None):
+                        print "featureB missing"
+                    #cv2.waitKey(0)
+                    return None
+		rawMatches = matcher.knnMatch(featuresA, featuresB, 2)
+		#rawMatches = matcher.match(featuresA,featuresB)
+		
+		elapsed = time.time() - t
+		print "Matching Feature Points: %f" % elapsed
+		matches = []
+ 
+		# loop over the raw matches
+		t=time.time()
+		for m in rawMatches:
+			# ensure the distance is within a certain ratio of each
+			# other (i.e. Lowe's ratio test)
+			if len(m) == 2 and m[0].distance < m[1].distance * ratio:
+				matches.append((m[0].trainIdx, m[0].queryIdx))
+                print len(featuresA)
+                print len(featuresB)
+                
+                print len(matches), "Matches found"
+		# computing a homography requires at least 4 matches, we use 10 to ensure a robust stitch.
+		if len(matches) > 20:
+                        
+			# construct the two sets of points
+			ptsA = np.float32([kpsA[i] for (_, i) in matches])
+			ptsB = np.float32([kpsB[i] for (i, _) in matches])
+ 
+			# compute the homography between the two sets of points
+			(H, status) = cv2.findHomography(ptsA, ptsB, cv2.RANSAC,
+				reprojThresh)
+			if H is None:
+				print "Homography failed: %d matches \n" % len(matches) 
+ 
+			# return the matches along with the homograpy matrix
+			# and status of each matched point 
+			elapsed = time.time() -t
+			print "Computing Homography: %f Seconds" % elapsed
+			return (matches, H, status)
+ 
+		# otherwise, no homograpy could be computed
+		print "No valid Homography \n"
+		return None
+
+	def shiftImage(self,imageA,imageB,H):
+        # Detect the appropriate size for the resulting image. 
+		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
+			[imageA.shape[1],imageA.shape[0],1]]).T
+		
+                #print H, corners
+		img_bounds = np.dot(H,corners)
+		
+                x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
+		y_bound = np.divide(img_bounds[1,:],img_bounds[2,:])
+		x_shift = 0
+		y_shift = 0
+		if min(x_bound) < 0:
+			x_shift = -int(min(x_bound))
+		if min(y_bound) < 0:
+			y_shift = -int(min(y_bound))
+		coord_shift = np.array([y_shift,x_shift])
+		shift_H = np.array([[1,0,x_shift],[0,1,y_shift],[0,0,1]])
+		x_bound = int(max(max(x_bound),imageB.shape[1]))
+		y_bound = int(max(max(y_bound),imageB.shape[0]))
+		
+		print "X Bound:",x_bound,"Y Bound:",y_bound, "x shift:",x_shift,"y shift:",y_shift
+		if (x_bound+x_shift > SIZE_BOUNDS[0]) or (y_bound+y_shift > SIZE_BOUNDS[1]):
+			imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
+			result2 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
+				(SIZE_BOUNDS[0],SIZE_BOUNDS[1]))
+			if (SIZE_BOUNDS[1] - imageB2.shape[0] > 0):
+				result1 = np.pad(imageB2,((0,SIZE_BOUNDS[1] - imageB2.shape[0]),(0,0),(0,0)),'constant', constant_values=0) 
+			
+			if (SIZE_BOUNDS[0] - imageB2.shape[1] > 0):
+				result1 = np.pad(imageB2,((0,0),(0,SIZE_BOUNDS[0] - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
+			
+			result1 = imageB2[0:result2.shape[0],0:result2.shape[1],:]
+
+			return result1,result2,coord_shift
+
+		
+		# Warp Image A and place it in frame.
+		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
+		result2 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
+			(x_bound+x_shift,y_bound+y_shift))
+		
+		result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
+		
+		return result1,result2,coord_shift
+
+
+	def stitch(self, images, ratio=.75, reprojThresh=4.0,
 		showMatches=True, reStitching = False, seam = 0):
                 if reStitching:
                     print "Re stitching video"
@@ -132,8 +441,11 @@ class Stitcher:
 		
 		#result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
 
-		mask1 = (result1 > 0).astype('int')
-		mask2 = (result2 > 0).astype('int')
+		#mask1 = (result1 > 0).astype('int')
+		#mask2 = (result2 > 0).astype('int')
+
+		mask1 = self.detectMask(result1)
+		mask2 = self.detectMask(result2)
 
 		if BLEND_IMAGES == 1:
 
@@ -167,301 +479,9 @@ class Stitcher:
 		
 		
 		return (result,H,mask1,mask2,coord_shift)
-
-        def detectAndDescribe(self, image):
-		# convert the image to grayscale
-		#gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                
-                
-		# detect and extract features from the image
-		#descriptor = cv2.xfeatures2d.SIFT_create()
-		descriptor = cv2.xfeatures2d.SURF_create()
-		
-		(kps, features) = descriptor.detectAndCompute(image, None)
-                
- 
-                #image_kps = image.copy()
-                #cv2.drawKeypoints(image_kps,kps,image_kps)
-                #cv2.imshow("KPS",image_kps)
-                #cv2.waitKey(0)
-		# convert the keypoints from KeyPoint objects to NumPy
-		# arrays
-		kps = np.float32([kp.pt for kp in kps])
-                
-                #mask = (gray > 0).astype(float)
-                #usable_points = np.nonzero(mask)
-                #usable_points = zip(usable_points[0],usable_points[1])
-                #print "Usable Points",usable_points
-                #print "KeyPoints", kps
-                #kps_final = []
-                #features_final = []
-                #for k in range(0,len(kps)):
-                #    print np.around(kps[k])
-                #    print zip(usable_points[0],usable_points[1])
-                #    print tuple(np.around(kps[k])) in zip(usable_points[0],usable_points[1])
-                #    if tuple(np.around(kps[k])) in usable_points:
-                #        print kps[k],features[k]
-                #        kps_final.append(kps[k])
-                #        features_final.append(features[k])
-                
-                #kps = kps_final
-                #features = features_final
-                
-                #print kps, features
-                
-		# return a tuple of keypoints and features
-		return (kps, features)
-
-        def matchKeypoints(self, kpsA, kpsB, featuresA, featuresB,
-		ratio, reprojThresh):
-		# compute the raw matches and initialize the list of actual
-		# matches
-		t=time.time()
-		#matcher = cv2.DescriptorMatcher_create("BruteForce-L1")     # replaces "BruteForce" because L1 seems to give slightly better results. 
-		matcher = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
-		if (featuresA is None) or (featuresB is None):
-                    print "Need to provide two sets of features"
-                    if (featuresA is None):
-                        print "FeaturesA missing"
-                    if (featuresB is None):
-                        print "featureB missing"
-                    #cv2.waitKey(0)
-                    return None
-                if (featuresA is []) or (featuresB is []):
-                    print "Need to provide two sets of features"
-                    if (featuresA is None):
-                        print "FeaturesA missing"
-                    if (featuresB is None):
-                        print "featureB missing"
-                    #cv2.waitKey(0)
-                    return None
-		rawMatches = matcher.knnMatch(featuresA, featuresB, 2)
-		#rawMatches = matcher.match(featuresA,featuresB)
-		
-		elapsed = time.time() - t
-		print "Matching Feature Points: %f" % elapsed
-		matches = []
- 
-		# loop over the raw matches
-		t=time.time()
-		for m in rawMatches:
-			# ensure the distance is within a certain ratio of each
-			# other (i.e. Lowe's ratio test)
-			if len(m) == 2 and m[0].distance < m[1].distance * ratio:
-				matches.append((m[0].trainIdx, m[0].queryIdx))
-                print len(featuresA)
-                print len(featuresB)
-                
-                print len(matches), "Matches found"
-		# computing a homography requires at least 4 matches, we use 10 to ensure a robust stitch.
-		if len(matches) > 20:
-                        
-			# construct the two sets of points
-			ptsA = np.float32([kpsA[i] for (_, i) in matches])
-			ptsB = np.float32([kpsB[i] for (i, _) in matches])
- 
-			# compute the homography between the two sets of points
-			(H, status) = cv2.findHomography(ptsA, ptsB, cv2.RANSAC,
-				reprojThresh)
-			if H is None:
-				print "Homography failed: %d matches \n" % len(matches) 
- 
-			# return the matches along with the homograpy matrix
-			# and status of each matched point 
-			elapsed = time.time() -t
-			print "Computing Homography: %f Seconds" % elapsed
-			return (matches, H, status)
- 
-		# otherwise, no homograpy could be computed
-		print "No valid Homography \n"
-		return None
-
-	def drawMatches(self, imageA, imageB, kpsA, kpsB, matches, status):
-		# initialize the output visualization image
-		(hA, wA) = imageA.shape[:2]
-		(hB, wB) = imageB.shape[:2]
-		vis = np.zeros((max(hA, hB), wA + wB, 3), dtype="uint8")
-		vis[0:hA, 0:wA] = imageA
-		vis[0:hB, wA:] = imageB
- 
-		# loop over the matches
-		for ((trainIdx, queryIdx), s) in zip(matches, status):
-			# only process the match if the keypoint was successfully
-			# matched
-			if s == 1:
-				# draw the match
-				ptA = (int(kpsA[queryIdx][0]), int(kpsA[queryIdx][1]))
-				ptB = (int(kpsB[trainIdx][0]) + wA, int(kpsB[trainIdx][1]))
-				cv2.line(vis, ptA, ptB, (0, 255, 0), 1)
- 
-		# return the visualization
-		return vis
-	def changeView(unknown,R,t, in_image):
-		ti = time.time()
-		im_lim = in_image.shape
-		# We assume that R is a rotation matrix with each row corresponding to the direction of that axis.   
-		H = np.append(R,t,1)
-		# find new image bounds
-		corners = np.transpose(np.array([[0,0,1,1],[im_lim[1],0,1,1],[im_lim[1],im_lim[0],1,1],[0,im_lim[0],1,1]]))
-		im_bounds = np.dot(H,corners)
-		max_x = round(max(np.divide(im_bounds[0,:],im_bounds[2,:])))
-		max_y = round(max(np.divide(im_bounds[1,:],im_bounds[2,:])))
-
-		output = np.zeros([max_y+1,max_x+1,3], dtype="uint8")
-		# Apply transformation in 3D space
-		for x in range(0,in_image.shape[1]):
-			for y in range(0,in_image.shape[0]):
-				in_pt = np.array([[x],[y],[1],[1]])
-				out_pt = np.dot(H,in_pt)
-				if out_pt[2] != 0:
-					out_x = int(round(out_pt[0]/out_pt[2]))
-					out_y = int(round(out_pt[1]/out_pt[2]))
-					
-					if (out_x >= 0) & (out_y >= 0) & (out_x < max_x+1) & (out_y< max_x + 1):
-						output[out_y,out_x,:] = in_image[y,x,:]
-
-		
-		elapsed = time.time() - ti
-		print " \nWarping Viewpoint: %f Seconds \n " % elapsed
-		return output
-	def applyHomography(self,imageB,imageA,H):
-		# Detect The appropriate size for the resulting image. 
-		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
-			[imageA.shape[1],imageA.shape[0],1]]).T
-		
-		# print H, corners
-		img_bounds = np.dot(H,corners)
-		
-                x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
-		y_bound = np.divide(img_bounds[1,:],img_bounds[2,:])
-		x_shift = 0
-		y_shift = 0
-		if min(x_bound) < 0:
-			x_shift = -int(min(x_bound))
-		if min(y_bound) < 0:
-			y_shift = -int(min(y_bound))
-		
-		shift_H = np.array([[1,0,x_shift],[0,1,y_shift],[0,0,1]])
-		x_bound = int(max(max(x_bound),imageB.shape[1]))
-		y_bound = int(max(max(y_bound),imageB.shape[0]))
 		
 
-		trans_mat = np.dot(shift_H,H)
-		if (x_bound+x_shift > SIZE_BOUNDS[0]) or (y_bound+y_shift > SIZE_BOUNDS[1]):
-			print "CROPPED IMAGE TO REASONABLE SIZE!"
-			imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
-			
-			if (x_bound+x_shift > SIZE_BOUNDS[0]) and (y_bound+y_shift > SIZE_BOUNDS[1]):
-				result2 = cv2.warpPerspective(imageA, trans_mat, (SIZE_BOUNDS[0],SIZE_BOUNDS[1]))
-			elif ((x_bound+x_shift > SIZE_BOUNDS[0])):
-				result2 = cv2.warpPerspective(imageA, trans_mat, (SIZE_BOUNDS[0],y_bound+y_shift))
-			elif ((y_bound+y_shift > SIZE_BOUNDS[1])):
-				result2 = cv2.warpPerspective(imageA, trans_mat, (x_bound+x_shift,SIZE_BOUNDS[1]))
-			else: 
-				result2 = cv2.warpPerspective(imageA, trans_mat, (x_bound+x_shift,y_bound+y_shift))
-
-
-			result1 = imageB2
-			if (SIZE_BOUNDS[1] - imageB2.shape[0] > 0):
-				print "expanding!"
-				result1 = np.pad(result1,((0,SIZE_BOUNDS[1] - imageB2.shape[0]),(0,0),(0,0)),'constant', constant_values=0) 
-			
-			if (SIZE_BOUNDS[0] - imageB2.shape[1] > 0):
-				print "expanding 2nd"
-				result1 = np.pad(result1,((0,0),(0,SIZE_BOUNDS[0] - imageB2.shape[1] ),(0,0)),'constant', constant_values=0) 
-			
-			print result1.shape, result2.shape[0],result2.shape[1]
-			result1 = result1[0:result2.shape[0],0:result2.shape[1],:]
-			print result1.shape,result2.shape
-
-			mask1 = (result1 > 0).astype('int')
-			mask2 = (result2 > 0).astype('int')
-
-			return result1,result2,mask1,mask2#,[x_shift,y_shift],trans_mat
-		
-		# Warp Image A and place it in frame.
-		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
-		#print imageA.shape, H,shift_H,np.dot(shift_H,H), (x_bound+x_shift,y_bound+y_shift)
-		result2 = cv2.warpPerspective(imageA, trans_mat, (x_bound+x_shift,y_bound+y_shift))
-		
-		result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
-		
-		mask1 = (result1 > 0).astype('int')
-		mask2 = (result2 > 0).astype('int')
-
-		return result1,result2,mask1,mask2#,[x_shift,y_shift],trans_mat
-
-	def locateSeam(self, maskA, maskB):	
-		out_mask = np.zeros(maskA.shape).astype('uint8')
-		contour_copy = np.zeros(maskA.shape).astype('uint8')
-		contour_copy[:] = maskA[:].astype('uint8')
-		im2, contours, hierarchy = cv2.findContours(contour_copy,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-		cv2.drawContours(out_mask,contours,-1,(255,255,0),1)
-		out_mask = np.logical_and(out_mask,maskB).astype('float')
-		return out_mask
-            
-        def calcMinDistance(self, pointsA,maskB):
-        # Calculates the distance from point a to the closest nonzero point on maskB.
-                output = np.zeros(len(pointsA))
-                pointsB = np.nonzero(maskB)
-                distance = np.zeros(len(pointsB[0]))
-                
-                for k in range(0,len(output)):
-                    pointA = pointsA[k]
-                    for i in range(0,len(distance)):
-                        distance[i] = ((pointA[0] - pointsB[0][i])**2 + (pointA[1] - pointsB[1][i])**2) ** (0.5)
-                        
-                    output[k] = np.min(distance)
-                
-                return output
-
-        def shiftImage(self,imageA,imageB,H):
-        # Detect the appropriate size for the resulting image. 
-		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
-			[imageA.shape[1],imageA.shape[0],1]]).T
-		
-                #print H, corners
-		img_bounds = np.dot(H,corners)
-		
-                x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
-		y_bound = np.divide(img_bounds[1,:],img_bounds[2,:])
-		x_shift = 0
-		y_shift = 0
-		if min(x_bound) < 0:
-			x_shift = -int(min(x_bound))
-		if min(y_bound) < 0:
-			y_shift = -int(min(y_bound))
-		coord_shift = np.array([y_shift,x_shift])
-		shift_H = np.array([[1,0,x_shift],[0,1,y_shift],[0,0,1]])
-		x_bound = int(max(max(x_bound),imageB.shape[1]))
-		y_bound = int(max(max(y_bound),imageB.shape[0]))
-		
-		print "X Bound:",x_bound,"Y Bound:",y_bound, "x shift:",x_shift,"y shift:",y_shift
-		if (x_bound+x_shift > SIZE_BOUNDS[0]) or (y_bound+y_shift > SIZE_BOUNDS[1]):
-			imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
-			result2 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
-				(SIZE_BOUNDS[0],SIZE_BOUNDS[1]))
-			if (SIZE_BOUNDS[1] - imageB2.shape[0] > 0):
-				result1 = np.pad(imageB2,((0,SIZE_BOUNDS[1] - imageB2.shape[0]),(0,0),(0,0)),'constant', constant_values=0) 
-			
-			if (SIZE_BOUNDS[0] - imageB2.shape[1] > 0):
-				result1 = np.pad(imageB2,((0,0),(0,SIZE_BOUNDS[0] - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
-			
-			result1 = imageB2[0:result2.shape[0],0:result2.shape[1],:]
-
-			return result1,result2,coord_shift
-
-		
-		# Warp Image A and place it in frame.
-		imageB2 = np.pad(imageB,((y_shift,0),(x_shift,0),(0,0)),'constant',constant_values = 0)
-		result2 = cv2.warpPerspective(imageA, np.dot(shift_H,H),
-			(x_bound+x_shift,y_bound+y_shift))
-		
-		result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0) 
-		
-		return result1,result2,coord_shift
-
-        def reStitch(self, image1, image2,canvas,fgbg,seam,out_pos):
+	def reStitch(self, image1, image2,canvas,fgbg,seam,out_pos):
             
                 #cv2.imshow("seam",np.seam)
                 seam_points = np.nonzero(seam)			# Determine the point locations of the seam
@@ -535,7 +555,7 @@ class Stitcher:
                                     #print x[i-1],y[i-1],w[i-1],h[i-1]
                                     #image2 = cv2.rectangle(image2,(x[i-1].astype('int'),y[i-1].astype('int')),(x[i-1].astype('int')+w[i-1].astype('int'),y[i-1].astype('int')+h[i-1].astype('int')),(0,255,0),2)
                                     
-                                    mask = image1 > 0 
+                                    mask = self.detectMask(image1)
                                     mask = mask[y[i-1]:y[i-1]+h[i-1],x[i-1]:x[i-1]+w[i-1]]
                                     
                                     #Stitch together seam area with object bounding box. 

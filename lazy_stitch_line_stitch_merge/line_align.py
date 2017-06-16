@@ -2,10 +2,13 @@ import numpy as np
 import cv2
 
 def calcF(image1,image2, ratio=.75):
+	#A method for calculating the fundamental matrix between two feature rich images. 
+	#This should be performed only during calibration. 
+
 	(kpsA, featuresA) = detectAndDescribe(image1)
 	(kpsB, featuresB) = detectAndDescribe(image2)
 
-	#matcher = cv2.DescriptorMatcher_create("BruteForce-L1")     # replaces "BruteForce" because L1 seems to give slightly better results. 
+	#matcher = cv2.DescriptorMatcher_create("BruteForce-L1")     # replaced "BruteForce" because L1 seems to give slightly better results. 
 	matcher = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
 
 	rawMatches = matcher.knnMatch(featuresA, featuresB, 2)
@@ -35,6 +38,10 @@ def calcF(image1,image2, ratio=.75):
 	return F
 
 def checkLine(line, n):
+# This function checks to see if the lines are vertical or horizontal.
+# it is used to ensure that the image edges are not detected. but it may result in 
+# the dropping of desired lines. 
+
 	rho = line[0,0]
 	theta = line[0,1]
 	#print "CHECKLINE: ", rho, n[0], n[1], theta
@@ -56,6 +63,7 @@ def correctPoint(x, line):
 	return y
 
 def detectAndDescribe(image):
+#This function computes the SURF features of the image. 
 
 	# detect and extract features from the image
 	#descriptor = cv2.xfeatures2d.SIFT_create()
@@ -72,8 +80,8 @@ def detectAndDescribe(image):
 
 
 def drawEpilines(img1,img2,linesA,linesB,pts1,pts2):
-    ''' img1 - image on which we draw the epilines for the points in img2
-        lines - corresponding epilines '''
+#A function for drawing the epipolar geometry onto a set of images. 
+
     r,c,z = img1.shape
     #img1 = cv2.cvtColor(img1,cv2.COLOR_GRAY2BGR)
     #img2 = cv2.cvtColor(img2,cv2.COLOR_GRAY2BGR)
@@ -93,7 +101,7 @@ def drawEpilines(img1,img2,linesA,linesB,pts1,pts2):
     return img1,img2
 
 def drawLines(rho,theta,image,color=(0,0,255),width=2):
-	#Copied code for drawing the lines on an image given rho and theta
+#Copied code for drawing the lines on an image given rho and theta
 	a = np.cos(theta)
 	b = np.sin(theta)
 	x0 = a*rho
@@ -106,6 +114,12 @@ def drawLines(rho,theta,image,color=(0,0,255),width=2):
 	cv2.line(image,(x1,y1),(x2,y2),color,width)
 
 def epiMatch(point, line, F,D = 1):
+#This function uses the epipolar geometry of a scene to find the corresponding feature
+#matches for a point which we know lies along a given line. 
+#point - The point for which we want to find a feature match.
+#line - the line on which the point will be found in the other image. 
+#F - The fundamental matrix for the images
+#D - the direction in which the epipolar lines should be computed. (should F get inverted.)
 	homPoint = np.mat([point[0],point[1],1]) #change point to homogeneous coordinates
 	#print homPoint,F
 	#Calculate epipolar lines and change formatting of both sets of lines.
@@ -122,9 +136,9 @@ def epiMatch(point, line, F,D = 1):
 	y2 = -A/B*x - C/B
 
 	#Determine error in the intersection (used for debugging. )
-	err1 = A*x + B*y2 + C
-	err2 = -x*np.cos(theta) - y1*np.sin(theta) + rho
-	epiline2 = cv2.computeCorrespondEpilines(homPoint, 2,F)
+	#err1 = A*x + B*y2 + C
+	#err2 = -x*np.cos(theta) - y1*np.sin(theta) + rho
+	#epiline2 = cv2.computeCorrespondEpilines(homPoint, 2,F)
 	#print "POINT: ", point
 	#print "EPILINE: ", epiline, epiline2
 	#print "OBJECT LINE: ", line
@@ -135,6 +149,8 @@ def epiMatch(point, line, F,D = 1):
 
 
 def lineSelect(lines, image):
+#Organizes the lines to try and ensure that proper lines get matched. 
+#It is supposed to remove lines associated with the image edges. 
 	n = image.shape
 	#print "lineshape: ", lines.shape
 	outlines = np.zeros((lines.shape[0], lines.shape[2]))
@@ -156,6 +172,8 @@ def lineSelect(lines, image):
 	return outlines
 
 def matchLines(point1, matpoint1, point2, matpoint2):
+# 
+
 	#Define variables use by the first point
 	x1 = point1[0]
 	y1 = point1[1]
@@ -222,13 +240,13 @@ def shiftLeft(point,line):
 	return y
 
 def sortLines(lines):
+# Sort the lines by theta?
 	#print "Pre-sort:", lines
 	outlines = lines[lines[:,1].argsort()]
 	#print "Post-sort: ", outlines
 
 
 def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,DRAW_LINES = True):
-
 	if (N_size == []):
 		N_size = 20
 	if (edgeThresh == []):
@@ -274,11 +292,11 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		edges4 = cv2.Canny(sub22,edgeThresh,edgeThresh*3)
 		lines4 = cv2.HoughLines(edges4,1,np.pi/180,N_size)
 
-	#	cv2.imshow("sub11",sub11)
-	#	cv2.imshow("sub12",sub12)
-	#	cv2.imshow("sub21",sub21)
-	#	cv2.imshow("sub22",sub22)
-	#	cv2.waitKey(0)
+		cv2.imshow("sub11",sub11)
+		cv2.imshow("sub12",sub12)
+		cv2.imshow("sub21",sub21)
+		cv2.imshow("sub22",sub22)
+		cv2.waitKey(0)
 		# If no lines are found, print error and return identity
 		if (lines1 is None) or (lines2 is None) or (lines3 is None) or (lines4 is None):
 			print "Error: Lines not found"
@@ -392,11 +410,9 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size)
 
 
-	#	cv2.imshow("sub11",sub11)
-	#	cv2.imshow("sub12",sub12)
-	#	cv2.imshow("sub21",sub21)
-	#	cv2.imshow("sub22",sub22)
-	#	cv2.waitKey(0)
+		cv2.imshow("sub1",sub1)
+		cv2.imshow("sub2",sub2)
+		cv2.waitKey(0)
 
 				# If no lines are found, print error and return identity
 		if (lines1 is None) or (lines2 is None):

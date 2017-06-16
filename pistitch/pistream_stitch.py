@@ -11,15 +11,15 @@ H3 = np.zeros([3,3])
 output_template = np.zeros(OUTPUT_SIZE)
 output_center = np.array([OUTPUT_SIZE[0]/2,OUTPUT_SIZE[1]/2]).astype('int')
 
-#cap1 = cv2.VideoCapture('http://10.42.0.105:8060/?action=stream')
-#cap2 = cv2.VideoCapture('http://10.42.0.124:8070/?action=stream')
-#cap3 = cv2.VideoCapture('http://10.42.0.104:8080/?action=stream')
-#cap4 = cv2.VideoCapture('http://10.42.0.102:8090/?action=stream')
+cap4 = cv2.VideoCapture('http://10.42.0.106:8060/?action=stream')
+cap3 = cv2.VideoCapture('http://10.42.0.124:8070/?action=stream')
+cap2 = cv2.VideoCapture('http://10.42.0.104:8050/?action=stream')
+cap1 = cv2.VideoCapture('http://10.42.0.102:8090/?action=stream')
 
-cap1 = cv2.VideoCapture('../data/testVideo/chopsticker2/output1.avi')
-cap2 = cv2.VideoCapture('../data/testVideo/chopsticker2/output2.avi')
-cap3 = cv2.VideoCapture('../data/testVideo/chopsticker2/output3.avi')
-cap4 = cv2.VideoCapture('../data/testVideo/chopsticker2/output4.avi')
+#cap1 = cv2.VideoCapture('../data/testVideo/chopsticker2/output1.avi')
+#cap2 = cv2.VideoCapture('../data/testVideo/chopsticker2/output2.avi')
+#cap3 = cv2.VideoCapture('../data/testVideo/chopsticker2/output3.avi')
+#cap4 = cv2.VideoCapture('../data/testVideo/chopsticker2/output4.avi')
 
 while cap1.isOpened():
         ret1, image1 = cap1.read()
