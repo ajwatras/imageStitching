@@ -62,10 +62,10 @@ im_pad = ((50,0),(50,0),(0,0))                  # Amount to pad the image so tha
 #vidcap3 = cv2.VideoCapture('../data/testVideo/office/output3.avi')
 #vidcap4 = cv2.VideoCapture('../data/testVideo/office/output4.avi')
 
-vidcap1 = cv2.VideoCapture('../data/testVideo/chopsticker2/output1.avi')
-vidcap2 = cv2.VideoCapture('../data/testVideo/chopsticker2/output2.avi')
-vidcap3 = cv2.VideoCapture('../data/testVideo/chopsticker2/output3.avi')
-vidcap4 = cv2.VideoCapture('../data/testVideo/chopsticker2/output4.avi')
+vidcap1 = cv2.VideoCapture('http://10.42.0.105:8060/?action=stream')
+vidcap2 = cv2.VideoCapture('http://10.42.0.105:8060/?action=stream')
+vidcap3 = cv2.VideoCapture('http://10.42.0.105:8060/?action=stream')
+vidcap4 = cv2.VideoCapture('http://10.42.0.105:8060/?action=stream')
 
 #vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
 #vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')

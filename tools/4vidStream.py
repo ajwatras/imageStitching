@@ -13,10 +13,10 @@ DISPLAY_KEYPOINTS = 0
 #vidcap4 = cv2.VideoCapture('../data/vidwriter/output4.avi')
 
 
-vidcap1 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output1.avi')
-vidcap2 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output2.avi')
-vidcap3 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output3.avi')
-vidcap4 = cv2.VideoCapture('../data/testVideo/WideView-BeanDrop1/output4.avi')
+vidcap1 = cv2.VideoCapture('../data/pi_writer/output1.avi')
+vidcap2 = cv2.VideoCapture('../data/pi_writer/output2.avi')
+vidcap3 = cv2.VideoCapture('../data/pi_writer/output3.avi')
+vidcap4 = cv2.VideoCapture('../data/pi_writer/output4.avi')
 
 #vidcap1 = cv2.VideoCapture(1)
 #vidcap2 = cv2.VideoCapture(2)
