@@ -2,31 +2,53 @@
 # Object Alignment
 #########################################################################################################################################
 
-Problem: When feature points lie too closely together on a line, the resulting homography can be a poor match for the desired outcome. 
-Solution: Since we can use any corresponding points along the lines, we can can shift the points to ensure that they are sufficiently far apart.
-Alternatively, we can use a given set of x values and simply find the point on the line at those values and use that method. 
+Problem: In the bean drop sample data sets, The matching is giving bad matches for an unknown reason. 
+Solution: Try Rotating the images so that they all share the same set of axes before calculating fundamental matrix. Identify the cause of the bad matches. First look at the epipolar lines and see what is going on with them. Second, double check to ensure the code is functioning as desired. After that adjust as needed. The epipolar lines look strange for some reason. I still haven't been able to pin down what is going on here, but their behavior is not as expected. 
 
-Problem: In the bean drop case, the hole in the cup keeps being detected as an object point rather than the tool itself. 
-solution: Update method for finding tool. 
+(COMPLETED) Problem: When feature points lie too closely together on a line, the resulting homography can be a poor match for the desired outcome. 
+Solution:  We solved this by choosing an arbitrary location along the line to use as the matched points. This allows us to ensure there is sufficient 
+distance between the points. However, It fails in the 2 edge case because the incorrect homography is calculated if some of the points lie after the lines 
+have crossed over each other. The final solution I have decided on for now is to simply shift the points to encourage them to be further from each other and 
+still within the viewed object. This may need revisiting with a more sophisticated method in the future. 
 
-Problem: In the bean drop case, object segmentation has a hard time determining what is tool and what is background (cup, writing on paper, bean, etc.)
-Solution: We may need some sort of improved object segmentation method. 
-
-Problem: the graspers on the object are not detected properly by the current edge based method. They also break the stitching assumption that the object is linear and thus create bad stitches. 
-Solution: Unknown. Perhaps we need to simply not perform alignment until the straight part of the object crosses into the new frame. 
-
-Problem: When the stitching fails, it causes jump discontinuities in the video that might be disconcerting to a surgeon. 
-Solution: Unknown. 
+Problem: If the object happens to fall close to parallel to the epipolar lines being used, we end up with a bad result. 
+Solution: This is an interesting one. The angle of the epipolar lines change depending on the point used. We may be able to choose which point to use 
+in order to minimize the instability of the estimate. I must look into what scene results can cause an epipolar line to be parallel to an object line.
+The lines will be parallel if the object itself lies on the plane created by intersecting the base line with the ray to the object. We note that in the case
+where the object line is parallel to the 
 
 Problem: Objects aren't corrected across secondary to secondary boundaries. 
 Solution: Implement a tiered correction approach to correct iteratively from image to image. 
 
+Problem: When the stitching fails, it causes jump discontinuities in the video that might be disconcerting to a surgeon. 
+Solution: Unknown. Perhaps we need to find a way to implement temporal continuity constraints. 
+
+Problem: In the bean drop case, the hole in the cup keeps being detected as an object point rather than the tool itself. 
+solution: Update method for finding tool. We have also gathered some data sets with the cup further away from the seam line. This is just a temporary patch. 
+
+Problem: In the bean drop case, object segmentation has a hard time determining what is tool and what is background (cup, writing on paper, bean, etc.)
+Solution: We may need some sort of improved object segmentation method. I need to talk to Zhanpeng about how this is currently done. 
+
+Problem: There are occasional instances of massive discolorations of the image. This usually happens during failed alignments. 
+Solution: We need to identify the cause. I am guessing that it may be related to the method of filling in gaps left by moved objects.
+
 Problem: When an object crosses multiple different seams, or is only half seen in the image, it will not be considered for object alignment. 
-Solution: Use one edge alignment when the object is only half in the image. Perhaps use the corner of the object as a good feature point? 
+Solution: Use one edge alignment when the object is only half in the image. Perhaps use the corner of the object as a good feature point? We also need to 
+fix the problem that we do not appear to check all possible seams for objects, but only a subset of them. 
 
 Problem: The space where the object used to be is very clearly visible. 
 Solution: store previous frame and fill in details from that. Or simply wait to draw updated image until the correct object location has been
 determined so that the pixels for the incorrect object location wont be updated.
+
+Problem: Occasionally, the object is disappearing when it is detected across the seam line but a linear match is not found. 
+Solution: It seems like this might be resulting from a bug in the code causing a transformation to be applied without a valid transformation being calculated. 
+This should be simple debugging. 
+
+(COMPLETED) Problem: Alignment fails when faced with a purely vertical line. 
+Solution: Adjust method for calculating line intersections to be robust to vertical lines. 
+
+
+
 
 
 
@@ -37,10 +59,47 @@ determined so that the pixels for the incorrect object location wont be updated.
 Solution: Rather than creating the mask from a basic command of (image > 0) ensure to run some method of checking if any of the pixels are 
 greater than 0. 
 
+Problem: Stitcher will fail if incoming images do not have identical shape.
+Solution: change input method for stitcher or only rotate images within the faststitch program. 
+
+
 
 #############################################################################################################################################
 # Lazy Stitching
 #############################################################################################################################################
 
 Problem: Lazy Stitching causes layering of images to shift, creating unreliable secondary to secondary object boundaries. 
-Solution: Unknown. 
+Solution: I'll talk to Zhanpeng about what is going on here and see if we can figure something out. 
+
+
+#############################################################################################################################################
+# Preparations
+#############################################################################################################################################
+
+1. collect references (everything that are relevant), create a reference database and for each paper you read and feel relevant, write a 1-2 sentence summary/comment and put it in the "note" field of your reference database. In the future, when you write related work section, these notes will be handy.
+	
+	I have a Mendeley collection of relevant papers I have found. I have not yet annotated them. 
+
+2. collect all public domain software (OpenCV, github, matlab, matlab central, and other places e.g. http://homepages.cae.wisc.edu/~ece539/software/index.html that may be useful/relevant
+	
+	I have a collection of python scripts and openCV installed on my computer to perform this task. 
+
+3. collect and annotate the data you are to work with and if possible some test data existing public domain software may be using to demonstrate their performance.
+
+4. decide performance metric (to determine which method is better) and cost metric (if applicable to determine which method is more efficient and practical)
+	
+	I'm still working to figure out a performance metric for this method. Cost is defined by the amount of time it takes to perform the method, the removal of discontinuities
+	along seam lines between images and the reliability of the method performing as expected. 
+
+5. apply public domain software or any preliminary program you developed (see #2) to the data you prepared (#3) and apply the criteria in #4 to derive a baseline result.
+	
+
+
+
+Image Stitching Software:
+Hugin
+Autostitch
+
+
+Video Stitching software:
+SkyStitch

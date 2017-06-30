@@ -53,14 +53,18 @@ def checkLine(line, n):
 
 	return True
 
-def correctPoint(x, line):
+def correctPoint(x, y, line):
 #Adjust the point so that it lies on the desired line. This is used so that
 #Neighborhoods only need to be approximate. 
 	rho = line[0]
 	theta = line[1]
-	y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
 
-	return y
+	if (theta == 0):
+		x = rho
+	else: 
+		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
+	#print x,y,rho,theta
+	return x,y
 
 def detectAndDescribe(image):
 #This function computes the SURF features of the image. 
@@ -95,7 +99,7 @@ def drawEpilines(img1,img2,linesA,linesB,pts1,pts2):
         x0,y0 = map(int, [0, -r2[2]/r2[1] ])
         x1,y1 = map(int, [c, -(r2[2]+r2[0]*c)/r2[1] ])
         img2 = cv2.line(img2, (x0,y0), (x1,y1), color,1)
-        print r1,r2,pt1,pt2,color
+        #print r1,r2,pt1,pt2,color
         #img1 = cv2.circle(img1,(int(pt1[0]),int(pt1[1])),5,color,-1)
         #img2 = cv2.circle(img2,(int(pt2[0]),int(pt2[1])),5,color,-1)
     return img1,img2
@@ -131,9 +135,13 @@ def epiMatch(point, line, F,D = 1):
 	theta = line[1]
 
 	#Intersect two lines
-	x = (rho/np.sin(theta) +C/B)/(np.cos(theta)/np.sin(theta) - A/B)
-	y1 = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
-	y2 = -A/B*x - C/B
+	if (theta == 0):
+		x = rho
+		y2 = A/B*x + C/B
+	else: 
+		x = (rho/np.sin(theta) +C/B)/(np.cos(theta)/np.sin(theta) - A/B)
+		y1 = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
+		y2 = -A/B*x - C/B
 
 	#Determine error in the intersection (used for debugging. )
 	#err1 = A*x + B*y2 + C
@@ -220,24 +228,62 @@ def matchLines(point1, matpoint1, point2, matpoint2):
 	output = np.dot(T2,A)
 	return output
 
-def shiftRight(point,line):
+def setRight(line):
 	# Shifts the point to the right to avoid overlapping features.
-	print "point:", point
-	x = point + 10
+	x = 400
+	y = 400
 	rho = line[0]
 	theta = line[1]
-	y = -np.cos(theta)/np.sin(theta)*(x) + rho/np.sin(theta)
 
-	return y
-def shiftLeft(point,line):
+	if (theta == 0):
+		x = rho
+	else: 
+		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
+
+	return x,y
+def setLeft(line):
 	# Shifts the point to the right to avoid overlapping features.
-	print "point:", point
-	x = point - 10
+
+	x = 5
+	y = 5
 	rho = line[0]
 	theta = line[1]
-	y = -np.cos(theta)/np.sin(theta)*(x) + rho/np.sin(theta)
 
-	return y
+	if (theta == 0):
+		x = rho
+	else: 
+		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
+
+	return x,y
+
+def shiftRight(x,y,line,dist = 5):
+	# Shifts the point to the right to avoid overlapping features.
+	x = x+dist
+	y = y + dist
+	rho = line[0]
+	theta = line[1]
+
+	if (theta == 0):
+		x = rho
+	else: 
+		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
+
+	return x,y
+def shiftLeft(x,y,line,dist = 5):
+	# Shifts the point to the right to avoid overlapping features.
+
+	x = x - dist
+	y = y - dist
+	rho = line[0]
+	theta = line[1]
+
+	if (theta == 0):
+		x = rho
+	else: 
+		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
+
+	return x,y
+
 
 def sortLines(lines):
 # Sort the lines by theta?
@@ -317,15 +363,15 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 
 
 		#Ensure points lie on a line.
-		points1[0,1] = correctPoint(points1[0,0],lines1)
-		points1[1,1] = correctPoint(points1[1,0],lines2)
-		points2[0,1] = correctPoint(points2[0,0],lines3)
-		points2[1,1] = correctPoint(points2[1,0],lines4)
+		points1[0,0], points1[0,1] = correctPoint(points1[0,0],points1[0,1],lines1)
+		points1[1,0], points1[1,1] = correctPoint(points1[1,0],points1[1,1],lines2)
+		points2[0,0], points2[0,1] = correctPoint(points2[0,0],points2[0,1],lines3)
+		points2[1,0], points2[1,1] = correctPoint(points2[1,0],points2[1,1],lines4)
 
-		#points1[0,1] = shiftRight(points1[0,0],lines1)
-		#points1[1,1] = shiftLeft(points1[1,0],lines2)
-		#points2[0,1] = shiftRight(points2[0,0],lines3)
-		#qpoints2[1,1] = shiftLeft(points2[1,0],lines4)
+		#points1[0,0], points1[0,1] = setRight(lines1)
+		#points1[1,0], points1[1,1] = setLeft(lines2)
+		#points2[0,0], points2[0,1] = setRight(lines3)
+		#points2[1,0], points2[1,1] = setLeft(lines4)
 
 
 
@@ -430,8 +476,16 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 
 
 		#Ensure points lie on a line.
-		points1[0,1] = correctPoint(points1[0,0],lines1)
-		points2[0,1] = correctPoint(points2[0,0],lines2)
+		#print points1, correctPoint(points1[0,0],points1[0,1],lines1)
+		points1[0,0], points1[0,1] = correctPoint(points1[0,0],points1[0,1],lines1)
+		points2[0,0], points2[0,1] = correctPoint(points2[0,0],points2[0,1],lines2)
+
+
+		#points1[0,0], points1[0,1] = setLeft(lines1)
+		#points2[0,0], points2[0,1] = setRight(lines2)
+
+		#points1[0,0], points1[0,1] = shiftLeft(points1[0,0],points1[0,1],lines1,10)
+		#points2[0,0], points2[0,1] = shiftRight(points2[0,0],points2[0,1],lines2,10)
 
 
 	#	print "LINES:",lines1,lines2,lines3,lines4
@@ -443,6 +497,8 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		mat2 = epiMatch(points2,lines1, np.matrix.transpose(F))
 
 		if DRAW_LINES:
+			ptsB = np.mat([points1,mat2])
+			ptsA = np.mat([mat1,points2])
 			tmp_image1 = np.copy(image1)
 			tmp_image2 = np.copy(image2)
 
@@ -454,8 +510,16 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 			cv2.circle(tmp_image1, points1, 5, (0,255,0))
 			cv2.circle(tmp_image2, points2, 5, (255,0,0))
 
-			cv2.imshow("image1 (1 edge)",tmp_image1)
-			cv2.imshow("image2 (1 edge)",tmp_image2)
+			#print points1,points2
+			linesA = cv2.computeCorrespondEpilines(ptsA, 2,F)
+			linesB = cv2.computeCorrespondEpilines(ptsB, 1,F)
+			linesA = linesA.reshape(-1,3)
+			linesB = linesB.reshape(-1,3)
+			img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
+
+			cv2.imshow("image1 (1 edge)",img5)
+			cv2.imshow("image2 (1 edge)",img6)
+
 
 
 

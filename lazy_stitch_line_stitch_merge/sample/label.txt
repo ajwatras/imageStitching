@@ -1,0 +1,1 @@
+This is a sample video set for line alignment. In this video, we just have the object moving over a plain white background. 

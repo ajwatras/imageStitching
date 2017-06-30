@@ -1,0 +1,1 @@
+This is a sample set of videos of the bean drop task. In this dataset, the cups have been moved away from the object seam.  

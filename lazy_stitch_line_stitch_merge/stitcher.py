@@ -91,9 +91,11 @@ class Stitcher:
 		#mask1 = (result1 > 0).astype('int')
 		#mask2 = (result2 > 0).astype('int')
 
+		#print "mask1:"
 		mask1 = self.detectMask(result1)
+		#print "mask2:"
 		mask2 = self.detectMask(result2)
-
+		#print "initial:",result1.shape,result2.shape,mask1.shape,mask2.shape
 		return result1,result2,mask1,mask2,[x_shift,y_shift],trans_mat
 
 	def calcMinDistance(self, pointsA,maskB):
@@ -144,7 +146,7 @@ class Stitcher:
 		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 		mask = (gray > 0)
 		mask = np.repeat(mask[:,:,np.newaxis],3,axis=2)
-
+		#print "detectMask", image.shape, gray.shape, mask.shape
 		return mask
 
 	def detectAndDescribe(self, image):

@@ -32,6 +32,7 @@ def find_ref(seam1_1_cross, shift1, trans_matrix_1):
 def line_stitch(image1, mean1, boundry1_1, seam1_1_cross, pts_tip_1_1, image2, mean2, boundry1_2, seam1_2_cross, pts_tip_1_2, F1, H1):
 
     result1,result2,mask1,mask2_original, shift, trans_matrix = stitch.applyHomography(image1,image2,H1)
+
     new_mask = (result2 > 0).astype('uint8')
 
     ret,thresh1 = cv2.threshold(image1[:,:,1],mean1,255,cv2.THRESH_BINARY_INV)
@@ -78,14 +79,14 @@ def line_stitch(image1, mean1, boundry1_1, seam1_1_cross, pts_tip_1_1, image2, m
             else:
                 pts2 = np.mat([[pts2[1,1],pts2[0,1]], [pts2[1,0],pts2[0,0]]])
 
-            #pts1 = np.mat([pts1[0,0], pts1[0,1]])
-            #pts2 = np.mat([pts2[0,0], pts2[0,1]])
+            pts1 = np.mat([pts1[0,0], pts1[0,1]])
+            pts2 = np.mat([pts2[0,0], pts2[0,1]])
             tempH = la.lineAlign(pts1,image1,pts2,image2,F1)
             result1_temp,result2_temp,_,mask2_temp, shift_temp, _ = stitch.applyHomography(image1,image2,tempH)
 
             mask_temp_temp = (result1_temp == 0).astype('int')
             temp = (result2_temp*mask_temp_temp + result1_temp).astype('uint8')
-            #cv2.imshow('pano', temp)
+            cv2.imshow('pano', temp)
 
             OUTPUT_SIZE = [3000,3000,3]
             out_pos = np.array([OUTPUT_SIZE[0]/2-500,OUTPUT_SIZE[1]/2-500]).astype('int')
@@ -93,6 +94,7 @@ def line_stitch(image1, mean1, boundry1_1, seam1_1_cross, pts_tip_1_1, image2, m
 
             window = pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:]
             if window.shape[0] != mask2_temp.shape[0] or window.shape[1] != mask2_temp.shape[1]:
+                #print "Out 1", mask1.shape,mask2.shape
                 return result1,result2,mask1,mask2, shift, trans_matrix
 
             pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:] = 0+result2_temp
@@ -109,19 +111,23 @@ def line_stitch(image1, mean1, boundry1_1, seam1_1_cross, pts_tip_1_1, image2, m
             mask = mask * (result2 > 0).astype('uint8')
 
             Background_mask = (result2 > mean2).astype('int')
-            color = np.sum(result2 * Background_mask) / np.sum(Background_mask)
-            temp = np.ones(mask.shape, np.uint8) * color
+            temp = np.sum(Background_mask[:,:,0])
+            color0 = np.sum(result2[:,:,0] * Background_mask[:,:,0]) / temp
+            color1 = np.sum(result2[:,:,1] * Background_mask[:,:,1]) / temp
+            color2 = np.sum(result2[:,:,2] * Background_mask[:,:,2]) / temp
+            temp = np.ones(mask.shape, np.uint8); temp[:,:,0] = temp[:,:,0] * color0; temp[:,:,1] = temp[:,:,1] * color1; temp[:,:,2] = temp[:,:,2] * color2;
             result2 = Background_mask.astype('uint8') * result2 + (result2 > 0).astype('uint8') * (result2 < mean2).astype('uint8') * temp
 
             result2 = result2 * np.logical_not(mask) + result2_temp * mask
 
             mask_temp_temp = (result1 == 0).astype('int')
             temp = (result2*mask_temp_temp + result1).astype('uint8')
-            cv2.imshow('pano_3', temp)
-            cv2.waitKey(0)
+            #cv2.imshow('pano_3', temp)
+            #cv2.waitKey(0)
+
     return result1,result2,mask1, new_mask, shift, trans_matrix
 
-OUTPUT_SIZE = [2500,2920,3]
+OUTPUT_SIZE = [1500,1920,3]
 stitch = stitcher.Stitcher()
 H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
@@ -131,22 +137,14 @@ output_center = np.array([OUTPUT_SIZE[0]/2-300,OUTPUT_SIZE[1]/2-200]).astype('in
 
 CALIBRATION = True
 
-#Recorded Video
-cap2 = cv2.VideoCapture('output2.avi')
-cap1 = cv2.VideoCapture('output1.avi')
-cap3 = cv2.VideoCapture('output3.avi')
-cap4 = cv2.VideoCapture('output4.avi')
-
-# Live Video
-#cap3 = cv2.VideoCapture('http://10.42.0.124:8070/?action=stream')
-#cap1 = cv2.VideoCapture('http://10.42.0.105:8080/?action=stream')
-#cap2 = cv2.VideoCapture('http://10.42.0.106:8060/?action=stream')
-#cap4 = cv2.VideoCapture('http://10.42.0.102:8090/?action=stream')
-
+cap2 = cv2.VideoCapture('./drop3_fixed/output2.avi')
+cap1 = cv2.VideoCapture('./drop3_fixed/output1.avi')
+cap3 = cv2.VideoCapture('./drop3_fixed/output3.avi')
+cap4 = cv2.VideoCapture('./drop3_fixed/output4.avi')
 
 shape = np.asarray([480, 640])
 pos_flag = np.asarray([False, False, False, False])
-diff_buffer = np.zeros((4, 480, 640, 2))
+diff_buffer = [];
 stitch_flag = np.asarray([True, True, True, True])
 cross_flag = np.asarray([False, False, False])
 
@@ -159,6 +157,13 @@ while cap1.isOpened():
         ret2, image2 = cap2.read()
         ret3, image3 = cap3.read()
         ret4, image4 = cap4.read()
+
+        #image1 = image1[2:465, 1:630, :]
+        #image2 = image2[3:473, 3:633, :]
+        #image3 = image3[4:478, 7:600, :]
+        #image4 = image4[5:460, 3:635, :]
+
+        diff_buffer = [image1[:,:,0:2], image2[:,:,0:2], image3[:,:,0:2], image4[:,:,0:2]]
 
         image1 = image1 + 1
         image2 = image2 + 1
@@ -185,15 +190,19 @@ while cap1.isOpened():
             #if (H1 is not 0) and (H2 is not 0) and (H3 is not 0):
             CALIBRATION = False
 
+            image1[:,:,:] = 1
+            image2[:,:,:] = 2
+            image3[:,:,:] = 3
+            image4[:,:,:] = 4
 
             result = result.astype('uint8')
             #------------------------------------------------------------------------
-            result1,result2,mask1,mask2, shift, trans_matrix = stitch.applyHomography(np.ones((shape[0], shape[1], 3)).astype('uint8'),2*np.ones((shape[0], shape[1], 3)).astype('uint8'),H1)
+            result1,result2,mask1,mask2, shift, trans_matrix = stitch.applyHomography(image1,image2,H1)
             seam1 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])   # Locate the seam between the two images.
             seam1_cross = seam1
             seam1 = cv2.dilate(seam1,kernel,iterations = 1) * mask1[:,:,1] * mask2[:,:,1]
 
-            boundry1 = seam1[shift[1]:shift[1]+shape[0], shift[0]:shift[0]+shape[1]]
+            boundry1 = seam1[shift[1]:shift[1]+image1.shape[0], shift[0]:shift[0]+image1.shape[1]]
             #boundry1_B = cv2.warpPerspective(seam1.astype('uint8'), inv(trans_matrix), (shape[1], shape[0]))
 
             resultA = (result2*np.logical_not(mask1) + result1).astype('uint8')
@@ -208,11 +217,11 @@ while cap1.isOpened():
 
 
             #------------------------------------------------------------------------
-            result1,result2,mask1,mask2, shift, trans_matrix = stitch.applyHomography(np.ones((shape[0], shape[1], 3)).astype('uint8'),3*np.ones((shape[0], shape[1], 3)).astype('uint8'),H2)
+            result1,result2,mask1,mask2, shift, trans_matrix = stitch.applyHomography(image1,image3,H2)
             seam2 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])   # Locate the seam between the two images.
             seam2_cross = seam2
             seam2 = cv2.dilate(seam2,kernel,iterations = 1) * mask1[:,:,1] * mask2[:,:,1]
-            boundry2 = seam2[shift[1]:shift[1]+shape[0], shift[0]:shift[0]+shape[1]]
+            boundry2 = seam2[shift[1]:shift[1]+image1.shape[0], shift[0]:shift[0]+image1.shape[1]]
             #boundry2_B = cv2.warpPerspective(seam2.astype('uint8'), inv(trans_matrix), (shape[1], shape[0]))
 
             resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
@@ -227,11 +236,11 @@ while cap1.isOpened():
 
 
             #------------------------------------------------------------------------
-            result1,result2,mask1,mask2, shift, trans_matrix = stitch.applyHomography(np.ones((shape[0], shape[1], 3)).astype('uint8'),4*np.ones((shape[0], shape[1], 3)).astype('uint8'),H3)
+            result1,result2,mask1,mask2, shift, trans_matrix = stitch.applyHomography(image1,image4,H3)
             seam3 = stitch.locateSeam(mask1[:,:,0],mask2[:,:,0])   # Locate the seam between the two images.
             seam3_cross = seam3
             seam3 = cv2.dilate(seam3,kernel,iterations = 1) * mask1[:,:,1] * mask2[:,:,1]
-            boundry3 = seam3[shift[1]:shift[1]+shape[0], shift[0]:shift[0]+shape[1]]
+            boundry3 = seam3[shift[1]:shift[1]+image1.shape[0], shift[0]:shift[0]+image1.shape[1]]
             #boundry3_B = cv2.warpPerspective(seam3.astype('uint8'), inv(trans_matrix), (shape[1], shape[0]))
 
             result3 = (result2*np.logical_not(mask1) + result1).astype('uint8')
@@ -245,7 +254,7 @@ while cap1.isOpened():
             #------------------------------------------------------------------------
 
             #------------------------------------------------------------------------
-            result[out_pos[0]:out_pos[0]+image1.shape[0],out_pos[1]:out_pos[1]+image1.shape[1],:] =np.ones((shape[0], shape[1], 3)).astype('uint8')
+            result[out_pos[0]:out_pos[0]+image1.shape[0],out_pos[1]:out_pos[1]+image1.shape[1],:] =image1
             #------------------------------------------------------------------------
 
             boundry1 = boundry1.astype('bool')
@@ -259,29 +268,29 @@ while cap1.isOpened():
             mask2 = (result[out_pos[0]-coord_shift1[0]:out_pos[0]-coord_shift1[0]+shape1[0],out_pos[1]-coord_shift1[1]:out_pos[1]-coord_shift1[1]+shape1[1],:] == 2).astype('uint8')
             mask = (mask_1_1 == 0).astype('uint8') * mask2
             mask = mask[:,:,1]
-            mask_motion_detect_1 = cv2.warpPerspective(mask.astype('uint8'), inv(trans_matrix_1), (shape[1],shape[0]))
+            mask_motion_detect_1 = cv2.warpPerspective(mask.astype('uint8'), inv(trans_matrix_1), (image2.shape[1],image2.shape[0]))
 
             mask2 = (result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+shape2[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+shape2[1],:] == 3).astype('uint8')
             mask = (mask_2_1 == 0).astype('uint8') * mask2
             mask = mask[:,:,1]
-            mask_motion_detect_2 = cv2.warpPerspective(mask.astype('uint8'), inv(trans_matrix_2), (shape[1],shape[0]))
+            mask_motion_detect_2 = cv2.warpPerspective(mask.astype('uint8'), inv(trans_matrix_2), (image3.shape[1],image3.shape[0]))
 
             mask2 = (result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+shape3[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+shape3[1],:] == 4).astype('uint8')
             mask = (mask_3_1 == 0).astype('uint8') * mask2
             mask = mask[:,:,1]
-            mask_motion_detect_3 = cv2.warpPerspective(mask.astype('uint8'), inv(trans_matrix_3), (shape[1],shape[0]))
+            mask_motion_detect_3 = cv2.warpPerspective(mask.astype('uint8'), inv(trans_matrix_3), (image4.shape[1],image4.shape[0]))
 
-            mask_motion_detect = np.stack((mask_motion_detect_1, mask_motion_detect_2, mask_motion_detect_3), axis = 2)
+            mask_motion_detect = [mask_motion_detect_1, mask_motion_detect_2, mask_motion_detect_3]
             #------------------------------------------------------------------------
 
             #------------------------------------------------------------------------
             boundry1_1 = boundry1.astype('uint8')
             boundry1_2 = np.zeros(seam1.shape, 'uint8')
-            boundry1_2[shift1[1]:shift1[1]+shape[0], shift1[0]:shift1[0]+shape[1]] = boundry1_1
+            boundry1_2[shift1[1]:shift1[1]+image1.shape[0], shift1[0]:shift1[0]+image1.shape[1]] = boundry1_1
             boundry1_2 = cv2.dilate(boundry1_2,kernel3,iterations = 1)
-            boundry1_2 = cv2.warpPerspective(boundry1_2, inv(trans_matrix_1), (shape[1],shape[0]))
+            boundry1_2 = cv2.warpPerspective(boundry1_2, inv(trans_matrix_1), (image2.shape[1],image2.shape[0]))
 
-            seam1_1_cross = seam1_cross[shift1[1]:shift1[1]+shape[0], shift1[0]:shift1[0]+shape[1]]
+            seam1_1_cross = seam1_cross[shift1[1]:shift1[1]+image1.shape[0], shift1[0]:shift1[0]+image1.shape[1]]
 
             pts_tip_1_1, pts_tip_1_2 = find_ref(seam1_1_cross, shift1, trans_matrix_1)
 
@@ -291,26 +300,26 @@ while cap1.isOpened():
             pts = np.nonzero(seam1_1_cross)
             pts = np.asarray(pts)
             for i in range(pts.shape[1]):
-                if pts[0,i] + 22 > shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > shape[1] or pts[1,i] - 22 < 0:
+                if pts[0,i] + 22 > image1.shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > image1.shape[1] or pts[1,i] - 22 < 0:
                     seam1_1_cross[pts[0,i],pts[1,i]] = 0
 
-            seam1_2_cross = cv2.warpPerspective(seam1_cross, inv(trans_matrix_1), (shape[1],shape[0]), flags=cv2.INTER_NEAREST)
+            seam1_2_cross = cv2.warpPerspective(seam1_cross, inv(trans_matrix_1), (image2.shape[1],image2.shape[0]), flags=cv2.INTER_NEAREST)
             pts = np.nonzero(seam1_2_cross)
             pts = np.asarray(pts)
             for i in range(pts.shape[1]):
                 seam1_2_cross[pts[0,i],pts[1,i]] = 1
-                if pts[0,i] + 22 > shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > shape[1] or pts[1,i] - 22 < 0:
+                if pts[0,i] + 22 > image2.shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > image2.shape[1] or pts[1,i] - 22 < 0:
                     seam1_2_cross[pts[0,i],pts[1,i]] = 0
             #------------------------------------------------------------------------
 
             #------------------------------------------------------------------------
             boundry2_1 = boundry2.astype('uint8')
             boundry2_2 = np.zeros(seam2.shape, 'uint8')
-            boundry2_2[shift2[1]:shift2[1]+shape[0], shift2[0]:shift2[0]+shape[1]] = boundry2_1
+            boundry2_2[shift2[1]:shift2[1]+image1.shape[0], shift2[0]:shift2[0]+image1.shape[1]] = boundry2_1
             boundry2_2 = cv2.dilate(boundry2_2,kernel3,iterations = 1)
-            boundry2_2 = cv2.warpPerspective(boundry2_2, inv(trans_matrix_2), (shape[1],shape[0]))
+            boundry2_2 = cv2.warpPerspective(boundry2_2, inv(trans_matrix_2), (image3.shape[1],image3.shape[0]))
 
-            seam2_1_cross = seam2_cross[shift2[1]:shift2[1]+shape[0], shift2[0]:shift2[0]+shape[1]]
+            seam2_1_cross = seam2_cross[shift2[1]:shift2[1]+image1.shape[0], shift2[0]:shift2[0]+image1.shape[1]]
 
             pts_tip_2_1, pts_tip_2_2 = find_ref(seam2_1_cross, shift2, trans_matrix_2)
 
@@ -320,26 +329,26 @@ while cap1.isOpened():
             pts = np.nonzero(seam2_1_cross)
             pts = np.asarray(pts)
             for i in range(pts.shape[1]):
-                if pts[0,i] + 22 > shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > shape[1] or pts[1,i] - 22 < 0:
+                if pts[0,i] + 22 > image1.shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > image1.shape[1] or pts[1,i] - 22 < 0:
                     seam2_1_cross[pts[0,i],pts[1,i]] = 0
 
-            seam2_2_cross = cv2.warpPerspective(seam2_cross, inv(trans_matrix_2), (shape[1],shape[0]), flags=cv2.INTER_NEAREST)
+            seam2_2_cross = cv2.warpPerspective(seam2_cross, inv(trans_matrix_2), (image3.shape[1],image3.shape[0]), flags=cv2.INTER_NEAREST)
             pts = np.nonzero(seam2_2_cross)
             pts = np.asarray(pts)
             for i in range(pts.shape[1]):
                 seam2_2_cross[pts[0,i],pts[1,i]] = 1
-                if pts[0,i] + 22 > shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > shape[1] or pts[1,i] - 22 < 0:
+                if pts[0,i] + 22 > image3.shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > image3.shape[1] or pts[1,i] - 22 < 0:
                     seam2_2_cross[pts[0,i],pts[1,i]] = 0
             #------------------------------------------------------------------------
 
             #------------------------------------------------------------------------
             boundry3_1 = boundry3.astype('uint8')
             boundry3_2 = np.zeros(seam3.shape, 'uint8')
-            boundry3_2[shift3[1]:shift3[1]+shape[0], shift3[0]:shift3[0]+shape[1]] = boundry3_1
+            boundry3_2[shift3[1]:shift3[1]+image1.shape[0], shift3[0]:shift3[0]+image1.shape[1]] = boundry3_1
             boundry3_2 = cv2.dilate(boundry3_2,kernel3,iterations = 1)
-            boundry3_2 = cv2.warpPerspective(boundry3_2, inv(trans_matrix_3), (shape[1],shape[0]))
+            boundry3_2 = cv2.warpPerspective(boundry3_2, inv(trans_matrix_3), (image4.shape[1],image4.shape[0]))
 
-            seam3_1_cross = seam3_cross[shift3[1]:shift3[1]+shape[0], shift3[0]:shift3[0]+shape[1]]
+            seam3_1_cross = seam3_cross[shift3[1]:shift3[1]+image1.shape[0], shift3[0]:shift3[0]+image1.shape[1]]
 
             pts_tip_3_1, pts_tip_3_2 = find_ref(seam3_1_cross, shift3, trans_matrix_3)
 
@@ -349,15 +358,15 @@ while cap1.isOpened():
             pts = np.nonzero(seam3_1_cross)
             pts = np.asarray(pts)
             for i in range(pts.shape[1]):
-                if pts[0,i] + 22 > shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > shape[1] or pts[1,i] - 22 < 0:
+                if pts[0,i] + 22 > image1.shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > image1.shape[1] or pts[1,i] - 22 < 0:
                     seam3_1_cross[pts[0,i],pts[1,i]] = 0
 
-            seam3_2_cross = cv2.warpPerspective(seam3_cross, inv(trans_matrix_3), (shape[1],shape[0]), flags=cv2.INTER_NEAREST)
+            seam3_2_cross = cv2.warpPerspective(seam3_cross, inv(trans_matrix_3), (image4.shape[1],image4.shape[0]), flags=cv2.INTER_NEAREST)
             pts = np.nonzero(seam3_2_cross)
             pts = np.asarray(pts)
             for i in range(pts.shape[1]):
                 seam3_2_cross[pts[0,i],pts[1,i]] = 1
-                if pts[0,i] + 22 > shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > shape[1] or pts[1,i] - 22 < 0:
+                if pts[0,i] + 22 > image4.shape[0] or pts[0,i] - 22 < 0 or pts[1,i] + 22 > image4.shape[1] or pts[1,i] - 22 < 0:
                     seam3_2_cross[pts[0,i],pts[1,i]] = 0
             #------------------------------------------------------------------------
 
@@ -372,19 +381,19 @@ while cap1.isOpened():
 
 
         additional_t = time.time()
-        images = np.stack((image1[:,:,1], image2[:,:,1], image3[:,:,1], image4[:,:,1]), axis = 2)
+        images = [image1[:,:,1], image2[:,:,1], image3[:,:,1], image4[:,:,1]]
         for i in range(0, 4):
 
             if pos_flag[i]:
-                diff_buffer[i,:,:,0] = images[:,:,i]
+                diff_buffer[i][:,:,0] = images[i]
                 if stitch_flag[i]:
                     pos_flag[i] = False
             else:
-                diff_buffer[i,:,:,1] = images[:,:,i]
+                diff_buffer[i][:,:,1] = images[i]
                 if stitch_flag[i]:
                     pos_flag[i] = True
 
-            motion_detect = np.absolute(diff_buffer[i,:,:,0] - diff_buffer[i,:,:,1]) >= 20
+            motion_detect = np.absolute(diff_buffer[i][:,:,0] - diff_buffer[i][:,:,1]) >= 20
             motion_detect = motion_detect.astype('uint8')
             if i == 0:
                 boundry_motion = motion_detect * boundry
@@ -395,7 +404,7 @@ while cap1.isOpened():
                 cross_flag[1] = np.sum(cross2.astype('uint8')) > 1
                 cross_flag[2] = np.sum(cross3.astype('uint8')) > 1
             else:
-                stitch_flag[i] = np.sum(motion_detect * mask_motion_detect[:,:,i-1]) > 30
+                stitch_flag[i] = np.sum(motion_detect * mask_motion_detect[i-1]) > 30
 
 
 
@@ -432,14 +441,10 @@ while cap1.isOpened():
                     result1,result2,mask1,mask2,_,_ = stitch.applyHomography(image1,image3,H2)
 
                 resultB = (result2*np.logical_not(mask1) + result1).astype('uint8')
-                mask2 = (resultB > 0 )
+
 
 
                 result_window = result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:]
-                print result_window.shape, resultB.shape, mask2.shape
-                resultB = resultB[0:result_window.shape[0],0:result_window.shape[1],:]
-                mask2 = mask2[0:result_window.shape[0],0:result_window.shape[1],:]
-                print result_window.shape, resultB.shape, mask2.shape
                 result[out_pos[0]-coord_shift2[0]:out_pos[0]-coord_shift2[0]+result1.shape[0],out_pos[1]-coord_shift2[1]:out_pos[1]-coord_shift2[1]+result1.shape[1],:] =resultB*mask2 + result_window*np.logical_not(mask2)
 
             t_2 = time.time() - t_2
@@ -452,12 +457,18 @@ while cap1.isOpened():
                     t_3_cross = time.time()
                     result1,result2,mask1,mask2,_,_ = line_stitch(image1, mean1, boundry3_1, seam3_1_cross, pts_tip_3_1, image4, mean4, boundry3_2, seam3_2_cross, pts_tip_3_2, F3, H3);
                     t_3_cross = time.time() - t_3_cross
+                    #print "Line Align: ", mask1.shape, mask2.shape
                 else:
                     result1,result2,mask1,mask2,_,_ = stitch.applyHomography(image1,image4,H3)
+                    #print "Homography: "
+
 
                 result3 = (result2*np.logical_not(mask1) + result1).astype('uint8')
 
                 result_window = result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result1.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result1.shape[1],:]
+                #mask2 = mask2[0:mask2.shape[0],0:mask2.shape[1],:]
+                #Fails when objects aren't large enough. 
+                
                 result[out_pos[0]-coord_shift3[0]:out_pos[0]-coord_shift3[0]+result1.shape[0],out_pos[1]-coord_shift3[1]:out_pos[1]-coord_shift3[1]+result1.shape[1],:] =result3*mask2 + result_window*np.logical_not(mask2)
 
             t_3 = time.time() - t_3
