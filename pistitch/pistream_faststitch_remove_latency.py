@@ -13,11 +13,11 @@ output_center = np.array([OUTPUT_SIZE[0]/2-400,OUTPUT_SIZE[1]/2-100]).astype('in
 
 CALIBRATION = True
 
-cap3 = cv2.VideoCapture('http://10.42.0.124:8070/?action=stream')
-cap1 = cv2.VideoCapture('http://10.42.0.102:8090/?action=stream')
-cap2 = cv2.VideoCapture('http://10.42.0.104:8050/?action=stream')
-cap4 = cv2.VideoCapture('http://10.42.0.106:8060/?action=stream')
-cap5 = cv2.VideoCapture('http://10.42.0.105:8040/?action=stream')
+cap3 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
+cap1 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
+cap2 = cv2.VideoCapture('http://10.42.0.103:8030/?action=stream')
+cap4 = cv2.VideoCapture('http://10.42.0.104:8040/?action=stream')
+cap5 = cv2.VideoCapture('http://10.42.0.105:8050/?action=stream')
 
 while cap1.isOpened():
         t = time.time()
