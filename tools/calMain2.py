@@ -19,10 +19,10 @@ import glob
 
 #print K1,K2,R,T
 
-cap1 = cv2.VideoCapture('../data/Calibration_vid1.avi')
-cap2 = cv2.VideoCapture('../data/Calibration_vid2.avi')
-cap3 = cv2.VideoCapture('../data/Calibration_vid3.avi')
-cap4 = cv2.VideoCapture('../data/Calibration_vid4.avi')
+cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
+cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
+cap3 = cv2.VideoCapture('http://10.42.0.103:8030/?action=stream')
+cap4 = cv2.VideoCapture('http://10.42.0.104:8040/?action=stream')
 #cap2 = cv2.VideoCapture(0)
 
 image_mat = ccam.gatherCalFrame((cap1,cap2,cap3,cap4))

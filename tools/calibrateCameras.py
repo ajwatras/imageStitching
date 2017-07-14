@@ -4,7 +4,7 @@ import glob
 
 #Used for calcIntrinsics
 cal_frames = 25
-grid_x = 8
+grid_x = 9
 grid_y = 6
 
 def calcF(image1,image2, ratio=.75):
