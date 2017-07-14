@@ -4,6 +4,12 @@ from matplotlib import pyplot as plt
 #import stitcher
 
 
+def computeF(K1,K2,R,t):
+	A = np.dot(np.dot(K1,np.transpose(R)),t)
+	C = np.mat([[0,-A[2],A[1]],[A[2],0,-A[0]],[-A[1],-A[0],0]])
+	K = np.transpose(np.inverse(K2))
+
+	return  np.dot(K,np.dot(R,np.dot(np.transpose(K1),C)))
 def calcF(image1,image2, ratio=.75):
 	#A method for calculating the fundamental matrix between two feature rich images. 
 	#This should be performed only during calibration. 
@@ -36,7 +42,7 @@ def calcF(image1,image2, ratio=.75):
 		ptsA = np.float32([kpsA[i] for (_, i) in matches])
 		ptsB = np.float32([kpsB[i] for (i, _) in matches])
  
-	(F, mask) = cv2.findFundamentalMat(ptsA,ptsB)
+	(F, mask) = cv2.findFundamentalMat(ptsA,ptsB,cv2.FM_RANSAC,1)
 	pts1 = ptsA[mask.ravel()==1]
 	pts2 = ptsB[mask.ravel()==1]
 
@@ -77,7 +83,7 @@ def drawlines(img1,img2,lines,pts1,pts2):
 def displayEpipolar(img1,img2,F,pts1,pts2):
 	# Find epilines corresponding to points in right image (second image) and
 	# drawing its lines on left image
-	print pts2
+	#print pts2
 	lines1 = cv2.computeCorrespondEpilines(pts2.reshape(-1,1,2), 2,F)
 	lines1 = lines1.reshape(-1,3)
 	img5,img6 = drawlines(img1,img2,lines1,pts1,pts2)
@@ -93,7 +99,7 @@ def displayEpipolar(img1,img2,F,pts1,pts2):
 
 
 cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output1.avi')
-cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output2.avi')
+cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output3.avi')
 
 #cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/sample/output1.avi')
 #cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/sample/output2.avi')
@@ -109,6 +115,7 @@ kps1,feat1 = detectAndDescribe(image1)
 kps2,feat2 = detectAndDescribe(image2)
 
 F,pts1,pts2 = calcF(image1,image2)
+F = np.loadtxt('fundamentalMatrices/F1.txt',delimiter=',')
 print pts1,pts2
 while cap1.isOpened():
 	ret1,image1 = cap1.read()

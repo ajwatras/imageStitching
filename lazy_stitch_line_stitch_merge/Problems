@@ -2,6 +2,11 @@
 # Object Alignment
 #########################################################################################################################################
 
+Problem: The 8 point method for computing the fundamental matrix from feature matches in an uncalibrated camera is degenerate if all the points
+are coplanar. Our calibration method for homographies require an approximately planar calibration pattern, so either we have a bad fundamental matrix
+or a bad homography. 
+Solution: There are three reasonable solutions here. All of them rely on some level of calibration about the cameras. 
+
 Problem: In the bean drop sample data sets, The matching is giving bad matches for an unknown reason. 
 Solution: Try Rotating the images so that they all share the same set of axes before calculating fundamental matrix. Identify the cause of the bad matches. First look at the epipolar lines and see what is going on with them. Second, double check to ensure the code is functioning as desired. After that adjust as needed. The epipolar lines look strange for some reason. I still haven't been able to pin down what is going on here, but their behavior is not as expected. 
 

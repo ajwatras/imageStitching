@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 
+CALCF = True
+
 def calcF(image1,image2,label=0, ratio=.75):
 
 	if (label is 0):
@@ -44,10 +46,6 @@ def calcF(image1,image2,label=0, ratio=.75):
 	return F
 
 def checkLine(line, n):
-# This function checks to see if the lines are vertical or horizontal.
-# it is used to ensure that the image edges are not detected. but it may result in 
-# the dropping of desired lines. 
-
 	rho = line[0,0]
 	theta = line[0,1]
 	#print "CHECKLINE: ", rho, n[0], n[1], theta
@@ -59,21 +57,16 @@ def checkLine(line, n):
 
 	return True
 
-def correctPoint(x, y, line):
+def correctPoint(x, line):
 #Adjust the point so that it lies on the desired line. This is used so that
 #Neighborhoods only need to be approximate. 
 	rho = line[0]
 	theta = line[1]
+	y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
 
-	if (theta == 0):
-		x = rho
-	else: 
-		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
-	#print x,y,rho,theta
-	return x,y
+	return y
 
 def detectAndDescribe(image):
-#This function computes the SURF features of the image. 
 
 	# detect and extract features from the image
 	#descriptor = cv2.xfeatures2d.SIFT_create()
@@ -90,8 +83,8 @@ def detectAndDescribe(image):
 
 
 def drawEpilines(img1,img2,linesA,linesB,pts1,pts2):
-#A function for drawing the epipolar geometry onto a set of images. 
-
+    ''' img1 - image on which we draw the epilines for the points in img2
+        lines - corresponding epilines '''
     r,c,z = img1.shape
     #img1 = cv2.cvtColor(img1,cv2.COLOR_GRAY2BGR)
     #img2 = cv2.cvtColor(img2,cv2.COLOR_GRAY2BGR)
@@ -105,13 +98,13 @@ def drawEpilines(img1,img2,linesA,linesB,pts1,pts2):
         x0,y0 = map(int, [0, -r2[2]/r2[1] ])
         x1,y1 = map(int, [c, -(r2[2]+r2[0]*c)/r2[1] ])
         img2 = cv2.line(img2, (x0,y0), (x1,y1), color,1)
-        #print r1,r2,pt1,pt2,color
+        print r1,r2,pt1,pt2,color
         #img1 = cv2.circle(img1,(int(pt1[0]),int(pt1[1])),5,color,-1)
         #img2 = cv2.circle(img2,(int(pt2[0]),int(pt2[1])),5,color,-1)
     return img1,img2
 
 def drawLines(rho,theta,image,color=(0,0,255),width=2):
-#Copied code for drawing the lines on an image given rho and theta
+	#Copied code for drawing the lines on an image given rho and theta
 	a = np.cos(theta)
 	b = np.sin(theta)
 	x0 = a*rho
@@ -124,12 +117,6 @@ def drawLines(rho,theta,image,color=(0,0,255),width=2):
 	cv2.line(image,(x1,y1),(x2,y2),color,width)
 
 def epiMatch(point, line, F,D = 1):
-#This function uses the epipolar geometry of a scene to find the corresponding feature
-#matches for a point which we know lies along a given line. 
-#point - The point for which we want to find a feature match.
-#line - the line on which the point will be found in the other image. 
-#F - The fundamental matrix for the images
-#D - the direction in which the epipolar lines should be computed. (should F get inverted.)
 	homPoint = np.mat([point[0],point[1],1]) #change point to homogeneous coordinates
 	#print homPoint,F
 	#Calculate epipolar lines and change formatting of both sets of lines.
@@ -141,18 +128,14 @@ def epiMatch(point, line, F,D = 1):
 	theta = line[1]
 
 	#Intersect two lines
-	if (theta == 0):
-		x = rho
-		y2 = A/B*x + C/B
-	else: 
-		x = (rho/np.sin(theta) +C/B)/(np.cos(theta)/np.sin(theta) - A/B)
-		y1 = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
-		y2 = -A/B*x - C/B
+	x = (rho/np.sin(theta) +C/B)/(np.cos(theta)/np.sin(theta) - A/B)
+	y1 = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
+	y2 = -A/B*x - C/B
 
 	#Determine error in the intersection (used for debugging. )
-	#err1 = A*x + B*y2 + C
-	#err2 = -x*np.cos(theta) - y1*np.sin(theta) + rho
-	#epiline2 = cv2.computeCorrespondEpilines(homPoint, 2,F)
+	err1 = A*x + B*y2 + C
+	err2 = -x*np.cos(theta) - y1*np.sin(theta) + rho
+	epiline2 = cv2.computeCorrespondEpilines(homPoint, 2,F)
 	#print "POINT: ", point
 	#print "EPILINE: ", epiline, epiline2
 	#print "OBJECT LINE: ", line
@@ -163,8 +146,6 @@ def epiMatch(point, line, F,D = 1):
 
 
 def lineSelect(lines, image):
-#Organizes the lines to try and ensure that proper lines get matched. 
-#It is supposed to remove lines associated with the image edges. 
 	n = image.shape
 	#print "lineshape: ", lines.shape
 	outlines = np.zeros((lines.shape[0], lines.shape[2]))
@@ -186,8 +167,6 @@ def lineSelect(lines, image):
 	return outlines
 
 def matchLines(point1, matpoint1, point2, matpoint2):
-# 
-
 	#Define variables use by the first point
 	x1 = point1[0]
 	y1 = point1[1]
@@ -234,71 +213,33 @@ def matchLines(point1, matpoint1, point2, matpoint2):
 	output = np.dot(T2,A)
 	return output
 
-def setRight(line):
+def shiftRight(point,line):
 	# Shifts the point to the right to avoid overlapping features.
-	x = 400
-	y = 400
+	print "point:", point
+	x = point + 10
 	rho = line[0]
 	theta = line[1]
+	y = -np.cos(theta)/np.sin(theta)*(x) + rho/np.sin(theta)
 
-	if (theta == 0):
-		x = rho
-	else: 
-		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
-
-	return x,y
-def setLeft(line):
+	return y
+def shiftLeft(point,line):
 	# Shifts the point to the right to avoid overlapping features.
-
-	x = 5
-	y = 5
+	print "point:", point
+	x = point - 10
 	rho = line[0]
 	theta = line[1]
+	y = -np.cos(theta)/np.sin(theta)*(x) + rho/np.sin(theta)
 
-	if (theta == 0):
-		x = rho
-	else: 
-		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
-
-	return x,y
-
-def shiftRight(x,y,line,dist = 5):
-	# Shifts the point to the right to avoid overlapping features.
-	x = x+dist
-	y = y + dist
-	rho = line[0]
-	theta = line[1]
-
-	if (theta == 0):
-		x = rho
-	else: 
-		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
-
-	return x,y
-def shiftLeft(x,y,line,dist = 5):
-	# Shifts the point to the right to avoid overlapping features.
-
-	x = x - dist
-	y = y - dist
-	rho = line[0]
-	theta = line[1]
-
-	if (theta == 0):
-		x = rho
-	else: 
-		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
-
-	return x,y
-
+	return y
 
 def sortLines(lines):
-# Sort the lines by theta?
 	#print "Pre-sort:", lines
 	outlines = lines[lines[:,1].argsort()]
 	#print "Post-sort: ", outlines
 
 
 def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,DRAW_LINES = True):
+
 	if (N_size == []):
 		N_size = 20
 	if (edgeThresh == []):
@@ -344,11 +285,11 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		edges4 = cv2.Canny(sub22,edgeThresh,edgeThresh*3)
 		lines4 = cv2.HoughLines(edges4,1,np.pi/180,N_size)
 
-		cv2.imshow("sub11",sub11)
-		cv2.imshow("sub12",sub12)
-		cv2.imshow("sub21",sub21)
-		cv2.imshow("sub22",sub22)
-		cv2.waitKey(0)
+	#	cv2.imshow("sub11",sub11)
+	#	cv2.imshow("sub12",sub12)
+	#	cv2.imshow("sub21",sub21)
+	#	cv2.imshow("sub22",sub22)
+	#	cv2.waitKey(0)
 		# If no lines are found, print error and return identity
 		if (lines1 is None) or (lines2 is None) or (lines3 is None) or (lines4 is None):
 			print "Error: Lines not found"
@@ -369,15 +310,15 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 
 
 		#Ensure points lie on a line.
-		points1[0,0], points1[0,1] = correctPoint(points1[0,0],points1[0,1],lines1)
-		points1[1,0], points1[1,1] = correctPoint(points1[1,0],points1[1,1],lines2)
-		points2[0,0], points2[0,1] = correctPoint(points2[0,0],points2[0,1],lines3)
-		points2[1,0], points2[1,1] = correctPoint(points2[1,0],points2[1,1],lines4)
+		points1[0,1] = correctPoint(points1[0,0],lines1)
+		points1[1,1] = correctPoint(points1[1,0],lines2)
+		points2[0,1] = correctPoint(points2[0,0],lines3)
+		points2[1,1] = correctPoint(points2[1,0],lines4)
 
-		#points1[0,0], points1[0,1] = setRight(lines1)
-		#points1[1,0], points1[1,1] = setLeft(lines2)
-		#points2[0,0], points2[0,1] = setRight(lines3)
-		#points2[1,0], points2[1,1] = setLeft(lines4)
+		points1[0,1] = shiftRight(points1[0,0],lines1)
+		points1[1,1] = shiftLeft(points1[1,0],lines2)
+		points2[0,1] = shiftRight(points2[0,0],lines3)
+		points2[1,1] = shiftLeft(points2[1,0],lines4)
 
 
 
@@ -462,9 +403,11 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size)
 
 
-		cv2.imshow("sub1",sub1)
-		cv2.imshow("sub2",sub2)
-		cv2.waitKey(0)
+	#	cv2.imshow("sub11",sub11)
+	#	cv2.imshow("sub12",sub12)
+	#	cv2.imshow("sub21",sub21)
+	#	cv2.imshow("sub22",sub22)
+	#	cv2.waitKey(0)
 
 				# If no lines are found, print error and return identity
 		if (lines1 is None) or (lines2 is None):
@@ -482,16 +425,8 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 
 
 		#Ensure points lie on a line.
-		#print points1, correctPoint(points1[0,0],points1[0,1],lines1)
-		#points1[0,0], points1[0,1] = correctPoint(points1[0,0],points1[0,1],lines1)
-		#points2[0,0], points2[0,1] = correctPoint(points2[0,0],points2[0,1],lines2)
-
-
-		#points1[0,0], points1[0,1] = setLeft(lines1)
-		#points2[0,0], points2[0,1] = setRight(lines2)
-
-		points1[0,0], points1[0,1] = shiftLeft(points1[0,0],points1[0,1],lines1,10)
-		points2[0,0], points2[0,1] = shiftRight(points2[0,0],points2[0,1],lines2,10)
+		points1[0,1] = correctPoint(points1[0,0],lines1)
+		points2[0,1] = correctPoint(points2[0,0],lines2)
 
 
 	#	print "LINES:",lines1,lines2,lines3,lines4
@@ -503,8 +438,6 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		mat2 = epiMatch(points2,lines1, np.matrix.transpose(F))
 
 		if DRAW_LINES:
-			ptsB = np.mat([points1,mat2])
-			ptsA = np.mat([mat1,points2])
 			tmp_image1 = np.copy(image1)
 			tmp_image2 = np.copy(image2)
 
@@ -516,16 +449,8 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 			cv2.circle(tmp_image1, points1, 5, (0,255,0))
 			cv2.circle(tmp_image2, points2, 5, (255,0,0))
 
-			#print points1,points2
-			linesA = cv2.computeCorrespondEpilines(ptsA, 2,F)
-			linesB = cv2.computeCorrespondEpilines(ptsB, 1,F)
-			linesA = linesA.reshape(-1,3)
-			linesB = linesB.reshape(-1,3)
-			img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
-
-			cv2.imshow("image1 (1 edge)",img5)
-			cv2.imshow("image2 (1 edge)",img6)
-
+			cv2.imshow("image1 (1 edge)",tmp_image1)
+			cv2.imshow("image2 (1 edge)",tmp_image2)
 
 
 
