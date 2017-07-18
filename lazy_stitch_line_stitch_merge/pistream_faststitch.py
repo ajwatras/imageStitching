@@ -3,15 +3,15 @@ import urllib
 import numpy as np
 import lazy_stitcher
 
-#cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
-#cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
-#cap3 = cv2.VideoCapture('http://10.42.0.103:8030/?action=stream')
-#cap4 = cv2.VideoCapture('http://10.42.0.104:8040/?action=stream')
-#cap_main = cap1
-#cap_side = [cap2,cap3,cap4]
+cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
+cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
+cap3 = cv2.VideoCapture('http://10.42.0.103:8030/?action=stream')
+cap4 = cv2.VideoCapture('http://10.42.0.104:8040/?action=stream')
+cap_main = cap1
+cap_side = [cap2,cap3,cap4]
 
-cap_main = cv2.VideoCapture('sample/output1.avi')
-cap_side = [cv2.VideoCapture('sample/output2.avi'), cv2.VideoCapture('sample/output3.avi'), cv2.VideoCapture('sample/output4.avi')]
+#cap_main = cv2.VideoCapture('sample/output1.avi')
+#cap_side = [cv2.VideoCapture('sample/output2.avi'), cv2.VideoCapture('sample/output3.avi'), cv2.VideoCapture('sample/output4.avi')]
 _, main_view_frame = cap_main.read()
 _, side_view_frame_1 = cap_side[0].read()
 _, side_view_frame_2 = cap_side[1].read()

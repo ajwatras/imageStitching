@@ -98,8 +98,11 @@ def displayEpipolar(img1,img2,F,pts1,pts2):
 	return
 
 
-cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output1.avi')
-cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output3.avi')
+#cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output1.avi')
+#cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output3.avi')
+
+cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
+cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
 
 #cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/sample/output1.avi')
 #cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/sample/output2.avi')
@@ -117,7 +120,7 @@ kps2,feat2 = detectAndDescribe(image2)
 F,pts1,pts2 = calcF(image1,image2)
 file_array = np.load('calibration_7_14_17/output.npz')
 (dst,K,R,t,F) = file_array['arr_0']
-F = F[2]
+F = F[1]
 #F = np.loadtxt('fundamentalMatrices/F1.txt',delimiter=',')
 print pts1,pts2
 while cap1.isOpened():
@@ -130,5 +133,5 @@ while cap1.isOpened():
 
 	displayEpipolar(image1,image2,F,pts1,pts2)
 
-	if cv2.waitKey(1) == ord('q'):
+	if cv2.waitKey(0) == ord('q'):
 		exit(0)
