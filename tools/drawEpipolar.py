@@ -115,7 +115,10 @@ kps1,feat1 = detectAndDescribe(image1)
 kps2,feat2 = detectAndDescribe(image2)
 
 F,pts1,pts2 = calcF(image1,image2)
-F = np.loadtxt('fundamentalMatrices/F1.txt',delimiter=',')
+file_array = np.load('calibration_7_14_17/output.npz')
+(dst,K,R,t,F) = file_array['arr_0']
+F = F[2]
+#F = np.loadtxt('fundamentalMatrices/F1.txt',delimiter=',')
 print pts1,pts2
 while cap1.isOpened():
 	ret1,image1 = cap1.read()

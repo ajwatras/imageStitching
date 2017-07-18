@@ -34,12 +34,16 @@ def calcF(image1,image2,label=0, ratio=.75):
 	 
 		(F, mask) = cv2.findFundamentalMat(ptsA,ptsB)
 
-	elif (label is 1):
-		F = np.loadtxt('fundamentalMatrices/F1.txt',delimiter=',')
-	elif (label is 2):
-		F = np.loadtxt('fundamentalMatrices/F2.txt',delimiter=',')
-	elif (label is 3):
-		F = np.loadtxt('fundamentalMatrices/F3.txt',delimiter=',')
+	else:
+		_,_,_,_,F = loadnpz('calibration_7_14_17/output.npz')
+		F = F[label]
+
+	#elif (label is 1):
+		#F = np.loadtxt('fundamentalMatrices/F1.txt',delimiter=',')
+	#elif (label is 2):
+		#F = np.loadtxt('fundamentalMatrices/F2.txt',delimiter=',')
+#	elif (label is 3):
+		#F = np.loadtxt('fundamentalMatrices/F3.txt',delimiter=',')
 	
 	return F
 
@@ -161,6 +165,11 @@ def epiMatch(point, line, F,D = 1):
 
 	return (int(x),int(y2))
 
+def loadnpz(filename):
+	file_array = np.load(filename)
+	(dst,K,R,t,F) = file_array['arr_0']
+
+	return dst,K,R,t,F
 
 def lineSelect(lines, image):
 #Organizes the lines to try and ensure that proper lines get matched. 

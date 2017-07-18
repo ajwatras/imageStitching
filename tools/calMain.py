@@ -17,8 +17,8 @@ for fname in imglist:
 
 dist, mtx = ccam.calcIntrinsics(images)
 
-np.save('calibration/distortion.txt',dist,delimiters=',')
-np.save('calibration/camera.txt',mtx,delimiters=',')
+np.savetxt('calibration/distortion.txt',dist,delimiter=',')
+np.savetxt('calibration/camera.txt',mtx,delimiter=',')
 
 
 print dist, mtx

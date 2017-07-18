@@ -7,8 +7,9 @@ are coplanar. Our calibration method for homographies require an approximately p
 or a bad homography. 
 Solution: There are three reasonable solutions here. All of them rely on some level of calibration about the cameras. 
 
-Problem: In the bean drop sample data sets, The matching is giving bad matches for an unknown reason. 
-Solution: Try Rotating the images so that they all share the same set of axes before calculating fundamental matrix. Identify the cause of the bad matches. First look at the epipolar lines and see what is going on with them. Second, double check to ensure the code is functioning as desired. After that adjust as needed. The epipolar lines look strange for some reason. I still haven't been able to pin down what is going on here, but their behavior is not as expected. 
+(COMPLETED)Problem: In the bean drop sample data sets, The matching is giving bad matches for an unknown reason. 
+Solution: Try Rotating the images so that they all share the same set of axes before calculating fundamental matrix. Identify the cause of the bad matches. First look at the epipolar lines and see what is going on with them. Second, double check to ensure the code is functioning as desired. After that adjust as needed. The epipolar lines look strange for some reason. I still haven't been able to pin down what is going on here, but their behavior is not as expected. The end 
+result was determining that the problem was due to us using a degenerate case of the 8 point fundamental matrix estimation algorithm. 
 
 (COMPLETED) Problem: When feature points lie too closely together on a line, the resulting homography can be a poor match for the desired outcome. 
 Solution:  We solved this by choosing an arbitrary location along the line to use as the matched points. This allows us to ensure there is sufficient 
