@@ -154,6 +154,9 @@ def calibCam(images1,images2):
 	E = None
 	F = None
 	retval, K1, dist1, K2, dist2, R, T, E, F = cv2.stereoCalibrate(objpoints,imgpoints1, imgpoints2,cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2,(width,height), R, T, E, F)
+	ret, K1, dist1, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints1, gray.shape[::-1],None,None)
+	ret, K2, dist2, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints2, gray.shape[::-1],None,None)
+
 	#retval, K1, dist1, K2, dist2, R, T, E, F = cv2.stereoCalibrate(objpoints, imgpoints1, imgpoints2, (width, height))
 	
 	return dist1,dist2,K1,K2,R,T,F  # outputs the radial distortion vector followed by the camera internal parameters.
