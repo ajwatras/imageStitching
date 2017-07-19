@@ -9,8 +9,6 @@ images = ccam.gatherCalFrame([cap1])
 
 dist, mtx = ccam.calcIntrinsics(images[0])
 
-<<<<<<< HEAD
-=======
 for fname in imglist:
 	print fname
 
@@ -19,7 +17,7 @@ for fname in imglist:
 
 dist, mtx = ccam.calcIntrinsics(images)
 
->>>>>>> 10e0c484c46915b34b321d0d41b0650dd17acf08
+
 np.savetxt('calibration/distortion.txt',dist,delimiter=',')
 np.savetxt('calibration/camera.txt',mtx,delimiter=',')
 

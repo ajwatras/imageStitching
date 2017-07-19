@@ -200,6 +200,7 @@ class lazy_stitcher:
                             pts1 = np.mat([pts1[0,0], pts1[0,1]])
                             pts2 = np.mat([pts2[0,0], pts2[0,1]])
 
+                            print "**********************************************************************"
                             tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
                             corners = np.mat([[0, side_view_frame.shape[1], 0, side_view_frame.shape[1]], [0, 0, side_view_frame.shape[0], side_view_frame.shape[0]], [1, 1, 1, 1]])
                             transformed_corners = np.dot(tempH, corners)

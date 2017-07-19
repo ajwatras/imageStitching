@@ -154,8 +154,8 @@ def calibCam(images1,images2):
 	E = None
 	F = None
 	retval, K1, dist1, K2, dist2, R, T, E, F = cv2.stereoCalibrate(objpoints,imgpoints1, imgpoints2,cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2,(width,height), R, T, E, F)
-	ret, K1, dist1, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints1, gray.shape[::-1],None,None)
-	ret, K2, dist2, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints2, gray.shape[::-1],None,None)
+	ret, K1, dist1, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints1, gray1.shape[::-1],None,None)
+	ret, K2, dist2, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints2, gray2.shape[::-1],None,None)
 
 	#retval, K1, dist1, K2, dist2, R, T, E, F = cv2.stereoCalibrate(objpoints, imgpoints1, imgpoints2, (width, height))
 	
@@ -269,12 +269,12 @@ def poseEstimate(points1,points2):
 
 	return R,t
 
-def saveCalibration(save_var):
+def saveCalibration(save_var,filename = 'calibration/output'):
 	if len(save_var) != 5:
 		print "ERROR: Use appropriate compiled calibration variable for saving" 
-		return
+		#return
 	
-	np.savez('calibration/output',save_var)
+	np.savez(filename,save_var)
 	print "Calibration Saved"
 	return
 

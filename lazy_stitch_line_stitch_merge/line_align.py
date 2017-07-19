@@ -35,7 +35,8 @@ def calcF(image1,image2,label=0, ratio=.75):
 		(F, mask) = cv2.findFundamentalMat(ptsA,ptsB)
 
 	else:
-		_,_,_,_,F = loadnpz('calibration_7_14_17/output.npz')
+		#_,_,_,_,F = loadnpz('calibration_7_14_17/output.npz')
+		_,_,_,_,F = loadnpz('../tools/picked_calibration/calibration.npz')
 		F = F[label]
 
 	#elif (label is 1):

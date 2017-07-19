@@ -101,8 +101,11 @@ def displayEpipolar(img1,img2,F,pts1,pts2):
 #cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output1.avi')
 #cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output3.avi')
 
-cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
-cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
+#cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
+#cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
+
+cap1 = cv2.VideoCapture('../data/7_18_17/bean1/output1.avi')
+cap2 = cv2.VideoCapture('../data/7_18_17/bean1/output3.avi')
 
 #cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/sample/output1.avi')
 #cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/sample/output2.avi')
@@ -118,9 +121,10 @@ kps1,feat1 = detectAndDescribe(image1)
 kps2,feat2 = detectAndDescribe(image2)
 
 F,pts1,pts2 = calcF(image1,image2)
-file_array = np.load('calibration_7_14_17/output.npz')
+#file_array = np.load('calibration_7_14_17/output.npz')
+file_array = np.load('./picked_calibration/calibration.npz')
 (dst,K,R,t,F) = file_array['arr_0']
-F = F[1]
+F = F[3]
 #F = np.loadtxt('fundamentalMatrices/F1.txt',delimiter=',')
 print pts1,pts2
 while cap1.isOpened():

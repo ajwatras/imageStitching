@@ -6,6 +6,7 @@ import numpy as np
 import time
  
 DISPLAY_KEYPOINTS = 0
+OUTPUT_PATH = './picked_calibration/'
 
 #vidcap1 = cv2.VideoCapture('../data/vidwriter/output1.avi')
 #vidcap2 = cv2.VideoCapture('../data/vidwriter/output2.avi')
@@ -18,6 +19,7 @@ vidcap2 = cv2.VideoCapture('../data/7_18_17/calibrationvids/output2.avi')
 vidcap3 = cv2.VideoCapture('../data/7_18_17/calibrationvids/output3.avi')
 vidcap4 = cv2.VideoCapture('../data/7_18_17/calibrationvids/output4.avi')
 
+
 #vidcap1 = cv2.VideoCapture(1)
 #vidcap2 = cv2.VideoCapture(2)
 #vidcap3 = cv2.VideoCapture(3)
@@ -28,7 +30,7 @@ if DISPLAY_KEYPOINTS:
     descriptor = cv2.xfeatures2d.SURF_create()
 
 
-
+cc = 0
 # load the two images and resize them to have a width of 400 pixels
 # (for faster processing)
 for k in range(0,5):
@@ -55,8 +57,17 @@ while ((success1 & success2) & (success3 & success4)):
 	
 	# show the images
 	cv2.imshow("Result", result)
+
+	if cv2.waitKey(100) & 0xFF == ord('p'):
+		print OUTPUT_PATH+'output1.jpg'
+		cv2.imwrite(OUTPUT_PATH+'output1/'+str(cc)+'.jpg',image1)
+		cv2.imwrite(OUTPUT_PATH+'output2/'+str(cc)+'.jpg',image2)
+		cv2.imwrite(OUTPUT_PATH+'output3/'+str(cc)+'.jpg',image3)
+		cv2.imwrite(OUTPUT_PATH+'output4/'+str(cc)+'.jpg',image4)
+
+	cc =cc +1
 	if cv2.waitKey(100) & 0xFF == ord('q'):
-        	break
+		break
 	#cv2.waitKey(0)
 
 	success1,image1 = vidcap1.read()
