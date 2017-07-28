@@ -9,17 +9,18 @@ H1 = np.zeros([3,3])
 H2 = np.zeros([3,3])
 H3 = np.zeros([3,3])
 output_template = np.zeros(OUTPUT_SIZE)
-output_center = np.array([OUTPUT_SIZE[0]/2-400,OUTPUT_SIZE[1]/2-100]).astype('int')
+output_center = np.array([OUTPUT_SIZE[0]/2-410,OUTPUT_SIZE[1]/2-200]).astype('int')
 
 CALIBRATION = True
 
-cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
-cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
-cap3 = cv2.VideoCapture('http://10.42.0.103:8030/?action=stream')
+cap3 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
+cap1 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
+cap2 = cv2.VideoCapture('http://10.42.0.103:8030/?action=stream')
 cap4 = cv2.VideoCapture('http://10.42.0.104:8040/?action=stream')
 cap5 = cv2.VideoCapture('http://10.42.0.105:8050/?action=stream')
 
 while cap1.isOpened():
+
         t = time.time()
         ret1, image1 = cap1.read()
         ret2, image2 = cap2.read()
