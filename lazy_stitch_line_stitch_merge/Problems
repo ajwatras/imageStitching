@@ -2,12 +2,24 @@
 # Object Alignment
 #########################################################################################################################################
 
-Problem: The 8 point method for computing the fundamental matrix from feature matches in an uncalibrated camera is degenerate if all the points
+
+Problem: We need to develop a library of test videos and determine a metric for the quality of our algorithm. 
+Solution: 
+
+Problem: The seam detection seems off. I'm going to try and fix it. 
+Solution: I replaced the old method with a new one which simply calculates the edges of the main view image as they will show up in the side view coordinate system. 
+
+
+Problem: Our method for identifying the and finding the tool currently relies on outdated assumptions which do not serve well in the bean drop case. As such the line alignment needs an improved object identification, tracking and segmentation method before it can be applied to these more general cases. 
+Solution: Current Proposed solution is that we use a Mixture of Gaussians background subtractor method to identify the probable location of the object. Then we use some form of spatially based image segmentation method to identify
+the exact shape of the object. Then finally we give the line alignment method the location of the edges of the object. This will need implementation and development and may be too computationally expensive for our application.  
+
+(COMPLETED))Problem: The 8 point method for computing the fundamental matrix from feature matches in an uncalibrated camera is degenerate if all the points
 are coplanar. Our calibration method for homographies require an approximately planar calibration pattern, so either we have a bad fundamental matrix
 or a bad homography. 
-Solution: There are three reasonable solutions here. All of them rely on some level of calibration about the cameras. 
+Solution: We calibrate the camera array for both intrinsic and extrinsic parameters before placing the array in the surgical area. From these parameters, we can calculate the Fundamental matrix.
 
-(COMPLETED)Problem: In the bean drop sample data sets, The matching is giving bad matches for an unknown reason. 
+Problem: In the bean drop sample data sets, The matching is giving bad matches for an unknown reason. 
 Solution: Try Rotating the images so that they all share the same set of axes before calculating fundamental matrix. Identify the cause of the bad matches. First look at the epipolar lines and see what is going on with them. Second, double check to ensure the code is functioning as desired. After that adjust as needed. The epipolar lines look strange for some reason. I still haven't been able to pin down what is going on here, but their behavior is not as expected. The end 
 result was determining that the problem was due to us using a degenerate case of the 8 point fundamental matrix estimation algorithm. 
 
@@ -21,10 +33,10 @@ Problem: If the object happens to fall close to parallel to the epipolar lines b
 Solution: This is an interesting one. The angle of the epipolar lines change depending on the point used. We may be able to choose which point to use 
 in order to minimize the instability of the estimate. I must look into what scene results can cause an epipolar line to be parallel to an object line.
 The lines will be parallel if the object itself lies on the plane created by intersecting the base line with the ray to the object. We note that in the case
-where the object line is parallel to the 
+where the camera rotation is purely around the depth axis for the camera, then all of the epipolar lines will be parallel and we will have an object orientation that will always result in poor matching 
 
 Problem: Objects aren't corrected across secondary to secondary boundaries. 
-Solution: Implement a tiered correction approach to correct iteratively from image to image. 
+Solution: Applying line alignment to all side views that have the located image should align the object across secondary boundaries. This needs to be tested. 
 
 Problem: When the stitching fails, it causes jump discontinuities in the video that might be disconcerting to a surgeon. 
 Solution: Unknown. Perhaps we need to find a way to implement temporal continuity constraints. 
@@ -40,7 +52,9 @@ Solution: We need to identify the cause. I am guessing that it may be related to
 
 Problem: When an object crosses multiple different seams, or is only half seen in the image, it will not be considered for object alignment. 
 Solution: Use one edge alignment when the object is only half in the image. Perhaps use the corner of the object as a good feature point? We also need to 
-fix the problem that we do not appear to check all possible seams for objects, but only a subset of them. 
+fix the problem that we do not appear to check all possible seams for objects, but only a subset of them. Actually, Crossing multiple seams should not be an issue. If
+the object is seen in multiple different side views, then applying the line alignment from those side views to the main views should map all views of the object to a consistent
+coordinate system. 
 
 Problem: The space where the object used to be is very clearly visible. 
 Solution: store previous frame and fill in details from that. Or simply wait to draw updated image until the correct object location has been
@@ -52,6 +66,11 @@ This should be simple debugging.
 
 (COMPLETED) Problem: Alignment fails when faced with a purely vertical line. 
 Solution: Adjust method for calculating line intersections to be robust to vertical lines. 
+
+
+
+cap = cv2.VideoCapture("udpsrc port=5600 caps=\"application/x-rtp, format=(string)I420, width=(int)1280, height=(int)720, pixel-aspect-ratio=(fraction)1/1, interlace-mode=(string)progressive, colorimetry=(string)bt709, framerate=(fraction)25/1\" ! rtph264depay ! decodebin ! appsink")
+
 
 
 

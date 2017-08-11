@@ -175,6 +175,9 @@ class lazy_stitcher:
         main_view_edge = cv2.filter2D(main_view_object_mask,-1,kernel_gradient)
         main_view_edge = (main_view_edge > 0).astype('uint8')
 
+        print  "Main View: ", np.nonzero(main_view_edge)
+
+
         pts = np.nonzero(main_view_edge * self.crossing_edges_main_view_list[idx])
         pts = np.asarray(pts)
         if pts.shape[1] >= 2:
@@ -185,6 +188,8 @@ class lazy_stitcher:
                 side_view_edge = cv2.filter2D(side_view_object_mask,-1,kernel_gradient)
                 side_view_edge = (side_view_edge > 0).astype('uint8')
 
+                print np.nonzero(side_view_edge)
+
                 pts = np.nonzero(side_view_edge * self.crossing_edges_side_views_list[idx])
                 pts = np.asarray(pts)
                 if pts.shape[1] >= 2:
@@ -192,6 +197,7 @@ class lazy_stitcher:
                     if cluster_err <= 10:
                         dist_main = np.sum(np.square(clusters_main_view[:, 0] - clusters_main_view[:, 1]))
                         dist_side = np.sum(np.square(clusters_side_view[:, 0] - clusters_side_view[:, 1]))
+                        print dist_main, dist_side
                         if dist_main >= 100 and dist_main <= 1000 and dist_side >= 100 and dist_side <= 1000:
                             clusters_side_view = find_pairs(clusters_main_view, clusters_side_view, self.homography_list[idx])
                             ##############################
@@ -200,7 +206,6 @@ class lazy_stitcher:
                             pts1 = np.mat([pts1[0,0], pts1[0,1]])
                             pts2 = np.mat([pts2[0,0], pts2[0,1]])
 
-                            print "**********************************************************************"
                             tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
                             corners = np.mat([[0, side_view_frame.shape[1], 0, side_view_frame.shape[1]], [0, 0, side_view_frame.shape[0], side_view_frame.shape[0]], [1, 1, 1, 1]])
                             transformed_corners = np.dot(tempH, corners)

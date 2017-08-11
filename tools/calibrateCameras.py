@@ -88,6 +88,82 @@ def calcIntrinsics(images):
 
 	return dist,mtx  # outputs the radial distortion vector followed by the camera internal parameters.
 
+def singleFrameCal(image1,image2):
+		#Note: images is a glob of images. We need to figure out how to make this. 
+
+	#termination criteria
+	criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+
+	# prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
+	objp = np.zeros((grid_x*grid_y,3),np.float32)
+	objp[:,:2] = np.mgrid[0:grid_y,0:grid_x].T.reshape(-1,2)
+
+	# Arrays to store object points and image points from all the images.
+	objpoints = [] # 3D points in real world space
+	imgpoints1 = [] # 2D points in image plane
+	imgpoints2 = [] # 2D points in second camera
+
+
+	for k in range(0,len(images1)):
+
+		img1 = images1[k]
+		img2 = images2[k]
+
+		height,width,depth = img1.shape
+
+		gray1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
+		gray2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
+	
+		#cv2.imshow("test",gray)
+		#cv2.waitKey(500)
+
+		# Find the chess board corners
+		ret1, corners1 = cv2.findChessboardCorners(gray1,(grid_y,grid_x),None)
+		ret2, corners2 = cv2.findChessboardCorners(gray2,(grid_y,grid_x),None)
+
+		aret1,circles1 = cv2.findCirclesGrid(gray1,(11,4),None,cv2.CALIB_CB_ASYMMETRIC_GRID)
+		aret1,circles1 = cv2.findCirclesGrid(gray1,(11,4),None,cv2.CALIB_CB_ASYMMETRIC_GRID)
+
+		# If found, add object points, image points (after refining them)
+		if ret1 == True and ret2 == True and aret1 == True and aret2 == True:
+			objpoints.append(objp)
+
+			#cv2.imshow('img1',gray1)
+			#cv2.imshow('img2',gray2)
+			#cv2.waitKey()
+
+						# Draw and display the corners
+			#cv2.drawChessboardCorners(img1, (grid_y,grid_x),corners1,ret1)
+			#cv2.imshow('img1',img1)
+			#cv2.drawChessboardCorners(img2, (grid_y,grid_x),corners2,ret2)
+			#cv2.imshow('img2',img2)
+			#cv2.waitKey()
+
+			cv2.cornerSubPix(gray1,corners1,(11,11),(-1,-1),criteria)
+			cv2.cornerSubPix(gray2,corners2,(11,11),(-1,-1),criteria)
+			imgpoints1.append(corners1)
+			imgpoints2.append(corners2)
+
+
+
+
+	cameraMatrix1 =None
+	cameraMatrix2 = None
+	distCoeffs1 = None
+	distCoeffs2 = None
+	R =None
+	T = None
+	E = None
+	F = None
+	retval, K1, dist1, K2, dist2, R, T, E, F = cv2.stereoCalibrate(objpoints,imgpoints1, imgpoints2,cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2,(width,height), R, T, E, F)
+	ret, K1, dist1, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints1, gray1.shape[::-1],None,None)
+	ret, K2, dist2, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints2, gray2.shape[::-1],None,None)
+
+	#retval, K1, dist1, K2, dist2, R, T, E, F = cv2.stereoCalibrate(objpoints, imgpoints1, imgpoints2, (width, height))
+	
+	return dist1,dist2,K1,K2,R,T,F  # outputs the radial distortion vector followed by the camera internal parameters.
+
+
 def calibCam(images1,images2):
 	#Note: images is a glob of images. We need to figure out how to make this. 
 
@@ -154,8 +230,14 @@ def calibCam(images1,images2):
 	E = None
 	F = None
 	retval, K1, dist1, K2, dist2, R, T, E, F = cv2.stereoCalibrate(objpoints,imgpoints1, imgpoints2,cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2,(width,height), R, T, E, F)
+
+	#Stereo calibrate doesn't really seem like it's doing a very good job. The following lines of code are to use as little as possible from stereo calibrate. 
 	ret, K1, dist1, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints1, gray1.shape[::-1],None,None)
 	ret, K2, dist2, rvecs, tvecs = cv2.calibrateCamera(objpoints, imgpoints2, gray2.shape[::-1],None,None)
+
+	
+	
+	F = computeF(K1,K2,R,T)
 
 	#retval, K1, dist1, K2, dist2, R, T, E, F = cv2.stereoCalibrate(objpoints, imgpoints1, imgpoints2, (width, height))
 	
@@ -174,7 +256,7 @@ def compE(R,t):
 def computeF(K1,K2,R,t):
 	A = np.dot(np.dot(K1,np.transpose(R)),t)
 	C = np.mat([[0,-A[2],A[1]],[A[2],0,-A[0]],[-A[1],-A[0],0]])
-	K = np.transpose(np.inverse(K2))
+	K = np.transpose(np.linalg.inv(K2))
 
 	return  np.dot(K,np.dot(R,np.dot(np.transpose(K1),C)))
 
@@ -269,7 +351,7 @@ def poseEstimate(points1,points2):
 
 	return R,t
 
-def saveCalibration(save_var,filename = 'calibration/output'):
+def saveCalibration(save_var,filename = 'calibration/output.npz'):
 	if len(save_var) != 5:
 		print "ERROR: Use appropriate compiled calibration variable for saving" 
 		#return

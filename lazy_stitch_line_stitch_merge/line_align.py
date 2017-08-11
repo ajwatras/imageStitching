@@ -36,7 +36,7 @@ def calcF(image1,image2,label=0, ratio=.75):
 
 	else:
 		#_,_,_,_,F = loadnpz('calibration_7_14_17/output.npz')
-		_,_,_,_,F = loadnpz('../tools/picked_calibration/calibration.npz')
+		_,_,_,_,F = loadnpz('../tools/matlab_calibration.npz')
 		F = F[label]
 
 	#elif (label is 1):
@@ -166,6 +166,16 @@ def epiMatch(point, line, F,D = 1):
 
 	return (int(x),int(y2))
 
+def identifyFG(frame, model,thresh = 40):
+	#Uses the model from modelBackground to separate foreground objects from background objects
+	# 
+	frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+	model = cv2.cvtColor(model, cv2.COLOR_BGR2GRAY)
+
+	diff_frame = np.abs(frame.astype('float') - model.astype('float'))
+	binary = cv2.threshold(diff_frame,thresh,255,cv2.THRESH_BINARY)
+	return binary[1]
+
 def loadnpz(filename):
 	file_array = np.load(filename)
 	(dst,K,R,t,F) = file_array['arr_0']
@@ -194,6 +204,7 @@ def lineSelect(lines, image):
 	sortLines(outlines)
 
 	return outlines
+
 
 def matchLines(point1, matpoint1, point2, matpoint2):
 # 
@@ -243,6 +254,42 @@ def matchLines(point1, matpoint1, point2, matpoint2):
 	#return the output transformation. 
 	output = np.dot(T2,A)
 	return output
+
+def modelBackground(caps, CAL_LENGTH = 10):
+	# This function runs the image captures until the user inputs p. Then it uses the next
+	# CAL_LENGTH frames to generate a model for the background. 
+
+	frames = []
+	output = []
+	n = len(caps)
+
+
+	for k in range(0,n):
+		frames.append([])
+		output.append([])	
+		ret, frames[k] = caps[k].read()
+
+	print "Press P to start estimating background, press q to quit."
+	while ret:
+		for k in range(0,n):
+			ret,frames[k] = caps[k].read()
+			cv2.imshow("frame " + str(k), frames[k])
+
+		if cv2.waitKey(10) == ord('q'):
+			return False, []
+
+		if cv2.waitKey(10) == ord('p'):
+			break
+
+	for k in range(0,n):
+		output[k] = frames[k]/CAL_LENGTH
+		for m in range(1,CAL_LENGTH):
+			ret, frames[k] = caps[k].read()
+			output[k] = output[k] + frames[k]/CAL_LENGTH
+
+
+		output[k] = output[k].astype('uint8')
+	return True, output
 
 def setRight(line):
 	# Shifts the point to the right to avoid overlapping features.

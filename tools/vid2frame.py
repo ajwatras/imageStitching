@@ -4,10 +4,10 @@ import numpy as np
 import math
 import cv2
 
-# input parameters
-#vid1 = "../data/vidwriter/output1.avi"
+# input parameter
+vid1 = "../data/vidwriter/output4.avi"
 #vid1 = "../data/testVideo/WideView-BeanDrop3/output1.avi"
-vid1 = "../data/Line_Alignment/output3.avi"
+#vid1 = "../data/7_18_17/calibrationvids/output4.avi"
 #vid1 = "./output.avi"			#Video to be split
 saveDest = "../data/vid2frame/"		#Location files should be saved 2
 FrameLimit = 100000			#Limit on length of the video (for filenaming)

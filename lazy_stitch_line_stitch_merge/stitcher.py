@@ -287,6 +287,27 @@ class Stitcher:
 		print "No valid Homography \n"
 		return None
 
+	def mapSeams(self,H,main_view,side_view,width=5):
+		corners = np.mat([[0,0,1],[main_view.shape[0],0,1],[0,main_view.shape[1],1],[main_view.shape[0],main_view.shape[1],1]]).T
+		backwards_H = np.linalg.inv(H)
+
+		transformed_corners = np.dot(backwards_H,corners).astype('int')
+
+		seam_image = np.zeros(side_view.shape)
+
+		line1 = ((transformed_corners[0,0],transformed_corners[1,0]),(transformed_corners[0,1],transformed_corners[1,1]))
+		line2 = ((transformed_corners[0,0],transformed_corners[1,0]),(transformed_corners[0,2],transformed_corners[1,2]))
+		line3 = ((transformed_corners[0,1],transformed_corners[1,1]),(transformed_corners[0,3],transformed_corners[1,3]))
+		line4 = ((transformed_corners[0,2],transformed_corners[1,2]),(transformed_corners[0,3],transformed_corners[1,3]))
+
+		cv2.line(seam_image,line1[0],line1[1],(1,1,1),width)
+		cv2.line(seam_image,line2[0],line2[1],(1,1,1),width)
+		cv2.line(seam_image,line3[0],line3[1],(1,1,1),width)
+		cv2.line(seam_image,line4[0],line4[1],(1,1,1),width)
+
+
+		return seam_image[:,:,0]
+
 	def shiftImage(self,imageA,imageB,H):
         # Detect the appropriate size for the resulting image. 
 		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
@@ -490,8 +511,8 @@ class Stitcher:
                 #print seam_points
                 seam_bounds = [np.min(seam_points[0]) ,np.max(seam_points[0]),np.min(seam_points[1]),np.max(seam_points[1])]
                 
-                seam_bounds[0] = np.max([(seam_bounds[0] -SEAM_PAD),0])
-                seam_bounds[2] = np.max([seam_bounds[2] -SEAM_PAD,0])
+                seam_bounds[0] = np.max([(seam_bounds[0] - SEAM_PAD),0])
+                seam_bounds[2] = np.max([seam_bounds[2] - SEAM_PAD,0])
                 seam_bounds[1] = np.min([seam_bounds[1] +SEAM_PAD,image1.shape[0]])
                 seam_bounds[3] = np.min([seam_bounds[3] +SEAM_PAD,image1.shape[1]])
 

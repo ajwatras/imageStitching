@@ -3,13 +3,18 @@ import numpy as np
 from matplotlib import pyplot as plt
 #import stitcher
 
+matcher = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
 
 def computeF(K1,K2,R,t):
-	A = np.dot(np.dot(K1,np.transpose(R)),t)
-	C = np.mat([[0,-A[2],A[1]],[A[2],0,-A[0]],[-A[1],-A[0],0]])
-	K = np.transpose(np.inverse(K2))
 
-	return  np.dot(K,np.dot(R,np.dot(np.transpose(K1),C)))
+	Tx = np.mat([[0, -t[2], t[1]],[t[2],0,-t[0]],[-t[1],-t[0],0]])
+	E = np.dot(R,Tx)
+	F = np.dot(np.dot(np.linalg.inv(K1).T,E),np.linalg.inv(K2))
+	#A = np.dot(np.dot(K1,np.transpose(R)),t)
+	#C = np.mat([[0,-A[2],A[1]],[A[2],0,-A[0]],[-A[1],-A[0],0]])
+	#K = np.transpose(np.linalg.inv(K2))
+
+	return  F
 def calcF(image1,image2, ratio=.75):
 	#A method for calculating the fundamental matrix between two feature rich images. 
 	#This should be performed only during calibration. 
@@ -31,10 +36,10 @@ def calcF(image1,image2, ratio=.75):
 		# other (i.e. Lowe's ratio test)
 		if len(m) == 2 and m[0].distance < m[1].distance * ratio:
 			matches.append((m[0].trainIdx, m[0].queryIdx))
-			print len(featuresA)
-			print len(featuresB)
+			#print len(featuresA)
+			#print len(featuresB)
                 
-			print len(matches), "Matches found"
+			#print len(matches), "Matches found"
 	# computing a homography requires at least 4 matches, we use 10 to ensure a robust stitch.
 	if len(matches) > 20:
                         
@@ -97,6 +102,30 @@ def displayEpipolar(img1,img2,F,pts1,pts2):
 
 	return
 
+def matchFeatures(kps1,feat1,kps2,feat2):
+	rawMatches = matcher.knnMatch(featuresA, featuresB, 2)
+
+	return
+
+def testF(image1,image2,F):
+	kps1,feat1 = detectAndDescribe(image1)
+	kps2,feat2 = detectAndDescribe(image2)
+
+	_,pts1,pts2 = calcF(image1,image2)
+	err = 0
+	for k in range(0,len(pts1)):
+
+		ptsA = np.mat([[pts1[k][0]],[pts1[k][1]],[1]])
+		ptsB = np.mat([[pts2[k][0]],[pts2[k][1]],[1]])
+		#print ptsA
+		#print ptsB
+		#print F
+		tmp = np.power((np.dot(np.transpose(ptsB),np.dot(F,ptsA))),2) 
+		err = err + tmp
+
+	return len(pts1),np.power(err,.5)
+
+
 
 #cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output1.avi')
 #cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/drop3_fixed/output3.avi')
@@ -104,8 +133,11 @@ def displayEpipolar(img1,img2,F,pts1,pts2):
 #cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
 #cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
 
-cap1 = cv2.VideoCapture('../data/7_18_17/bean1/output1.avi')
-cap2 = cv2.VideoCapture('../data/7_18_17/bean1/output3.avi')
+#cap1 = cv2.VideoCapture(1)
+#cap2 = cv2.VideoCapture(3)
+
+cap1 = cv2.VideoCapture('../data/7_18_17/calibrationvids/output1.avi')
+cap2 = cv2.VideoCapture('../data/7_18_17/calibrationvids/output2.avi')
 
 #cap1 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/sample/output1.avi')
 #cap2 = cv2.VideoCapture('../lazy_stitch_line_stitch_merge/sample/output2.avi')
@@ -122,11 +154,23 @@ kps2,feat2 = detectAndDescribe(image2)
 
 F,pts1,pts2 = calcF(image1,image2)
 #file_array = np.load('calibration_7_14_17/output.npz')
-file_array = np.load('./picked_calibration/calibration.npz')
+file_array = np.load('./calibration/output.npz')
 (dst,K,R,t,F) = file_array['arr_0']
-F = F[3]
+F = F[1]
+com_F = computeF(K[0],K[1],R[1],t[1])
+file_array = np.load('./matlab_calibration.npz')
+(dst2,K2,R2,t2,F2) = file_array['arr_0']
+F2 = F2[1]
+
+#R[3][0:2,0:2] = -R[3][0:2,0:2]
+#t[3] = -t[3]
+
+com_F2 = computeF(K2[0],K2[3],R2[3],t2[3])
+#com_F3 = computeF(K2[3],K2[0],R2[3],t2[3])
+#F2 = np.transpose(F)
+#print F2.shape
 #F = np.loadtxt('fundamentalMatrices/F1.txt',delimiter=',')
-print pts1,pts2
+#print pts1,pts2
 while cap1.isOpened():
 	ret1,image1 = cap1.read()
 	ret2,image2 = cap2.read()
@@ -134,8 +178,19 @@ while cap1.isOpened():
 
 	image1 = cv2.cvtColor(image1,cv2.COLOR_BGR2GRAY)
 	image2 = cv2.cvtColor(image2,cv2.COLOR_BGR2GRAY)
+	cpim1 = image1
+	cpim2 = image2
 
-	displayEpipolar(image1,image2,F,pts1,pts2)
+	_,pts1,pts2 = calcF(image1,image2)
 
-	if cv2.waitKey(0) == ord('q'):
+	displayEpipolar(image1,image2,F2,pts1,pts2)
+	len1,error = testF(image1,image2,F)
+	len2,error2 = testF(image1,image2,com_F)
+	len3,error3 = testF(image1,image2,F2)
+	len4, error4 = testF(image1,image2,com_F2)
+	print "Error for Frame: ", len1,error,error2,error3,error4
+	#cv2.waitKey(0)
+	#displayEpipolar(image1,image2,F2,pts1,pts2)
+
+	if cv2.waitKey(10) == ord('q'):
 		exit(0)
