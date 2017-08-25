@@ -11,14 +11,14 @@ import line_align as la
 #cap_main = cap1
 #cap_side = [cap2,cap3,cap4]
 
-filepath = '../data/7_18_17/bean1/'
+filepath = '../data/pi_writer/'
+cap_main = cv2.VideoCapture(filepath+'output1.avi')
+cap_side = [cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
 
 #cap_main = cv2.VideoCapture(1)
 #cap_side = [cv2.VideoCapture(2), cv2.VideoCapture(3), cv2.VideoCapture(4)]
 
 
-cap_main = cv2.VideoCapture(filepath+'output1.avi')
-cap_side = [cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
 _, main_view_frame = cap_main.read()
 _, side_view_frame_1 = cap_side[0].read()
 _, side_view_frame_2 = cap_side[1].read()

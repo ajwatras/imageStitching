@@ -97,7 +97,8 @@ def detectAndDescribe(image):
 def drawEpilines(img1,img2,linesA,linesB,pts1,pts2):
 #A function for drawing the epipolar geometry onto a set of images. 
 
-    r,c,z = img1.shape
+    r,c = img1.shape
+    #r,c,z = img1.shape
     #img1 = cv2.cvtColor(img1,cv2.COLOR_GRAY2BGR)
     #img2 = cv2.cvtColor(img2,cv2.COLOR_GRAY2BGR)
     for r1,r2,pt1,pt2 in zip(linesA,linesB,pts1,pts2):
@@ -269,7 +270,7 @@ def modelBackground(caps, CAL_LENGTH = 10):
 		output.append([])	
 		ret, frames[k] = caps[k].read()
 
-	print "Press P to start estimating background, press q to quit."
+	print "Press P to start esimating background, press q to quit."
 	while ret:
 		for k in range(0,n):
 			ret,frames[k] = caps[k].read()
@@ -279,6 +280,12 @@ def modelBackground(caps, CAL_LENGTH = 10):
 			return False, []
 
 		if cv2.waitKey(10) == ord('p'):
+			cv2.destroyWindow("frame 0")
+			cv2.destroyWindow("frame 1")
+			cv2.destroyWindow("frame 2")
+			cv2.destroyWindow("frame 3")
+			cv2.waitKey(1)
+
 			break
 
 	for k in range(0,n):
@@ -371,6 +378,7 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 	if (points1.shape[0] == 2):
 		#Isolate point Neighborhoods
 		sub11 = image1[points1[0,1] - N_size:points1[0,1]+N_size, points1[0,0] - N_size:points1[0,0]+N_size,:]
+
 		#shift11 = np.mat([points1[0,0] - N_size, points1[0,1] - N_size])
 		sub12 = image1[points1[1,1] - N_size:points1[1,1]+N_size, points1[1,0] - N_size:points1[1,0]+N_size,:]
 		#shift12 = np.mat([points1[1,0] - N_size, points1[1,1] - N_size])
@@ -389,17 +397,17 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 
 		#Identify dominant lines in sub images
 		edges1 = cv2.Canny(sub11,edgeThresh,edgeThresh*3)
-		lines1 = cv2.HoughLines(edges1,1,np.pi/180,N_size)
+		lines1 = cv2.HoughLines(edges1,1,np.pi/180,N_size/2)
 
 
 		edges2 = cv2.Canny(sub12,edgeThresh,edgeThresh*3)
-		lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size)
+		lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size/2)
 
 		edges3 = cv2.Canny(sub21,edgeThresh,edgeThresh*3)
-		lines3 = cv2.HoughLines(edges3,1,np.pi/180,N_size)
+		lines3 = cv2.HoughLines(edges3,1,np.pi/180,N_size/2)
 
 		edges4 = cv2.Canny(sub22,edgeThresh,edgeThresh*3)
-		lines4 = cv2.HoughLines(edges4,1,np.pi/180,N_size)
+		lines4 = cv2.HoughLines(edges4,1,np.pi/180,N_size/2)
 
 		cv2.imshow("sub11",sub11)
 		cv2.imshow("sub12",sub12)
@@ -461,8 +469,8 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		ptsA[3] = (points2[1,0],points2[1,1])
 
 		if DRAW_LINES:
-			tmp_image1 = np.copy(image1)
-			tmp_image2 = np.copy(image2)
+			tmp_image1 = np.mat([np.copy(image1),np.copy(image1),np.copy(image1)])
+			tmp_image2 = np.mat([np.copy(image2),np.copy(image2),np.copy(image2)])
 
 			drawLines(lines1[0],lines1[1],tmp_image1)
 			drawLines(lines2[0],lines2[1],tmp_image1,(0,255,0))
@@ -499,10 +507,26 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 
 		return LineT
 	if (points1.shape[0] == 1):
+		#Error checking code. If the point is too close to the edge, this bugs out and causes the program to crash. We shift the window to prevent this from happening. 
+		# This may be a source of innefficiency which may need to be changed later. 
+		if points1[0,1] <= N_size:
+			points1[0,1] = N_size
+		if points1[0,0] <= N_size:
+			points1[0,0] = N_size
+		if points2[0,1] <= N_size:
+			points2[0,1] = N_size
+		if points2[0,0] <= N_size:
+			points2[0,0] = N_size
+		#End Error checking segment. 
+
 		#Isolate point Neighborhoods
-		sub1 = image1[points1[0,1] - N_size:points1[0,1]+N_size, points1[0,0] - N_size:points1[0,0]+N_size,:]
+		#sub1 = image1[points1[0,1] - N_size:points1[0,1]+N_size, points1[0,0] - N_size:points1[0,0]+N_size,:]
+		sub1 = image1[points1[0,1] - N_size:points1[0,1]+N_size, points1[0,0] - N_size:points1[0,0]+N_size]
+
 		#shift1 = np.mat([points1[0,0] - N_size, points1[0,1] - N_size])
-		sub2 = image2[points2[0,1] - N_size:points2[0,1]+N_size, points2[0,0] - N_size:points2[0,0]+N_size,:]
+		#sub2 = image2[points2[0,1] - N_size:points2[0,1]+N_size, points2[0,0] - N_size:points2[0,0]+N_size,:]
+		sub2 = image2[points2[0,1] - N_size:points2[0,1]+N_size, points2[0,0] - N_size:points2[0,0]+N_size]
+
 		#shift2 = np.mat([points2[0,0] - N_size, points2[0,1] - N_size])
 
 		#Identify the coordinate shift for sub neighborhoods. 
@@ -512,11 +536,11 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 
 		#Identify dominant lines in sub images
 		edges1 = cv2.Canny(sub1,edgeThresh,edgeThresh*3)
-		lines1 = cv2.HoughLines(edges1,1,np.pi/180,N_size)
+		lines1 = cv2.HoughLines(edges1,1,np.pi/180,N_size/2)
 
 
 		edges2 = cv2.Canny(sub2,edgeThresh,edgeThresh*3)
-		lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size)
+		lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size/2)
 
 
 		cv2.imshow("sub1",sub1)
@@ -525,8 +549,8 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 
 				# If no lines are found, print error and return identity
 		if (lines1 is None) or (lines2 is None):
-			print "Error: Lines not found"
-			return np.eye(3)
+			print "Error: Lines not found", lines1, lines2
+			return np.zeros((3,3))
 		#Select Lines (Each subimage should only give one line. This is just ensuring they are the right shape to avoid errors.)
 		lines1 = lines1[0]
 		lines2 = lines2[0]
@@ -592,4 +616,4 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		return LineT
 	else:
 		print "ERROR: Unexpected number of points."
-		return np.eye(3)
+		return np.zeros((3,3))

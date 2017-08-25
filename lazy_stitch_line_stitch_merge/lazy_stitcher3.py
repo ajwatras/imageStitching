@@ -88,8 +88,8 @@ class lazy_stitcher:
         self.crossing_edges_side_views_list = [];
         kernel_gradient = np.mat([[0, 1, 0],[1, -4, 1],[0, 1, 0]])
         #Added by Alex
-        crossing_edge = np.ones((self.main_view_image_shape[0],self.main_view_image_shape[1]))
-        crossing_edge[1:crossing_edge.shape[0]-1,1:crossing_edge.shape[1]-1] = np.zeros((self.main_view_image_shape[0] - 2, self.main_view_image_shape[1] - 2))
+        #crossing_edge = np.ones((self.main_view_image_shape[0],self.main_view_image_shape[1]))
+        #crossing_edge[1:crossing_edge.shape[0]-1,1:crossing_edge.shape[1]-1] = np.zeros((self.main_view_image_shape[0] - 2, self.main_view_image_shape[1] - 2))
         for i in range(len(side_view_frames)):
             #crossing_edge = (self.seam == (i+1)).astype('uint8')
             #crossing_edge = cv2.filter2D(crossing_edge, -1, kernel_gradient)
@@ -99,8 +99,8 @@ class lazy_stitcher:
             #for j in range(pts.shape[1]):
             #    if pts[0,j] + 24 > self.main_view_image_shape[0] or pts[0,j] - 24 < 0 or pts[1,j] + 24 > self.main_view_image_shape[1] or pts[1,j] - 24 < 0:
             #        crossing_edge[pts[0,j],pts[1,j]] = 0
-
-            self.crossing_edges_main_view_list.append(crossing_edge)
+            temp_seam_main_view = sti.mapMainView(self.homography_list[i],main_view_frame,side_view_frames[i])
+            self.crossing_edges_main_view_list.append(temp_seam_main_view)
 
             #temp_seam_side_view = np.zeros(transformed_image_shapes_list[i][0:2])
             #temp_seam_side_view[shift_list[i][1]:shift_list[i][1]+self.main_view_image_shape[0], shift_list[i][0]:shift_list[i][0]+self.main_view_image_shape[1]] = crossing_edge #(temp_seam == (i+1)).astype('uint8')
@@ -215,7 +215,7 @@ class lazy_stitcher:
         if pts.shape[1] >= 2:
             print "Object detected in main view"
             clusters_main_view, cluster_err = kmean(pts, 2)
-            #if cluster_err <= 1000000000:
+            #if cluster_err <= 10:
             if True:    
                 #side_view_edge = cv2.Canny(side_view_frame, 50, 150)
                 #side_view_object_mask = (cv2.morphologyEx(side_view_edge, cv2.MORPH_CLOSE, kernel_opening_closing)/255).astype('uint8')
@@ -244,15 +244,21 @@ class lazy_stitcher:
                         dist_main = np.sum(np.square(clusters_main_view[:, 0] - clusters_main_view[:, 1]))
                         dist_side = np.sum(np.square(clusters_side_view[:, 0] - clusters_side_view[:, 1]))
                         print dist_main, dist_side
-                        if dist_main >= 100 and dist_main <= 1000 and dist_side >= 100 and dist_side <= 1000:
+                        if True:
+                        #if dist_main >= 100 and dist_main <= 5000 and dist_side >= 100 and dist_side <= 5000:
+
                             clusters_side_view = find_pairs(clusters_main_view, clusters_side_view, self.homography_list[idx])
+
                             ##############################
                             pts1 = np.mat([[clusters_main_view[1,0], clusters_main_view[0,0]], [clusters_main_view[1,1], clusters_main_view[0,1]]])
                             pts2 = np.mat([[clusters_side_view[1,0], clusters_side_view[0,0]], [clusters_side_view[1,1], clusters_side_view[0,1]]])
                             pts1 = np.mat([pts1[0,0], pts1[0,1]])
                             pts2 = np.mat([pts2[0,0], pts2[0,1]])
 
-                            tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
+
+                            #tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
+                            tempH = la.lineAlign(pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx])
+
                             corners = np.mat([[0, side_view_frame.shape[1], 0, side_view_frame.shape[1]], [0, 0, side_view_frame.shape[0], side_view_frame.shape[0]], [1, 1, 1, 1]])
                             transformed_corners = np.dot(tempH, corners)
                             bound = np.zeros((2, 4), np.float)
@@ -265,8 +271,8 @@ class lazy_stitcher:
                             bound[0,3] = transformed_corners[0,3] / transformed_corners[2,3]
                             bound[1,3] = transformed_corners[1,3] / transformed_corners[2,3]
 
-                            if (np.max(bound[0,:]) - np.min(bound[0,:])) <= 2500 and (np.max(bound[1,:]) - np.min(bound[1,:])) < 2500:
-                                #############################################################################
+                            if (np.max(bound[0,:]) - np.min(bound[0,:])) <= 2500 and (np.max(bound[1,:]) - np.min(bound[1,:])) < 2500 and (tempH is not np.zeros((3,3))):
+                               #############################################################################
                                 result1_temp,result2_temp,_,mask2_temp, shift_temp, _ = sti.applyHomography(main_view_frame, side_view_frame, tempH)
                                 mask_temp_temp = (result1_temp == 0).astype('int')
                                 result2_temp_shape = result2_temp.shape
@@ -281,7 +287,8 @@ class lazy_stitcher:
 
                                 pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:] = 0+result2_temp
                                 result2_temp = 0+pano[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
-                                #cv2.imshow('pano_2', result2_temp)
+                                cv2.imshow('pano_2', result2_temp)
+                                cv2.waitKey(0)
                                 _,mask,_,_, _, _ = sti.applyHomography(main_view_frame, np.stack((side_view_object_mask,side_view_object_mask,side_view_object_mask), axis=2), tempH)
 
                                 pano_mask = np.zeros(OUTPUT_SIZE, np.uint8)
@@ -350,5 +357,5 @@ if __name__ == "__main__":
         pano = cv2.resize(pano,None,fx=0.5, fy=0.5, interpolation = cv2.INTER_CUBIC)
         cv2.imshow('pano',pano)
 
-        if cv2.waitKey(1) == ord('q'):
+        if cv2.waitKey(0) == ord('q'):
             exit(0)

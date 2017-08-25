@@ -287,8 +287,32 @@ class Stitcher:
 		print "No valid Homography \n"
 		return None
 
+	def mapMainView(selt, H, main_view,side_view,it = 20):
+		kernel = np.ones([3,3])
+		corners = np.mat([[0,0,1],[side_view.shape[1],0,1],[side_view.shape[1],side_view.shape[0],1],[0,side_view.shape[0],1]]).T
+		transformed_corners = np.dot(H,corners).astype('int')
+		polygon_corners = np.array([[[transformed_corners[0,0],transformed_corners[1,0]],[transformed_corners[0,1],transformed_corners[1,1]],[transformed_corners[0,2],transformed_corners[1,2]],[transformed_corners[0,3],transformed_corners[1,3]]]],dtype=np.int32)
+
+		boundary_image = np.zeros([main_view.shape[0],main_view.shape[1]])
+
+		cv2.fillPoly(boundary_image,polygon_corners,255)
+
+		#cv2.imshow("boundary_image",boundary_image)
+
+		main_view_edge = np.ones([main_view.shape[0],main_view.shape[1]])
+		main_view_edge[1:main_view_edge.shape[0]-1,1:main_view_edge.shape[1]-1] = np.zeros((main_view.shape[0] - 2, main_view.shape[1] - 2))
+
+		main_view_seam = np.logical_and(boundary_image,main_view_edge).astype('uint8')
+		main_view_seam = cv2.dilate(main_view_seam,kernel, iterations = it)
+
+		#cv2.imshow("main view seam", 255*main_view_seam)
+
+		main_view_seam = np.logical_and(main_view_seam,main_view_edge).astype('uint8')
+		#print main_view_seam
+		return main_view_seam
+
 	def mapSeams(self,H,main_view,side_view,width=5):
-		corners = np.mat([[0,0,1],[main_view.shape[0],0,1],[0,main_view.shape[1],1],[main_view.shape[0],main_view.shape[1],1]]).T
+		corners = np.mat([[0,0,1],[main_view.shape[1],0,1],[0,main_view.shape[0],1],[main_view.shape[1],main_view.shape[0],1]]).T
 		backwards_H = np.linalg.inv(H)
 
 		transformed_corners = np.dot(backwards_H,corners).astype('int')

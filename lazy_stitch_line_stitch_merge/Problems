@@ -2,6 +2,19 @@
 # Object Alignment
 #########################################################################################################################################
 
+Problem: We are occasionally matching the wrong edges of the object together.
+Solution: 
+
+Problems: New method for detecting if an object crosses the main view edge does introduced unexpected problem if the object crosses off of the image on the opposite side.
+Solution: this method may be difficult to solve. We need some method of determining whether the object passes off of the portion of the image corresponding to the direction of the side view. However, the object location in the main view can
+diverge from that direction by a significant margin. I'll have to think on it. 
+
+(COMPLETED) Problem: Ran into an error when the object was detected in the corner of the image. This meant that when the neighborhood was detectec, it tried to grab somewhere outside of the image coordinate system and crashed. 
+Solution: Added in error checking code. 
+
+Problem: By August we need to fix: limitations on when the object is picked up and aligned. Utilize fifth camera to remove parallel degeneracy. Write journal paper by end of August. 
+We need to have the line alignment working most of the time on objects when the object is in the correct field of view with sufficient overlap between images. If the algorithm fails 
+in corner cases, that is fine but it needs to work well in the ideal cases.  
 
 Problem: We need to develop a library of test videos and determine a metric for the quality of our algorithm. 
 Solution: 
