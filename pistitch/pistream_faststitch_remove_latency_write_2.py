@@ -15,12 +15,12 @@ VIDEOWRITER_OUTPUT_PATH = '../data/stitch_writer_2/'
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
-out1 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output1.avi',fourcc, 20.0, (640,480))
-out2 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output2.avi',fourcc, 20.0, (640,480))
-out3 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output3.avi',fourcc, 20.0, (640,480))
-out4 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output4.avi',fourcc, 20.0, (640,480))
-out5 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'output5.avi',fourcc, 20.0, (640,480))
-out6 = cv2.VideoWriter(VIDEOWRITER_OUTPUT_PATH+'stitched.avi',fourcc, 20.0, (1920,1500))
+out1 = cv2.VideoWriter('output1.avi',fourcc, 20.0, (640,480))
+out2 = cv2.VideoWriter('output2.avi',fourcc, 20.0, (640,480))
+out3 = cv2.VideoWriter('output3.avi',fourcc, 20.0, (640,480))
+out4 = cv2.VideoWriter('output4.avi',fourcc, 20.0, (640,480))
+out5 = cv2.VideoWriter('output5.avi',fourcc, 20.0, (640,480))
+out6 = cv2.VideoWriter('stitched.avi',fourcc, 20.0, (1920,1500))
 
 CALIBRATION = True
 
