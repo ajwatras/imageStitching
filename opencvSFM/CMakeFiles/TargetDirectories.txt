@@ -1,0 +1,3 @@
+/home/jianwei/Documents/opencvSFM/CMakeFiles/edit_cache.dir
+/home/jianwei/Documents/opencvSFM/CMakeFiles/rebuild_cache.dir
+/home/jianwei/Documents/opencvSFM/CMakeFiles/opencvSFM.dir

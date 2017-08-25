@@ -1,0 +1,4 @@
+/home/jianwei/Documents/opencvSFM/images/resized_IMG_2889.jpg
+/home/jianwei/Documents/opencvSFM/images/resized_IMG_2890.jpg
+/home/jianwei/Documents/opencvSFM/images/resized_IMG_2891.jpg
+/home/jianwei/Documents/opencvSFM/images/resized_IMG_2892.jpg
