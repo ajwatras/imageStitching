@@ -14,10 +14,10 @@ import numpy as np
 #imageB = cv2.imread("../data/stitching_img2/image003.png") # top right
 #imageC = cv2.imread("../data/stitching_img2/image009.png") # bottom left
 #imageD = cv2.imread("../data/stitching_img2/image005.png") # bottom right
-imageA = cv2.imread("../data/MeasTape/S1.jpg") # top right
-imageB = cv2.imread("../data/MeasTape/S2.jpg") # top Left
-imageC = cv2.imread("../data/MeasTape/S3.jpg") # bottom right
-imageD = cv2.imread("../data/MeasTape/S4.jpg") # bottom left
+imageA = cv2.imread("../data/Bookshelf/S1.jpg") # top right
+imageB = cv2.imread("../data/Bookshelf/S2.jpg") # top Left
+imageC = cv2.imread("../data/Bookshelf/S3.jpg") # bottom right
+imageD = cv2.imread("../data/Bookshelf/S4.jpg") # bottom left
 imageA = imutils.resize(imageA, width=400)
 imageB = imutils.resize(imageB, width=400)
 imageC = imutils.resize(imageC, width=400)
@@ -29,15 +29,15 @@ imageD = imutils.resize(imageD, width=400)
 stitch = stitcher.Stitcher()
 t = time.time()
 print "\nAB"
-(result1, vis1, H1) = stitch.stitch([imageB, imageA], showMatches=True)
+(result1, vis,H,mask1,mask2,coord_shift) = stitch.stitch([imageB, imageA], showMatches=True)
 print " \nCD"
-(result2, vis2,H2) = stitch.stitch([imageD, imageC], showMatches=True)
+(result2, vis,H,mask1,mask2,coord_shift) = stitch.stitch([imageD, imageC], showMatches=True)
 print " \nAB,C"
-(result3, vis3,H3) = stitch.stitch([imageC,result1], showMatches=True)
+(result3, vis,H,mask1,mask2,coord_shift) = stitch.stitch([imageC,result1], showMatches=True)
 print " \nABC,D"
-(result4,vis4,H4) = stitch.stitch([imageD, result3], showMatches =True)
+(result4, vis,H,mask1,mask2,coord_shift) = stitch.stitch([imageD, result3], showMatches =True)
 print " \nAB,CD"
-(result5,vis5,H4) = stitch.stitch([result1, result2], showMatches =True) 
+(result5, vis,H,mask1,mask2,coord_shift) = stitch.stitch([result1, result2], showMatches =True) 
 print" \n"
 elapsed = time.time() - t
 print "Total time elapsed: %f Seconds" %elapsed

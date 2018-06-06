@@ -409,11 +409,11 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		edges4 = cv2.Canny(sub22,edgeThresh,edgeThresh*3)
 		lines4 = cv2.HoughLines(edges4,1,np.pi/180,N_size/2)
 
-		cv2.imshow("sub11",sub11)
-		cv2.imshow("sub12",sub12)
-		cv2.imshow("sub21",sub21)
-		cv2.imshow("sub22",sub22)
-		cv2.waitKey(0)
+		#cv2.imshow("sub11",sub11)
+		#cv2.imshow("sub12",sub12)
+		#cv2.imshow("sub21",sub21)
+		#cv2.imshow("sub22",sub22)
+		#cv2.waitKey(0)
 		# If no lines are found, print error and return identity
 		if (lines1 is None) or (lines2 is None) or (lines3 is None) or (lines4 is None):
 			print "Error: Lines not found"
@@ -495,11 +495,11 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 			linesB = linesB.reshape(-1,3)
 			img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
 
-			cv2.imshow("image1 (2 edge)",img5)
+			#cv2.imshow("image1 (2 edge)",img5)
 			#cv2.imshow("IDK1",img6)
-			cv2.imshow("image2 (2 edge)",img6)
+			#cv2.imshow("image2 (2 edge)",img6)
 			#cv2.imshow("IDK2",img4)
-			cv2.waitKey(0)
+			#cv2.waitKey(0)
 
 		#print "PTS: ", ptsA,ptsB
 
@@ -543,9 +543,9 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 		lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size/2)
 
 
-		cv2.imshow("sub1",sub1)
-		cv2.imshow("sub2",sub2)
-		cv2.waitKey(0)
+		#cv2.imshow("sub1",sub1)
+		#cv2.imshow("sub2",sub2)
+		#cv2.waitKey(0)
 
 				# If no lines are found, print error and return identity
 		if (lines1 is None) or (lines2 is None):
@@ -604,8 +604,8 @@ def lineAlign(points1, image1,points2, image2, F, N_size = 20, edgeThresh = 20,D
 			linesB = linesB.reshape(-1,3)
 			img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
 
-			cv2.imshow("image1 (1 edge)",img5)
-			cv2.imshow("image2 (1 edge)",img6)
+			#cv2.imshow("image1 (1 edge)",img5)
+			#qcv2.imshow("image2 (1 edge)",img6)
 
 
 

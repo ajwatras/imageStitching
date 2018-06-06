@@ -15,6 +15,8 @@ filepath = '../data/pi_writer/'
 cap_main = cv2.VideoCapture(filepath+'output1.avi')
 cap_side = [cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
 
+
+
 #cap_main = cv2.VideoCapture(1)
 #cap_side = [cv2.VideoCapture(2), cv2.VideoCapture(3), cv2.VideoCapture(4)]
 
@@ -36,7 +38,8 @@ ret, models = la.modelBackground(caps,1)
 #cv2.imshow("model3", models[2])
 #cv2.imshow("model4", models[3])
 #cv2.waitKey(0)
-
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('./pano.avi',fourcc, 20.0, (467,454))
 
 while True:
     _, main_view_frame = cap_main.read()
@@ -48,6 +51,9 @@ while True:
     pano, main_view_frame, side_view_frames = a.stitch(main_view_frame, [side_view_frame_1, side_view_frame_2, side_view_frame_3],models)
     pano = cv2.resize(pano,None,fx=0.5, fy=0.5, interpolation = cv2.INTER_CUBIC)
     cv2.imshow('pano',pano)
+    print "write size"
+    print pano.shape
+    out.write(pano)
 
     if cv2.waitKey(1) == ord('q'):
         exit(0)

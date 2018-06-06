@@ -199,12 +199,16 @@ class lazy_stitcher:
         side_view_edge = cv2.filter2D(side_view_object_mask,-1,kernel_gradient)
         side_view_edge = (side_view_edge > 0).astype('uint8')
 
-        #cv2.imshow("Side View Edge"+str(idx),self.crossing_edges_side_views_list[idx])
+        cv2.imshow("Side View Object"+str(idx),side_view_object_mask*255)
         cv2.imshow("side View mask"+str(idx), np.logical_or(self.crossing_edges_side_views_list[idx], side_view_object_mask).astype('uint8')*255 ) 
+        cv2.imwrite("side_view_object"+str(idx)+".jpg",side_view_object_mask*255)
+        cv2.imwrite("side_view_mask"+str(idx)+".jpg",np.logical_or(self.crossing_edges_side_views_list[idx], side_view_object_mask).astype('uint8')*255 )
+        
+
 
 
         #print  "Main View: ", np.nonzero(main_view_edge)
-        cv2.imshow("Main View edge", np.logical_or(main_view_object_mask,self.crossing_edges_main_view_list[idx]).astype('uint8')*255)
+        #cv2.imshow("Main View edge", np.logical_or(main_view_object_mask,self.crossing_edges_main_view_list[idx]).astype('uint8')*255)
         #cv2.imshow("Main View Frame",main_view_frame)
         #cv2.waitKey(10)
 
@@ -287,8 +291,8 @@ class lazy_stitcher:
 
                                 pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:] = 0+result2_temp
                                 result2_temp = 0+pano[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
-                                cv2.imshow('pano_2', result2_temp)
-                                cv2.waitKey(0)
+                                #cv2.imshow('pano_2', result2_temp)
+                                #cv2.waitKey(0)
                                 _,mask,_,_, _, _ = sti.applyHomography(main_view_frame, np.stack((side_view_object_mask,side_view_object_mask,side_view_object_mask), axis=2), tempH)
 
                                 pano_mask = np.zeros(OUTPUT_SIZE, np.uint8)
