@@ -10,8 +10,11 @@ import os
 
 
 frames_q = [Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0)]
+#frames_q = [Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0)]
 
 record_frame_q = [Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0)]
+#record_frame_q = [Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0)]
+
 
 class video_record(threading.Thread):
     def __init__(self, frame1, frame2, frame3, frame4, frame5, frame_pano):
@@ -217,17 +220,17 @@ class Main(threading.Thread):
                     rotate_angle = rotate_angle + 10.
 
 
-addr1 = 'http://10.42.0.105:8050/?action=stream'
-addr2 = 'http://10.42.0.101:8010/?action=stream'
-addr3 = 'http://10.42.0.104:8040/?action=stream'
-addr4 = 'http://10.42.0.103:8030/?action=stream'
-addr5 = 'http://10.42.0.102:8020/?action=stream'
+#addr1 = 'http://10.42.0.105:8050/?action=stream'
+#addr2 = 'http://10.42.0.101:8010/?action=stream'
+#addr3 = 'http://10.42.0.104:8040/?action=stream'
+#addr4 = 'http://10.42.0.103:8030/?action=stream'
+#addr5 = 'http://10.42.0.102:8020/?action=stream'
 
-#addr1 = 'Sample/m.avi'
-#addr2 = 'Sample/s1.avi'
-#addr3 = 'Sample/s2.avi'
-#addr4 = 'Sample/s3.avi'
-#addr5 = 'Sample/s4.avi'
+addr1 = 'Sample/m.avi'
+addr2 = 'Sample/s1.avi'
+addr3 = 'Sample/s2.avi'
+addr4 = 'Sample/s3.avi'
+addr5 = 'Sample/s3.avi'
 
 grabber0 = image_grabber(addr1, 0)
 grabber1 = image_grabber(addr2, 1)

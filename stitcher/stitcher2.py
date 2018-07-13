@@ -277,6 +277,8 @@ class Stitcher:
 		return None
 
 	def drawMatches(self, imageA, imageB, kpsA, kpsB, matches, status):
+		# drawMatches attempts to visualize feature matches on the images that they were drawn from. 
+		# It is mainly used for debugging purposes.
 		# initialize the output visualization image
 		(hA, wA) = imageA.shape[:2]
 		(hB, wB) = imageB.shape[:2]
@@ -296,7 +298,11 @@ class Stitcher:
 
 		# return the visualization
 		return vis
-	def changeView(unknown,R,t, in_image):
+
+	def changeView(self,R,t, in_image):
+		# ChangeView is a function that serves to display the image as seen from a new virtual camera. This camera will be related to the old 
+		# Camera by the rotation and translation matrices R and t.
+
 		ti = time.time()
 		im_lim = in_image.shape
 		# We assume that R is a rotation matrix with each row corresponding to the direction of that axis.
@@ -325,6 +331,8 @@ class Stitcher:
 		print " \nWarping Viewpoint: %f Seconds \n " % elapsed
 		return output
 	def applyHomography(self,imageB,imageA,H):
+		#Applies the projective transformation H to image A and then blends it with image B. 
+
 		# Detect The appropriate size for the resulting image.
 		corners = np.array([[0,0,1],[0,imageA.shape[0],1],[imageA.shape[1],0,1],
 			[imageA.shape[1],imageA.shape[0],1]]).T
@@ -359,11 +367,13 @@ class Stitcher:
 		result1 = np.pad(imageB2,((0,y_bound+y_shift - imageB2.shape[0]),(0,x_bound+x_shift - imageB2.shape[1]),(0,0)),'constant', constant_values=0)
 
 		mask1 = (result1 > 0).astype('int')
-		mask2 = (result2 > 0).astype('int')
+		mask2 = (result2 > 0).astype('int')			# Memory leak in windows terminates here.
 
 		return result1,result2,mask1,mask2, [x_shift, y_shift], trans_matrix
 
 	def locateSeam(self, maskA, maskB):
+		# locateSeam detects the location of the seam between maskA and MAskB during blending.
+
 		out_mask = np.zeros(maskA.shape).astype('uint8')
 		contour_copy = np.zeros(maskA.shape).astype('uint8')
 		contour_copy[:] = maskA[:].astype('uint8') * 255
@@ -374,6 +384,8 @@ class Stitcher:
 		return out_mask
 
         def calcMinDistance(self, pointsA,maskB):
+        	#
+        	
         # Calculates the distance from point a to the closest nonzero point on maskB.
                 output = np.zeros(len(pointsA))
                 pointsB = np.nonzero(maskB)
