@@ -8,10 +8,11 @@ import Queue
 import time
 import os
 
-
+# Initialize input video streams
 frames_q = [Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0)]
 #frames_q = [Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0)]
 
+# Initialize output video streams 
 record_frame_q = [Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0)]
 #record_frame_q = [Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0)]
 
@@ -27,6 +28,8 @@ class video_record(threading.Thread):
         self.shape_pano = (frame_pano.shape[1], frame_pano.shape[0])
         self.is_end = False
 
+
+     # Uncomment to record video.
 #    def run(self):
 #        global record_frame_q
 
@@ -60,6 +63,8 @@ class video_record(threading.Thread):
 
 
 class image_grabber(threading.Thread):
+    # Object for reading incoming frames from a video stream. 
+
     def __init__(self, cap_address, idx):
         threading.Thread.__init__(self)
         self.cap = cv2.VideoCapture(cap_address)
@@ -88,7 +93,10 @@ class Main(threading.Thread):
         threading.Thread.__init__(self)
 
     def calibrate(self, frames_queue):
+        # Calibrate image stitcher and compute resulting Homofraphies and seam lines.
         flag = [0,0,0,0,0]
+
+        # Gather initial frames from all cameras. 
         while (flag[0] + flag[1] + flag[2] + flag[3] + flag[4] < 5):
             print "waiting"
             if (not frames_queue[0].empty()):
@@ -120,6 +128,7 @@ class Main(threading.Thread):
             if (flag[0] + flag[1] + flag[2] + flag[3] + flag[4] < 5):
                 time.sleep(0.02)
 
+        # Preform Calibration
         time_begin = time.time()
         stitcher = lazy_stitcher.lazy_stitcher(self.main_view_frame, [self.side_view_frame_1, self.side_view_frame_2, self.side_view_frame_3, self.side_view_frame_4])
         time_end = time.time()
@@ -127,16 +136,18 @@ class Main(threading.Thread):
         return stitcher
 
     def run(self):
+        # Stream video mosaic using calibration parameters.
         global frames_q
 
-        stitcher = self.calibrate(frames_q)
+        stitcher = self.calibrate(frames_q)                                                                                                                                 
         record_thread = video_record(self.main_view_frame, self.side_view_frame_1, self.side_view_frame_2, self.side_view_frame_3, self.side_view_frame_4, stitcher.final_pano)
         record_thread.start()
 
-        rotate_angle = 0.
-        pre_translation = np.mat([[1,0,-stitcher.final_pano.shape[1]/2], [0,1,-stitcher.final_pano.shape[0]/2], [0,0,1]], np.float)
-        post_translation = np.mat([[1,0,stitcher.final_pano.shape[1]/2], [0,1,stitcher.final_pano.shape[0]/2], [0,0,1]], np.float)
+        rotate_angle = 0.                                                                                                              # Used for manually rotating view 
+        pre_translation = np.mat([[1,0,-stitcher.final_pano.shape[1]/2], [0,1,-stitcher.final_pano.shape[0]/2], [0,0,1]], np.float)    # 
+        post_translation = np.mat([[1,0,stitcher.final_pano.shape[1]/2], [0,1,stitcher.final_pano.shape[0]/2], [0,0,1]], np.float)     #
 
+        # Main streaming loop
         while True:
 
             time_begin = time.time()
@@ -183,36 +194,43 @@ class Main(threading.Thread):
             if (not (rotate_angle == 0)):
                 pano = cv2.warpPerspective(pano, np.dot(post_translation, np.dot(rotation_matrix, pre_translation)), (pano.shape[1], pano.shape[0]))
 
-            cv2.imshow('pano', pano)
-            record_frame_q[0].put(self.main_view_frame)
-            record_frame_q[1].put(self.side_view_frame_1)
-            record_frame_q[2].put(self.side_view_frame_2)
-            record_frame_q[3].put(self.side_view_frame_3)
-            record_frame_q[4].put(self.side_view_frame_4)
-            record_frame_q[5].put(pano)
+            cv2.imshow('pano', pano)                                                # Display panorama
+            record_frame_q[0].put(self.main_view_frame)                             # Record Camera 1 frame
+            record_frame_q[1].put(self.side_view_frame_1)                           # Record Camera 2 frame
+            record_frame_q[2].put(self.side_view_frame_2)                           # Record Camera 3 frame
+            record_frame_q[3].put(self.side_view_frame_3)                           # Record Camera 4 frame
+            record_frame_q[4].put(self.side_view_frame_4)                           # Record Camera 5 frame
+            record_frame_q[5].put(pano)                                             # Record Panorama frame
 
-            time_end = time.time()
-            print(1/(time_end - time_begin))
+            time_end = time.time()                                                  # Note time to display frame
+            print(1/(time_end - time_begin))                                        # Display stitching time
 
             rep = cv2.waitKey(1)
 
 
+            # Check for termination command
             if rep == ord('q'):
                 record_thread.is_end = True
                 record_thread.join()
                 os._exit(1)
+
+            # Check for recalibration command
             if rep == ord('r'):
                 stitcher = self.calibrate(frames_q)
 
+            # Check for Main view change command
             if rep == ord('0') or rep == ord('1') or rep == ord('2') or rep == ord('3') or rep == ord('4'):
                 print int(rep) - 48
                 stitcher.top_view = int(rep) - 48
 
+            # Check for CW rotation command
             if rep == ord(','):
                 if rotate_angle == 0:
                     rotate_angle = 350.
                 else:
                     rotate_angle = rotate_angle - 10.
+
+            # Check for CCW rotation command
             if rep == ord('.'):
                 if rotate_angle == 350:
                     rotate_angle = 0.
@@ -220,12 +238,15 @@ class Main(threading.Thread):
                     rotate_angle = rotate_angle + 10.
 
 
+
+# Location of incoming video stream
 #addr1 = 'http://10.42.0.105:8050/?action=stream'
 #addr2 = 'http://10.42.0.101:8010/?action=stream'
 #addr3 = 'http://10.42.0.104:8040/?action=stream'
 #addr4 = 'http://10.42.0.103:8030/?action=stream'
 #addr5 = 'http://10.42.0.102:8020/?action=stream'
 
+# Uncomment if streaming from video file
 addr1 = 'Sample/m.avi'
 addr2 = 'Sample/s1.avi'
 addr3 = 'Sample/s2.avi'
@@ -247,12 +268,12 @@ grabber3.start()
 grabber4.start()
 
 main.start()
-main.join()
-
-grabber0.join()
-grabber1.join()
-grabber2.join()
-grabber3.join()
-grabber4.join()
+main.join()                                 # Wait until main terminates
+    
+grabber0.join()                             # Wait until grabber0 terminates
+grabber1.join()                             # Wait until grabber1 terminates
+grabber2.join()                             # Wait until grabber2 terminates
+grabber3.join()                             # Wait until grabber3 terminates
+grabber4.join()                             # Wait until grabber4 terminates
 
 ####
