@@ -11,13 +11,18 @@ import line_align_2 as la
 from ulti import kmean
 from ulti import find_pairs
 
+
+# The warping queue serves to hold the images used for image transformations. The first column holds the main view, the second column holds the side frame, and the third column holds the transformed side view. 
 warpping_queue = [[Queue.Queue(1), Queue.Queue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)]]
 
 class lazy_stitcher:
+    # The lazy stitcher contains multithreading and selective updating methods which can significantly speed up image stitching. 
     def __init__(self, main_view_frame, side_view_frames):
-        sti = stitcher2.Stitcher();
+        # Object constructor - Builds a lazy stitcher using a main_view_frame and a side_view_frame
 
-        self.top_view = 0
+        sti = stitcher2.Stitcher();                                     # Used for image stitching
+
+        self.top_view = 0                                               # Sets camera 0 as the top image
 
         main_view_cal_image = main_view_frame + 1
         self.main_view_image_shape = main_view_cal_image.shape
@@ -30,17 +35,19 @@ class lazy_stitcher:
         for i in range(len(side_view_frames)):
             self.side_view_image_shape.append(side_view_cal_images[i].shape)
 
-        ##############################################
-        self.homography_list = [];
-        self.coord_shift_list = [];
+        ############################################## CALIBRATION #############################################################################################
+        self.homography_list = [];                          # Store H matrices
+        self.coord_shift_list = [];                         # Store coordinate shifts
         self.fundamental_matrices_list = [];
+
         t = time.time()
+        # Calibrate cameras for stitching. 
         calibration_thread_list = [];
         for i in range(len(side_view_frames)):
              thread = calibration_thread(main_view_cal_image, side_view_cal_images[i])
              thread.start()
              calibration_thread_list.append(thread)
-
+        # Once Calibration has finished. Store Homographies, coordinate shifts, and Fundamental Matrices (used for line alignment)
         for i in range(len(side_view_frames)):
             calibration_thread_list[i].join();
             self.homography_list.append(calibration_thread_list[i].H)
@@ -48,13 +55,15 @@ class lazy_stitcher:
             self.fundamental_matrices_list.append(calibration_thread_list[i].fundamental_matrix)
 
         print('compute H and F: ' + str(time.time() - t))
-        ##############################################
+
+        ############################################## SEAM DETECTION ###########################################################################################
         seams_main_view_list = [];
         transformed_image_shapes_list = [];
         trans_matrices_list = [];
         shift_list = [];
         pano = np.zeros((10000, 10000, 3), np.uint8)
         out_pos = np.array([5000-self.main_view_image_shape[0]/2,5000-self.main_view_image_shape[1]/2]).astype('int')
+
         for i in range(len(side_view_frames)):
             (transformed_main_view, transformed_side_view, mask_main_view, mask_side_view, shift, trans_matrix) = sti.applyHomography(np.ones(self.main_view_image_shape, np.uint8), (i + 2) * np.ones(self.side_view_image_shape[i], np.uint8), self.homography_list[i])
             seam = sti.locateSeam(mask_main_view[:,:,0], mask_side_view[:,:,0])
@@ -70,7 +79,7 @@ class lazy_stitcher:
 
         pano[out_pos[0]:out_pos[0]+self.main_view_image_shape[0], out_pos[1]:out_pos[1]+self.main_view_image_shape[1],:] = np.ones(self.main_view_image_shape, np.uint8)
 
-        ##############################################
+        ############################################## BOUNDARY DETECTION ########################################################################################
         pts = np.nonzero(pano)
         pts = np.asarray(pts)
         left_most = np.min(pts[1,:])-5
@@ -80,7 +89,7 @@ class lazy_stitcher:
         self.main_view_upleft_coord = [out_pos[0] - up_most, out_pos[1] - left_most]
         self.final_pano = np.zeros((pano[up_most:down_most, left_most:right_most, :]).shape, np.uint8)
 
-        ##############################################
+        ############################################## MASK CALCULATION ##########################################################################################
         self.transformed_mask_side_view = [];
         self.masks_side_view = [];
         kernel_opening_closing = np.ones((5,5),np.uint8)
@@ -90,7 +99,7 @@ class lazy_stitcher:
             self.transformed_mask_side_view.append(transformed_mask)
             self.masks_side_view.append(cv2.warpPerspective(self.transformed_mask_side_view[i], inv(trans_matrices_list[i]), (self.side_view_image_shape[i][1], self.side_view_image_shape[i][0])))
 
-        # ##############################################
+        # ############################################## LINE ALIGNMENT PREP ######################################################################################
         # self.seam = np.zeros((self.main_view_image_shape[0], self.main_view_image_shape[1]))
         # #temp_seam = np.zeros((self.main_view_image_shape[0], self.main_view_image_shape[1]))
         # kernel = np.ones((50,50),np.uint8)
@@ -136,7 +145,7 @@ class lazy_stitcher:
         # self.buffer_current_idx.append(False)
         # self.diff_buffer[len(side_view_frames)][:,:,int(self.buffer_current_idx[len(side_view_frames)])] = main_view_cal_image[:,:,1];
 
-
+        # Start streaming phase
         self.warpping_thread_list = [];
         for i in range(len(side_view_frames)):
             thread = warpping_thread(i, self.homography_list[i])
@@ -145,6 +154,7 @@ class lazy_stitcher:
 
 
     def __del__(self):
+        # Object destructor - ends warpping threads once lazy_stitcher is destroyed.
         for i in range(len(self.homography_list)):
             self.warpping_thread_list[i].is_end = True;
         for i in range(len(self.homography_list)):
@@ -177,20 +187,25 @@ class lazy_stitcher:
     #     return side_view_has_motion, seam_has_motion
 
     def stitch(self, main_view_frame, side_view_frames):
+        # Generate final panorama. 
         out_pos = self.main_view_upleft_coord
 
         #side_view_has_motion, seam_has_motion = self.read_next_frame(main_view_frame, side_view_frames)
         #print side_view_has_motion, seam_has_motion
 
         #t = time.time()
+        # Gather most recent frames.
         for i in range(len(side_view_frames)):
             warpping_queue[i][0].put(main_view_frame)
             warpping_queue[i][1].put(side_view_frames[i])
 
+        # 
         num_stitch_frames = len(side_view_frames)
         flag_finished = np.zeros(num_stitch_frames)
         while (np.sum(flag_finished) < num_stitch_frames):
+            # For each side view
             for i in range(len(side_view_frames)):
+                # If warping has been completed for a previous frame.
                 if (not warpping_queue[i][2].empty()):
                     flag_finished[i] = 1
                     transformed_side_view = warpping_queue[i][2].get()
@@ -200,16 +215,23 @@ class lazy_stitcher:
                     #print transformed_side_view.shape, self.transformed_mask_side_view[i].shape, self.transformed_mask_side_view[i].shape
                
                     temp_result_window = self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_view.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_view.shape[1], :]
+                    
+                    ## DISPLAY PARAMETERS
                     #print temp_result_window.shape
                     #print out_pos[0]-self.coord_shift_list[i][0], out_pos[0]-self.coord_shift_list[i][0]+transformed_side_view.shape[0]
                     #print out_pos[1]-self.coord_shift_list[i][1], out_pos[1]-self.coord_shift_list[i][1]+transformed_side_view.shape[1]
                     #print self.final_pano.shape
+                    
+                    # Add side view to panorama
                     self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_view.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_view.shape[1], :] = transformed_side_view * self.transformed_mask_side_view[i] + temp_result_window * np.logical_not(self.transformed_mask_side_view[i])
                     #print 'complete'
 
+        # Add main view to panorama.
         self.final_pano[out_pos[0]:out_pos[0]+self.main_view_image_shape[0], out_pos[1]:out_pos[1]+self.main_view_image_shape[1],:] = main_view_frame
 
+
         #print('stitch time: ' + str(time.time() - t))
+        # Adjust for top view
         if not self.top_view == 0:
             i = self.top_view - 1
             temp_result_window = self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+top_view_frame.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+top_view_frame.shape[1], :]
@@ -217,7 +239,11 @@ class lazy_stitcher:
 
         return self.final_pano
 
+
+
+    # Legacy Code - To revisit later
     # def line_stitch(self, main_view_frame, side_view_frame, idx):
+    #     # line_stitch runs stitching code with parallax correction methods. 
     #     sti = stitcher2.Stitcher()
     #     result1,result2,mask1,mask2_original, shift, trans_matrix = sti.applyHomography(main_view_frame,side_view_frame,self.homography_list[idx])
     #     new_mask = (result2 > 0).astype('uint8')
@@ -324,7 +350,11 @@ class lazy_stitcher:
     #     return result1,result2,mask1,new_mask, shift, trans_matrix
 
 class calibration_thread(threading.Thread):
+    # A thread for performing stitching calibration. When run, this thread generates the fundamental matrix F
+    # used for line alignment, the homography H used for image alignment, and the coordinate shift needed to ensure that the 
+    # full panorama is visible.
     def __init__(self, main_frame, side_frame):
+        # The thread must be initialized with the main frame and side frame.
         threading.Thread.__init__(self)
         self.main_frame = main_frame;
         self.side_frame = side_frame;
@@ -337,12 +367,14 @@ class calibration_thread(threading.Thread):
         self.coord_shift = coord_shift
 
 class warpping_thread(threading.Thread):
+    # The warping thread takes a set of Homographies and uses them to warp and blend together new images into a panorama. 
     def __init__(self, idx, H):
+        # The thread must be initialized with a thread id which signifies a row of the warping queue (one pair of cameras), and a homography H.
         threading.Thread.__init__(self)
-        self.idx = idx;
-        self.sti = stitcher2.Stitcher();
-        self.H = H;
-        self.is_end = False;
+        self.idx = idx;                             # Which row of the warping queue is used
+        self.sti = stitcher2.Stitcher();            # Stitcher object (performs stitching)
+        self.H = H;                                 # Transformation to be applied
+        self.is_end = False;                        # Flag to check when to stop thread
 
     def run(self):
         global warpping_queue;
