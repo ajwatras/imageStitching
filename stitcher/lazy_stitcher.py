@@ -13,7 +13,7 @@ from ulti import find_pairs
 
 
 # The warping queue serves to hold the images used for image transformations. The first column holds the main view, the second column holds the side frame, and the third column holds the transformed side view. 
-warpping_queue = [[Queue.Queue(1), Queue.Queue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)]]
+warping_queue = [[Queue.Queue(1), Queue.Queue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)], [Queue.LifoQueue(1), Queue.LifoQueue(1), Queue.Queue(1)]]
 
 class lazy_stitcher:
     # The lazy stitcher contains multithreading and selective updating methods which can significantly speed up image stitching. 
@@ -146,19 +146,19 @@ class lazy_stitcher:
         # self.diff_buffer[len(side_view_frames)][:,:,int(self.buffer_current_idx[len(side_view_frames)])] = main_view_cal_image[:,:,1];
 
         # Start streaming phase
-        self.warpping_thread_list = [];
+        self.warping_thread_list = [];
         for i in range(len(side_view_frames)):
-            thread = warpping_thread(i, self.homography_list[i])
+            thread = warping_thread(i, self.homography_list[i])
             thread.start();
-            self.warpping_thread_list.append(thread)
+            self.warping_thread_list.append(thread)
 
 
     def __del__(self):
-        # Object destructor - ends warpping threads once lazy_stitcher is destroyed.
+        # Object destructor - ends warping threads once lazy_stitcher is destroyed.
         for i in range(len(self.homography_list)):
-            self.warpping_thread_list[i].is_end = True;
+            self.warping_thread_list[i].is_end = True;
         for i in range(len(self.homography_list)):
-            self.warpping_thread_list[i].join();
+            self.warping_thread_list[i].join();
 
 
     # def read_next_frame(self, main_view_frame, side_view_frames):
@@ -196,8 +196,8 @@ class lazy_stitcher:
         #t = time.time()
         # Gather most recent frames.
         for i in range(len(side_view_frames)):
-            warpping_queue[i][0].put(main_view_frame)
-            warpping_queue[i][1].put(side_view_frames[i])
+            warping_queue[i][0].put(main_view_frame)
+            warping_queue[i][1].put(side_view_frames[i])
 
         # 
         num_stitch_frames = len(side_view_frames)
@@ -206,9 +206,9 @@ class lazy_stitcher:
             # For each side view
             for i in range(len(side_view_frames)):
                 # If warping has been completed for a previous frame.
-                if (not warpping_queue[i][2].empty()):
+                if (not warping_queue[i][2].empty()):
                     flag_finished[i] = 1
-                    transformed_side_view = warpping_queue[i][2].get()
+                    transformed_side_view = warping_queue[i][2].get()
 
                     if self.top_view == i + 1:
                         top_view_frame = transformed_side_view
@@ -366,7 +366,7 @@ class calibration_thread(threading.Thread):
         self.H = H;
         self.coord_shift = coord_shift
 
-class warpping_thread(threading.Thread):
+class warping_thread(threading.Thread):
     # The warping thread takes a set of Homographies and uses them to warp and blend together new images into a panorama. 
     def __init__(self, idx, H):
         # The thread must be initialized with a thread id which signifies a row of the warping queue (one pair of cameras), and a homography H.
@@ -377,14 +377,14 @@ class warpping_thread(threading.Thread):
         self.is_end = False;                        # Flag to check when to stop thread
 
     def run(self):
-        global warpping_queue;
+        global warping_queue;
         while True:
-            if ((not warpping_queue[self.idx][0].empty()) and (not warpping_queue[self.idx][1].empty())):
+            if ((not warping_queue[self.idx][0].empty()) and (not warping_queue[self.idx][1].empty())):
                 try:
-                    main_frame = warpping_queue[self.idx][0].get()
-                    side_frame = warpping_queue[self.idx][1].get()
+                    main_frame = warping_queue[self.idx][0].get()
+                    side_frame = warping_queue[self.idx][1].get()
                     (_, transformed_side_view, _, _, _, _) = self.sti.applyHomography(main_frame, side_frame, self.H)
-                    warpping_queue[self.idx][2].put(transformed_side_view)
+                    warping_queue[self.idx][2].put(transformed_side_view)
                     #print 'warp complete', self.idx
                 except:
                     print 'warp error', self.idx
