@@ -5,11 +5,11 @@ import math
 import cv2
 
 # input parameter
-vid1 = "../data/08_18_17/calibration/output5.avi"
+#vid1 = "../data/08_18_17/calibration/output5.avi"
 #vid1 = "../data/testVideo/WideView-BeanDrop3/output1.avi"
 #vid1 = "../data/7_18_17/calibrationvids/output4.avi"
-#vid1 = "./output.avi"			#Video to be split
-saveDest = "../data/08_18_17/calibration/output5/"		#Location files should be saved 2
+vid1 = "../data/Line_Align/Calibration/s4.avi"			#Video to be split
+saveDest = "../data/vid2frame/output5/"		#Location files should be saved 2
 FrameLimit = 100000			#Limit on length of the video (for filenaming)
 
 # Set up video capture environment
