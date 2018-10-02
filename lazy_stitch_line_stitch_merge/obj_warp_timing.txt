@@ -1465,3 +1465,5 @@ Object Warping: 0.143415927887
 Object Warping: 0.143854141235
 Object Warping: 0.247510910034
 Object Warping: 0.217302083969
+Object Warping: 0.0698311328888
+Object Warping: 0.000205993652344

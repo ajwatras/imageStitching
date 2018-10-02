@@ -52,6 +52,15 @@ def calcF(image1,image2,label=0, ratio=.75):
 	
 	return F
 
+def checkHalfPlane(rho,theta,x):
+	w = np.mat([np.cos(theta),np.sin(theta)])
+	b = -rho
+
+	r = (np.dot(w,x) + b)/np.linalg.norm(w,2)
+
+	return r
+
+
 def checkLine(line, n):
 # This function checks to see if the lines are vertical or horizontal.
 # it is used to ensure that the image edges are not detected. but it may result in 
@@ -78,7 +87,8 @@ def correctPoint(x, y, line):
 		x = rho
 	else: 
 		y = -np.cos(theta)/np.sin(theta)*x + rho/np.sin(theta)
-	#print x,y,rho,theta
+	
+	print "CorrectPoint: ", x,y,rho,theta
 	return x,y
 
 def detectAndDescribe(image):
@@ -336,6 +346,179 @@ def loadnpz(filename):
 
 	return dst,K,R,t,F
 
+def lineDetect(image, edgeThresh = 20,N_size = 200 ):
+	# LineDetect detects whether there is a single prominent line in the image or 2. If there are 2, then 
+	# the function will return the equation for each. 
+
+	# Generate Lines and points of intersection for image 1
+	edges1 = cv2.Canny(image,edgeThresh,edgeThresh*3)
+	lines1 = lineSelect(edges1,edgeThresh,N_size)
+
+	A_pts = np.nonzero(edges1[0,:])
+	B_pts = np.nonzero(edges1[:,0])
+	C_pts = np.nonzero(edges1[edges1.shape[0]-1,:])
+	D_pts = np.nonzero(edges1[:,edges1.shape[1]-1])
+
+	#print "A: ",A_pts
+	#print "B: ",B_pts
+	#print "C: ",C_pts
+	#print "D: ",D_pts
+
+	# Check whether multiple lines have been detected. 
+	if len(A_pts)+len(B_pts)+len(C_pts)+len(D_pts) < 2:
+		print "Not enough edge points: ",len(A_pts)+len(B_pts)+len(C_pts)+len(D_pts)
+		return []
+		
+	if len(A_pts)+len(B_pts)+len(C_pts)+len(D_pts) == 2:
+		outline = lines1[0]
+		return outline
+
+	# Check for distance between detected line and detected points
+	A_dist = []
+	B_dist = []
+	C_dist = []
+	D_dist = []
+	pts = []
+	distances = []
+	temp_line = lines1[0]
+	#print "temp_line: ",temp_line[0,0],temp_line[0,1]
+
+	# A points distance
+	if any(map(len,A_pts)):
+		y = 0
+		x = -np.sin(temp_line[0,1])/np.cos(temp_line[0,1])*y + temp_line[0,0]/np.cos(temp_line[0,1])
+		A_dist = np.abs(A_pts - x)
+		#print "A Distance: ",A_dist,x,y
+		for i in range(0,len(A_pts[0])):
+			#print A_pts[0][i],A_dist[0][i]
+			pts.append([A_pts[0][i],y])
+			distances.append(A_dist[0][i])
+
+	# B points distance
+	if any(map(len,B_pts)):
+		x = 0
+		y = -np.cos(temp_line[0,1])/np.sin(temp_line[0,1])*x + temp_line[0,0]/np.sin(temp_line[0,1])
+		B_dist = np.abs(B_pts - y)
+		#print "B Distance: ",B_dist,x,y
+		for i in range(0,len(B_pts[0])):
+			#print B_pts[0][i],B_dist[0][i]
+			pts.append([x,B_pts[0][i]])
+			distances.append(B_dist[0][i])
+	
+	# C points distance
+	if any(map(len,C_pts)):
+		y = edges1.shape[0]-1
+		x = -np.sin(temp_line[0,1])/np.cos(temp_line[0,1])*y + temp_line[0,0]/np.cos(temp_line[0,1])
+		C_dist = np.abs(C_pts - x)
+		#print "C Distance: ",C_dist,x,y
+		for i in range(0,len(C_pts[0])):
+			#print C_pts[0][i],C_dist[0][i]
+			pts.append([C_pts[0][i],y])
+			distances.append(C_dist[0][i])
+	
+	# D points distance
+	if any(map(len,D_pts)):
+		x = edges1.shape[1]-1
+		y = -np.cos(temp_line[0,1])/np.sin(temp_line[0,1])*x + temp_line[0,0]/np.sin(temp_line[0,1])
+		D_dist = np.abs(D_pts - y)
+		#print "D Distance: ",D_dist,x,y
+		for i in range(0,len(D_pts[0])):
+			#print D_pts[0][i],D_dist[0][i]
+			pts.append([x,D_pts[0][i]])
+			distances.append(D_dist[0][i])
+
+	#print pts
+	#print distances
+	idx = np.argsort(np.mat(distances))
+	#print idx
+	#print pts[idx[0,0]], pts[idx[0,1]]
+
+
+	chosen_pts = np.array(pts)[idx]
+	chosen_pts = [[chosen_pts[0][0][0],chosen_pts[0][0][1]],[chosen_pts[0][1][0],chosen_pts[0][1][1]]]
+	distances = np.array(distances)[idx]
+	first_line = temp_line
+
+	
+
+	#print chosen_pts
+	#print distances
+
+	# detect distance to subsequent lines
+	for i in range(1, len(lines1)):
+		print "Detecting subsequent lines..."
+		pts = []
+		distances = []
+		temp_line = lines1[i]
+
+		# A points distance
+		if any(map(len,A_pts)):
+			y = 0
+			x = -np.sin(temp_line[0,1])/np.cos(temp_line[0,1])*y + temp_line[0,0]/np.cos(temp_line[0,1])
+			A_dist = np.abs(A_pts - x)
+			#print "A Distance: ",A_dist,x,y
+			for i in range(0,len(A_pts[0])):
+				#print A_pts[0][i],A_dist[0][i]
+				pts.append([A_pts[0][i],y])
+				distances.append(A_dist[0][i])
+
+		# B points distance
+		if any(map(len,B_pts)):
+			x = 0
+			y = -np.cos(temp_line[0,1])/np.sin(temp_line[0,1])*x + temp_line[0,0]/np.sin(temp_line[0,1])
+			B_dist = np.abs(B_pts - y)
+			#print "B Distance: ",B_dist,x,y
+			for i in range(0,len(B_pts[0])):
+				#print B_pts[0][i],B_dist[0][i]
+				pts.append([x,B_pts[0][i]])
+				distances.append(B_dist[0][i])
+	
+		# C points distance
+		if any(map(len,C_pts)):
+			y = edges1.shape[0]-1
+			x = -np.sin(temp_line[0,1])/np.cos(temp_line[0,1])*y + temp_line[0,0]/np.cos(temp_line[0,1])
+			C_dist = np.abs(C_pts - x)
+			#print "C Distance: ",C_dist,x,y
+			for i in range(0,len(C_pts[0])):
+				#print C_pts[0][i],C_dist[0][i]
+				pts.append([C_pts[0][i],y])
+				distances.append(C_dist[0][i])
+	
+		# D points distance
+		if any(map(len,D_pts)):
+			x = edges1.shape[1]-1
+			y = -np.cos(temp_line[0,1])/np.sin(temp_line[0,1])*x + temp_line[0,0]/np.sin(temp_line[0,1])
+			D_dist = np.abs(D_pts - y)
+			#print "D Distance: ",D_dist,x,y
+			for i in range(0,len(D_pts[0])):
+				#print D_pts[0][i],D_dist[0][i]
+				pts.append([x,D_pts[0][i]])
+				distances.append(D_dist[0][i])
+
+		idx = np.argsort(np.mat(distances))
+		line_pts = np.array(pts)[idx]
+		line_pts = [[line_pts[0][0][0],line_pts[0][0][1]],[line_pts[0][1][0],line_pts[0][1][1]]]
+
+		line_found = False
+		for i in range(0,2):
+			match_flag = False
+			for j in range(0,2):
+				if np.all(line_pts[i] == chosen_pts[j]):
+					print "Match Found: ",line_pts,chosen_pts
+					match_flag = True
+
+			if not match_flag:
+				second_line = temp_line
+				line_found = True
+				break
+
+
+
+		if line_found:
+			break
+			
+	return [first_line[0,0],first_line[0,1]],[second_line[0,0],second_line[0,1]]
+
 def lineEdge(line, frame_mask, border_mask):
 	# INDEVELOPMENT: lineEdge finds intersections between line and frame_edge. 
 	# line=(rho,theta) stores the line information 
@@ -365,9 +548,9 @@ def lineEdge(line, frame_mask, border_mask):
 	temp_display[:,:,1] = border_mask[:,:,0]
 	temp_display[:,:,2] = (1- frame_mask[:,:,0])
 	
-	cv2.imshow("temp display",temp_display)
-	cv2.waitKey(0)
-	cv2	.destroyWindow("temp display")
+	#cv2.imshow("temp display",temp_display)
+	#cv2.waitKey(0)
+	#cv2	.destroyWindow("temp display")
 	return point
 
 
@@ -379,13 +562,16 @@ def lineSelect(image, edgeThresh, N_size):
 
 	edges = cv2.Canny(image,edgeThresh,edgeThresh*3)
 
+	#cv2.imshow("Temp",image)
+	#cv2.waitKey(0)
+
 	lines = cv2.HoughLines(edges[1:edges.shape[0]-1,1:edges.shape[1]-1],1,np.pi/180,N_size/2)
 
 	temp_image = np.repeat(edges[:, :, np.newaxis]/2, 3, axis=2)
 	temp_image = 100*temp_image.astype('uint8')
 	
 	for line in lines:
-		print line[0,0], line[0,1]
+		#print line[0,0], line[0,1]
 		drawLines(line[0,0],line[0,1],temp_image)
 
 	cc = 0;
@@ -394,7 +580,7 @@ def lineSelect(image, edgeThresh, N_size):
 		#print "LINE: ",line, np.abs(line[0,1] - np.pi/2) > .001
 		#Removing vertical and horizontal lines, this is probably not a great way of selecting lines. 
 		if checkLine(line,n):
-			print "Not 0: ", cc,line[0,0], line[0,1]
+			#print "Not 0: ", cc,line[0,0], line[0,1]
 			outlines.append([line[0,0],line[0,1]])
 			cc = cc + 1
 
@@ -405,10 +591,9 @@ def lineSelect(image, edgeThresh, N_size):
 	# Identify 2 dominant line crossings
 	# Check for secondary line crossings
 	#  
-	print "FINAL LINE: ", outlines
+	#print "FINAL LINE: ", outlines
 
 	return outlines
-
 
 def matchLines(point1, matpoint1, point2, matpoint2):
 # 
@@ -509,6 +694,94 @@ def modelBackground(caps, CAL_LENGTH = 10):
 		output[k] = output[k].astype('uint8')
 	return True, output
 
+
+def pairLines(lines1,lines2,H,main_view_seam):
+	#
+	line1 = [0,0]
+	line2 = [0,0]
+	mat1 = [0,0]
+	mat2 = [0,0]
+
+	# Transform line to line segment
+	y1 = lines2[0][0]/np.sin(lines2[0][1]) # x = 0
+	y2 = -np.cos(lines2[0][1])/np.sin(lines2[0][1]) + y1 # x = 1
+	pts1 = np.mat([[0,1],[y1,y2],[1,1]])
+
+	y1 = lines2[1][0]/np.sin(lines2[1][1]) # x = 0
+	y2 = -np.cos(lines2[1][1])/np.sin(lines2[1][1]) + y1 # x = 1
+	pts2 = np.mat([[0,1],[y1,y2],[1,1]])
+
+	# Apply homography to line segment
+	transformed_pts1 = np.dot(H,pts1)
+	transformed_pts2 = np.dot(H,pts2)
+
+	# correct for disparity
+	transformed_pts1 = np.mat([[transformed_pts1[0,0]/transformed_pts1[2,0],transformed_pts1[1,0]/transformed_pts1[2,1]],[transformed_pts1[0,1]/transformed_pts1[2,0],transformed_pts1[1,1]/transformed_pts1[2,1]]])
+	transformed_pts2 = np.mat([[transformed_pts2[0,0]/transformed_pts2[2,0],transformed_pts2[1,0]/transformed_pts2[2,1]],[transformed_pts2[0,1]/transformed_pts2[2,0],transformed_pts2[1,1]/transformed_pts2[2,1]]])
+
+	# Convert segment back to line.
+	if transformed_pts1[0,0] == transformed_pts1[1,0]:
+		transformed_lines1 = [transformed_pts1[0,0], 0]
+	else:
+		transformed_lines1 = [0, np.pi/2 - np.arctan((transformed_pts1[0,1]-transformed_pts1[1,1])/(transformed_pts1[0,0]-transformed_pts1[1,0]))]
+		transformed_lines1[0] = transformed_pts1[0,1]*np.sin(transformed_lines1[1]) + transformed_pts1[0,0]*np.cos(transformed_lines1[1])
+
+	if transformed_pts2[0,0] == transformed_pts2[1,0]:
+		transformed_lines2 = [transformed_pts2[0,0], 0]
+	else:
+		transformed_lines2 = [0,np.pi/2 - np.arctan((transformed_pts2[0,1]-transformed_pts2[1,1])/(transformed_pts2[0,0]-transformed_pts2[1,0]))]
+		transformed_lines2[0] = transformed_pts2[0,1]*np.sin(transformed_lines2[1]) + transformed_pts2[0,0]*np.cos(transformed_lines2[1])
+
+	# Detect seam crossing points
+	mask1 = np.zeros(main_view_seam.shape)
+	mask2 = np.zeros(main_view_seam.shape)
+	mask3 = np.zeros(main_view_seam.shape)
+	mask4 = np.zeros(main_view_seam.shape)
+	drawLines(transformed_lines1[0],transformed_lines1[1],mask1)
+	drawLines(transformed_lines2[0],transformed_lines2[1],mask2)
+	drawLines(lines1[0][0],lines1[0][1],mask3)
+	drawLines(lines1[1][0],lines1[1][1],mask4)
+	main_view_line1_pt = np.nonzero(mask3*main_view_seam)
+	main_view_line2_pt = np.nonzero(mask4*main_view_seam)
+	side_view_line1_pt = np.nonzero(mask1*main_view_seam)
+	side_view_line2_pt = np.nonzero(mask2*main_view_seam)
+
+	main_view_line1_pt = [main_view_line1_pt[1][0],main_view_line1_pt[0][0]]
+	main_view_line2_pt = [main_view_line2_pt[1][0],main_view_line2_pt[0][0]]
+	side_view_line1_pt = [side_view_line1_pt[1][0],side_view_line1_pt[0][0]]
+	side_view_line2_pt = [side_view_line2_pt[1][0],side_view_line2_pt[0][0]]
+
+	main_view_pt = np.transpose((np.mat(main_view_line1_pt) + np.mat(main_view_line2_pt))/2)
+	side_view_pt = np.transpose((np.mat(side_view_line2_pt) + np.mat(side_view_line1_pt))/2)
+
+	#print lines1[1][0],lines1[1][1], main_view_pt
+	#print transformed_lines1,transformed_lines2, side_view_pt
+
+	# Calculate distances
+	r1 = np.sign(checkHalfPlane(transformed_lines1[0],transformed_lines1[1],side_view_pt))
+	r2 = np.sign(checkHalfPlane(transformed_lines2[0],transformed_lines2[1],side_view_pt))
+	r3 = np.sign(checkHalfPlane(lines1[0][0],lines1[0][1],main_view_pt))
+	r4 = np.sign(checkHalfPlane(lines1[1][0],lines1[1][1],main_view_pt))
+
+	# Match lines
+	if r1 == r3:
+		line1 =  lines1[0]
+		line2 = lines1[1]
+		mat1 = lines2[0]
+		mat2 = lines2[1]
+
+	elif r1 == r4:
+		line1 = lines1[0]
+		line2 = lines1[1]
+		mat1 = lines2[1]
+		mat2 = lines2[0]
+
+	else:
+		print "ERROR: line match not found"
+
+	# Return matched lines
+	return line1,mat1,line2,mat2
+
 def setRight(line):
 	# Shifts the point to the right to avoid overlapping features.
 	x = 400
@@ -578,12 +851,12 @@ def sortLines(lines, edge):
 
 	coverage = []
 	for line in lines:
-		print line
+		#print line
 		temp= np.zeros((edge.shape[0], edge.shape[1],3)).astype('uint8')
 		drawLines(line[0,0],line[0,1],temp)
 		temp = np.nonzero(temp[:,:,0]*edge)
 		coverage.append(len(temp[0]))
-		print temp,coverage
+		#print temp,coverage
 
 	#idx = coverage.index(max(coverage))
 	idx = np.argsort(-np.mat(coverage))
@@ -591,7 +864,7 @@ def sortLines(lines, edge):
 	outlines = lines
 	#outlines = lines[idx]	
 	#outlines = lines[lines[:,1].argsort()]
-	print "Post-sort: ", outlines
+	#print "Post-sort: ", outlines
 
 
 
@@ -949,19 +1222,15 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 		#edges2 = cv2.Canny(sub2,edgeThresh,edgeThresh*3)
 		#lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size/2)
 
-		lines1 = lineSelect(sub1,edgeThresh,N_size)
-		lines2 = lineSelect(sub2,edgeThresh,N_size)
-		print "lines1  found ",len(lines1)," lines"
-		print "lines2 found ",len(lines2)," lines"
+		#lines1 = lineSelect(sub1,edgeThresh,N_size)
+		#lines2 = lineSelect(sub2,edgeThresh,N_size)
+
+		lines11, lines12 = lineDetect(sub1,edgeThresh,N_size)
+		lines21, lines22 = lineDetect(sub2,edgeThresh,N_size)
 		
-		#cv2.imshow("sub1",sub1)
-		#cv2.imshow("sub2",sub2)
-		#cv2.waitKey(0)
-		#cv2.destroyWindow('sub1')
-		#cv2.destroyWindow('sub2')
 
 		# If no lines are found, print error and return identity
-		if (lines1 is None) or (lines2 is None):
+		if (lines11 is None) or (lines21 is None):
 			print "Error: Lines not found", lines1, lines2
 			return np.zeros((3,3))
 		#Select Lines (Each subimage should only give one line. This is just ensuring they are the right shape to avoid errors.)
@@ -970,28 +1239,74 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 
 		sub1 = np.repeat(sub1[:,:,np.newaxis],3,axis=2)
 		sub2 = np.repeat(sub2[:,:,np.newaxis],3,axis=2)
-		print lines1
-		drawLines(lines1[0,0],lines1[0,1],sub1)
-		drawLines(lines2[0,0],lines2[0,1],sub2)
-		cv2.imshow("line1",sub1)
-		cv2.imshow("line2",sub2)
-		cv2.waitKey(0)
-		cv2.destroyWindow('line1')
-		cv2.destroyWindow('line2')
+
+		#print lines1
+		drawLines(lines11[0],lines11[1],sub1)
+		drawLines(lines21[0],lines21[1],sub2)
+		if lines12:
+			drawLines(lines12[0],lines12[1],sub1)
+		if lines22:
+			drawLines(lines22[0],lines22[1],sub2)
+		#cv2.imshow("line1",sub1)
+		#cv2.imshow("line2",sub2)
+		#cv2.waitKey(0)
+		#cv2.destroyWindow('line1')
+		#cv2.destroyWindow('line2')
 
 		#Adjust lines for coordinate shift due to cropping. 
 		#np.cos(np.arctan2(y,x) - theta)*np.sqrt(x^2 + y^2) + rho
 
 		#print "Lines 1: ",lines1
 		#print "Lines 2: ",lines2
-		lines1 = [np.cos(-np.arctan2(shift1[0,1],shift1[0,0]) + lines1[0,1])*np.sqrt(pow(shift1[0,0],2) + pow(shift1[0,1],2)) + lines1[0,0],lines1[0,1]]
-		lines2 = [np.cos(-np.arctan2(shift2[0,1],shift2[0,0]) + lines2[0,1])*np.sqrt(pow(shift2[0,0],2) + pow(shift2[0,1],2)) + lines2[0,0],lines2[0,1]]
-		#print "Lines 1: ",lines1
-		#print "Lines 2: ",lines2
+		lines11 = [np.cos(-np.arctan2(shift1[0,1],shift1[0,0]) + lines11[1])*np.sqrt(pow(shift1[0,0],2) + pow(shift1[0,1],2)) + lines11[0],lines11[1]]
+		lines21 = [np.cos(-np.arctan2(shift2[0,1],shift2[0,0]) + lines21[1])*np.sqrt(pow(shift2[0,0],2) + pow(shift2[0,1],2)) + lines21[0],lines21[1]]
+		if lines12:
+			lines12 = [np.cos(-np.arctan2(shift1[0,1],shift1[0,0]) + lines12[1])*np.sqrt(pow(shift1[0,0],2) + pow(shift1[0,1],2)) + lines12[0],lines12[1]]
+		if lines22:
+			lines22 = [np.cos(-np.arctan2(shift2[0,1],shift2[0,0]) + lines22[1])*np.sqrt(pow(shift2[0,0],2) + pow(shift2[0,1],2)) + lines22[0],lines22[1]]
+
+		print "Lines 1: ",lines11,lines12
+		print "Lines 2: ",lines21,lines22
 
 		#Ensure points lie on a line.
 		#print points1, correctPoint(points1[0,0],points1[0,1],lines1)
-		points1[0,0], points1[0,1] = correctPoint(points1[0,0],points1[0,1],lines1)
+		points = np.zeros((2,2))
+		print "Points: ",points
+		points[0,0], points[0,1] = correctPoint(points1[0,0],points1[0,1],lines11)
+		if lines12:
+			print "Adjusting for lines12"
+			points[1,0], points[1,1] = correctPoint(points1[0,0],points1[0,1],lines12)
+			x,y = correctPoint(points1[0,0],points1[0,1],lines12)
+			print"XY: ", x,y
+		print "Points: ",points
+		points = np.round(points).astype('int')
+		print "Points: ",points
+		#points = points.astype('uint8')
+		
+
+		main_view_pts =  np.zeros((4,2))
+		side_view_pts = np.zeros((4,2))
+
+		main_view_pts[0,:] = points[0,:] + np.mat([shift[0],shift[1]])
+		main_view_pts[1,:] = points[1,:] + np.mat([shift[0],shift[1]])
+		main_view_pts[2,:] = lineEdge(lines11,main_seam,transformed_side_border)
+		main_view_pts[3,:] = lineEdge(lines12,main_seam,transformed_side_border)
+
+		side_view_pts[0,:] = epiMatch((main_view_pts[0,0],main_view_pts[0,1]),lines21,F)
+		side_view_pts[1,:] = epiMatch((main_view_pts[1,0],main_view_pts[1,1]),lines22,F)
+		#side_view_pts[0,:] = lineEdge(lines21,side_seam,1 - side_border)
+		#side_view_pts[1,:] = lineEdge(lines22,side_seam,1 - side_border)
+		side_view_pts[2,:] = lineEdge(lines21,side_seam,side_border)
+		side_view_pts[3,:] = lineEdge(lines22,side_seam,side_border)
+
+		main_view_pts = main_view_pts.astype('int')
+		side_view_pts = side_view_pts.astype('int')
+
+		print "Shift: ",shift
+		print "Points: ",points
+		print "Main View Points: ",main_view_pts
+		print "Side View Points: ",side_view_pts
+
 		#points2[0,0], points2[0,1] = correctPoint(points2[0,0],points2[0,1],lines2)
 
 
@@ -1004,20 +1319,22 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 
 		#print "LINES:",lines1,lines2
 		#print points1[0][0],points1[1],points2[0],points2[1], (points1[0,0],points1[0,1])
-		seam2 = main_seam.copy()
-		seam2 = 255*seam2.astype('uint8')
-		drawLines(lines1[0],lines1[1],seam2)
-		drawLines(lines2[0],lines2[1],seam2)
-		cv2.imshow("seam", seam2)
-		cv2.waitKey(0)
-		cv2.destroyWindow('seam')
+		#seam2 = main_seam.copy()
+		#seam2 = 255*seam2.astype('uint8')
+		#drawLines(lines11[0],lines11[1],seam2)
+		#drawLines(lines12[0],lines12[1],seam2)
+		#cv2.imshow("seam", seam2)
+		#cv2.waitKey(0)
+		#cv2.destroyWindow('seam')
+
+		print "DONE!"
 
 		# Perform Feature Matching
-		points1 = (points1[0,0],points1[0,1])
-		points2 = lineEdge(lines2,side_seam,side_border)
+		points1 = (points[0,0],points[0,1])
+		points2 = lineEdge(lines21,side_seam,side_border)
 		#points2 = (points2[0,0],points2[0,1])
-		mat1 = epiMatch(points1,lines2, F)
-		mat2 = lineEdge(lines1,main_seam,transformed_side_border)
+		mat1 = epiMatch(points1,lines12, F)
+		mat2 = lineEdge(lines11,main_seam,transformed_side_border)
 		points1 = (points1[0] + shift[0],points1[1] + shift[1])
 		#mat2 = points2
 		#print "Points1: ", points1
@@ -1034,17 +1351,30 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 				tmp_image2 = np.repeat(image2[:, :, np.newaxis]/2, 3, axis=2)
 				tmp_image1 = np.copy(100*main_seam).astype('uint8')
 
-				print tmp_image1.shape
+				#print tmp_image1.shape
 
-				drawLines(lines1[1],lines1[0],tmp_image1)
-				drawLines(lines2[1],lines2[0],tmp_image2)
-
+				drawLines(lines11[0],lines11[1],tmp_image1)
+				drawLines(lines21[0],lines21[1],tmp_image2)
+				if lines12:
+					drawLines(lines12[0],lines12[1],tmp_image1)
+				if lines22:
+					drawLines(lines22[0],lines22[1],tmp_image2)
 
 				
-				cv2.circle(tmp_image1, mat2, 5, (255,0,0))
-				cv2.circle(tmp_image2, mat1, 5, (0,255,0))
-				cv2.circle(tmp_image1, points1, 5, (0,255,0))
-				cv2.circle(tmp_image2, points2, 5, (255,0,0))
+				#cv2.circle(tmp_image1, mat2, 5, (255,0,0))
+				#cv2.circle(tmp_image2, mat1, 5, (0,255,0))
+				#cv2.circle(tmp_image1, points1, 5, (0,255,0))
+				#cv2.circle(tmp_image2, points2, 5, (255,0,0))
+
+				cv2.circle(tmp_image1, (main_view_pts[0,0],main_view_pts[0,1]), 5, (255,0,0))
+				cv2.circle(tmp_image1, (main_view_pts[1,0],main_view_pts[1,1]), 5, (0,255,0))
+				cv2.circle(tmp_image1, (main_view_pts[2,0],main_view_pts[2,1]), 5, (0,0,255))
+				cv2.circle(tmp_image1, (main_view_pts[3,0],main_view_pts[3,1]), 5, (255,0,255))
+
+				cv2.circle(tmp_image2, (side_view_pts[0,0],side_view_pts[0,1]), 5, (255,0,0))
+				cv2.circle(tmp_image2, (side_view_pts[1,0],side_view_pts[1,1]), 5, (0,255,0))
+				cv2.circle(tmp_image2, (side_view_pts[2,0],side_view_pts[2,1]), 5, (0,0,255))
+				cv2.circle(tmp_image2, (side_view_pts[3,0],side_view_pts[3,1]), 5, (255,0,255))
 
 				#print points1,points2
 				print "PtsA: ",ptsA
@@ -1062,12 +1392,15 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 				cv2.destroyWindow("image2 (1 edge)")
 
 
-
-			LineT = matchLines(points1, mat1, points2, mat2)
+			if lines12:
+				if lines22:
+					(LineT,status) = cv2.findHomography(main_view_pts,side_view_pts)
+			else:
+				LineT = matchLines(points1, mat1, points2, mat2)
 			
 
-			print "Proposed PtsB: ",np.dot(LineT,[[ptsA[0,0],ptsA[1,0]],[ptsA[0,1],ptsA[1,1]],[1,1]])
-			print "Actual Pts B: ",ptsB
+			print "Proposed PtsB: ",np.dot(LineT,np.transpose(np.mat([[main_view_pts[0,0],main_view_pts[0,1],1],[main_view_pts[1,0],main_view_pts[1,1],1],[main_view_pts[2,0],main_view_pts[2,1],1],[main_view_pts[3,0],main_view_pts[3,1],1]])))
+			print "Actual Pts B: ",side_view_pts
 			print "LineT: ",LineT
 
 		else:

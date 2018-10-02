@@ -16,8 +16,8 @@ H,h_mask = cv2.findHomography(corners,new_corners)
 H2 = np.mat([[0,1,200],[1,0,200],[0,0,1]])
 
 # Identify desired object line
-line1 = (-250,-np.pi/2.1)
-line2 = (-250,-np.pi/2.5)
+line1 = (-250,-np.pi/2.2)
+line2 = (-200,-np.pi/2.4)
 #line2 = (50,np.pi/2)
 
 # Generate F
@@ -78,8 +78,8 @@ if obj_detected:
     align_time = time.time() - t 
     #print "Object_Alignment: ", align_time
     #print "tempH: ",tempH
-    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,tempH)
-    #pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
+    result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
+    pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
     #cv2.imshow("result1",result1)
     #cv2.imshow("result2",result2)
     #cv2.waitKey(0)
@@ -89,8 +89,9 @@ if obj_detected:
     #tempH = la.lineAlign(pts1,main_frame,pts2,side_frame,fundamental_matrices_list[0])
     #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, side_view_background, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
 
-    result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_frame, side_frame, side_view_object_mask, tempH, H, stitch,result1,mask1,result2,shift, mask2, trans_mat)
-    pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
+    #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_frame, side_frame, side_view_object_mask, tempH, H, stitch,result1,mask1,result2,shift, mask2, trans_mat)
+    #print "Mask1: ",mask1.shape,result1.shape,result2.shape
+    #pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
     warping_time = time.time() - t 
     print "Object Warping: ", warping_time
 
