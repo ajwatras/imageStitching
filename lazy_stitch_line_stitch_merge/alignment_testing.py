@@ -16,7 +16,7 @@ H,h_mask = cv2.findHomography(corners,new_corners)
 H2 = np.mat([[0,1,200],[1,0,200],[0,0,1]])
 
 # Identify desired object line
-line1 = (-250,-np.pi/2.2)
+line1 = (-250,-np.pi/1.9)
 line2 = (-200,-np.pi/2.4)
 #line2 = (50,np.pi/2)
 
@@ -64,28 +64,20 @@ if obj_detected:
     # Detect Main View location in side view
     #side_view_main_mask = la.mapCoveredSide(H,main_frame,side_frame)
     main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_frame, side_frame, mask1,mask2,H)            
-    #cv2.imshow("Main_seam",255*main_seam.astype('uint8'))
-    #cv2.imshow("Side_seam",255*side_seam.astype('uint8'))
-    #cv2.imshow("Side_Border",255*side_border.astype('uint8'))
-    #cv2.imshow("transformed_side_border",255*transformed_side_border.astype('uint8'))
-    #cv2.waitKey(0)
-    #cv2.destroyWindow("Main_seam")
-    #cv2.destroyWindow("Side_seam")
-    #cv2.destroyWindow("Side_Border")
-    #cv2.destroyWindow("transformed_side_border")
-    #tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
     tempH = la.lineAlign(pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,fundamental_matrices_list[0],main_seam, side_seam, side_border,transformed_side_border,shift)
     align_time = time.time() - t 
     #print "Object_Alignment: ", align_time
     #print "tempH: ",tempH
-    result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
+    
+    ### Perform warping and save timing info ###
+    t = time.time()
+
+    result2 = la.warpObject(side_view_object_mask,tempH,result2,side_frame,background_model,H)
+    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
     pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
     #cv2.imshow("result1",result1)
     #cv2.imshow("result2",result2)
     #cv2.waitKey(0)
-    
-    ### Perform warping and save timing info ###
-    t = time.time()
     #tempH = la.lineAlign(pts1,main_frame,pts2,side_frame,fundamental_matrices_list[0])
     #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, side_view_background, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
 
@@ -95,8 +87,6 @@ if obj_detected:
     warping_time = time.time() - t 
     print "Object Warping: ", warping_time
 
-
-print pts1, pts2
 cv2.imshow('pano1',pano)
 cv2.imshow("final",pano2)
 cv2.waitKey(0)

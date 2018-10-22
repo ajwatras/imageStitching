@@ -347,8 +347,10 @@ def loadnpz(filename):
 	return dst,K,R,t,F
 
 def lineDetect(image, edgeThresh = 20,N_size = 200 ):
+	# DEBUG: Sometimes detects lines incorrectly. 
 	# LineDetect detects whether there is a single prominent line in the image or 2. If there are 2, then 
-	# the function will return the equation for each. 
+	# the function will return the equation for each. Needs to be debugged, sometimes will only detect one 
+	# line even though two are present. 
 
 	# Generate Lines and points of intersection for image 1
 	edges1 = cv2.Canny(image,edgeThresh,edgeThresh*3)
@@ -438,6 +440,7 @@ def lineDetect(image, edgeThresh = 20,N_size = 200 ):
 	chosen_pts = [[chosen_pts[0][0][0],chosen_pts[0][0][1]],[chosen_pts[0][1][0],chosen_pts[0][1][1]]]
 	distances = np.array(distances)[idx]
 	first_line = temp_line
+	second_line = first_line
 
 	
 
@@ -500,10 +503,11 @@ def lineDetect(image, edgeThresh = 20,N_size = 200 ):
 		line_pts = [[line_pts[0][0][0],line_pts[0][0][1]],[line_pts[0][1][0],line_pts[0][1][1]]]
 
 		line_found = False
+
 		for i in range(0,2):
 			match_flag = False
 			for j in range(0,2):
-				if np.all(line_pts[i] == chosen_pts[j]):
+				if np.linalg.norm(np.mat(line_pts[i]) - np.mat(chosen_pts[j])) < 5:
 					print "Match Found: ",line_pts,chosen_pts
 					match_flag = True
 
@@ -535,22 +539,24 @@ def lineEdge(line, frame_mask, border_mask):
 	possible_points = np.nonzero(line_mask[:,:,0]*border_mask[:,:,0]*(1-frame_mask[:,:,0]))
 
 	if(len(possible_points[0]) > 1):
-		print "Warning: line intersects with too many edges in lineEdge. Total number of edges ",len(possible_points[0])
+		if (max(possible_points[0]) - min(possible_points[0]) > 6) or (max(possible_points[0]) - min(possible_points[0]) > 6): 
+			print "Warning: line intersects with too many edges in lineEdge. Total number of edges ",len(possible_points[0])
 
 	elif (len(possible_points[0]) == 0):
 		print "Warning: no point found."
-		return []
+		return (-10,-10)
 
 	print"Possible points: ", possible_points
 	point = (possible_points[1][0],possible_points[0][0])
-	temp_display = np.zeros(line_mask.shape)
-	temp_display[:,:,0] = line_mask[:,:,0]
-	temp_display[:,:,1] = border_mask[:,:,0]
-	temp_display[:,:,2] = (1- frame_mask[:,:,0])
-	
+
+	#temp_display = np.zeros(line_mask.shape)
+	#temp_display[:,:,0] = line_mask[:,:,0]
+	#temp_display[:,:,1] = border_mask[:,:,0]
+	#temp_display[:,:,2] = (1- frame_mask[:,:,0])
 	#cv2.imshow("temp display",temp_display)
 	#cv2.waitKey(0)
-	#cv2	.destroyWindow("temp display")
+	#cv2.destroyWindow("temp display")
+	
 	return point
 
 
@@ -569,7 +575,10 @@ def lineSelect(image, edgeThresh, N_size):
 
 	temp_image = np.repeat(edges[:, :, np.newaxis]/2, 3, axis=2)
 	temp_image = 100*temp_image.astype('uint8')
-	
+	if lines is None:
+		print "ERROR: No line found in lineSelect"
+		return np.mat([0,0])
+
 	for line in lines:
 		#print line[0,0], line[0,1]
 		drawLines(line[0,0],line[0,1],temp_image)
@@ -920,82 +929,102 @@ def surgSeg(image, model,N_size = 20, edgeThresh = 20):
 
 	return mask
 
-def warpObject(main_view_frame, side_view_frame, side_view_object_mask, tempH, main_homography, sti, result1, mask1, result2, shift, new_mask, trans_matrix):
+#def warpObject(main_view_frame, side_view_frame, side_view_object_mask, tempH, main_homography, sti, result1, mask1, result2, shift, new_mask, trans_matrix):
 	
 
-    corners = np.mat([[0, side_view_frame.shape[1], 0, side_view_frame.shape[1]], [0, 0, side_view_frame.shape[0], side_view_frame.shape[0]], [1, 1, 1, 1]])
-    transformed_corners = np.dot(tempH, corners)
-    bound = np.zeros((2, 4), np.float)
-    bound[0,0] = transformed_corners[0,0] / transformed_corners[2,0]
-    bound[1,0] = transformed_corners[1,0] / transformed_corners[2,0]
-    bound[0,1] = transformed_corners[0,1] / transformed_corners[2,1]
-    bound[1,1] = transformed_corners[1,1] / transformed_corners[2,1]
-    bound[0,2] = transformed_corners[0,2] / transformed_corners[2,2]
-    bound[1,2] = transformed_corners[1,2] / transformed_corners[2,2]
-    bound[0,3] = transformed_corners[0,3] / transformed_corners[2,3]
-    bound[1,3] = transformed_corners[1,3] / transformed_corners[2,3]
+#    corners = np.mat([[0, side_view_frame.shape[1], 0, side_view_frame.shape[1]], [0, 0, side_view_frame.shape[0], side_view_frame.shape[0]], [1, 1, 1, 1]])
+#    transformed_corners = np.dot(tempH, corners)
+#    bound = np.zeros((2, 4), np.float)
+#    bound[0,0] = transformed_corners[0,0] / transformed_corners[2,0]
+#    bound[1,0] = transformed_corners[1,0] / transformed_corners[2,0]
+#    bound[0,1] = transformed_corners[0,1] / transformed_corners[2,1]
+#    bound[1,1] = transformed_corners[1,1] / transformed_corners[2,1]
+#    bound[0,2] = transformed_corners[0,2] / transformed_corners[2,2]
+#    bound[1,2] = transformed_corners[1,2] / transformed_corners[2,2]
+#    bound[0,3] = transformed_corners[0,3] / transformed_corners[2,3]
+#    bound[1,3] = transformed_corners[1,3] / transformed_corners[2,3]
 
-    if (np.max(bound[0,:]) - np.min(bound[0,:])) <= 2500 and (np.max(bound[1,:]) - np.min(bound[1,:])) < 2500 and (tempH is not np.zeros((3,3))):
+#    if (np.max(bound[0,:]) - np.min(bound[0,:])) <= 2500 and (np.max(bound[1,:]) - np.min(bound[1,:])) < 2500 and (tempH is not np.zeros((3,3))):
         #############################################################################
-        result1_temp,result2_temp,_,mask2_temp, shift_temp, _ = sti.applyHomography(main_view_frame, side_view_frame, tempH)
-        mask_temp_temp = (result1_temp == 0).astype('int')
-        result2_temp_shape = result2_temp.shape
+#        result1_temp,result2_temp,_,mask2_temp, shift_temp, _ = sti.applyHomography(main_view_frame, side_view_frame, tempH)
+#        mask_temp_temp = (result1_temp == 0).astype('int')
+#        result2_temp_shape = result2_temp.shape
 
-        OUTPUT_SIZE = [3000,3000,3]
-        out_pos = np.array([OUTPUT_SIZE[0]/2-500,OUTPUT_SIZE[1]/2-500]).astype('int')
-        pano = np.zeros(OUTPUT_SIZE, np.uint8)
+#        OUTPUT_SIZE = [3000,3000,3]
+#        out_pos = np.array([OUTPUT_SIZE[0]/2-500,OUTPUT_SIZE[1]/2-500]).astype('int')
+#        pano = np.zeros(OUTPUT_SIZE, np.uint8)
 
-        window = pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:]
+#        window = pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:]
 
-        if window.shape[0] != mask2_temp.shape[0] or window.shape[1] != mask2_temp.shape[1]:
-            return result1,result2,mask1,new_mask, shift, trans_matrix
+#        if window.shape[0] != mask2_temp.shape[0] or window.shape[1] != mask2_temp.shape[1]:
+#            return result1,result2,mask1,new_mask, shift, trans_matrix
 
-        print out_pos, shift_temp, result1.shape
+#        print out_pos, shift_temp, result1.shape
 
-        pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:] = 0+result2_temp
-        result2_temp = 0+pano[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
+#        pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:] = 0+result2_temp
+#        result2_temp = 0+pano[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
         #cv2.imshow('pano_2', result2_temp)
         #cv2.waitKey(0)
-        _,mask,_,_, _, _ = sti.applyHomography(main_view_frame, np.stack((side_view_object_mask,side_view_object_mask,side_view_object_mask), axis=2), tempH)
+#        _,mask,_,_, _, _ = sti.applyHomography(main_view_frame, np.stack((side_view_object_mask,side_view_object_mask,side_view_object_mask), axis=2), tempH)
 
-        pano_mask = np.zeros(OUTPUT_SIZE, np.uint8)
-        pano_mask[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp_shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp_shape[1],:] = 0+mask
-        mask = 0+pano_mask[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
+#        pano_mask = np.zeros(OUTPUT_SIZE, np.uint8)
+#        pano_mask[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp_shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp_shape[1],:] = 0+mask
+#        mask = 0+pano_mask[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
 
-        pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+mask2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+mask2_temp.shape[1],:] = 0+mask2_temp
-        mask2_temp = 0+pano[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
+#        pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+mask2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+mask2_temp.shape[1],:] = 0+mask2_temp
+#        mask2_temp = 0+pano[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
 
 
-        mask = mask.astype('uint8') * mask2_temp
+#        mask = mask.astype('uint8') * mask2_temp
         #mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel_opening_closing)
-        mask = mask * (result2 > 0).astype('uint8')
+#        mask = mask * (result2 > 0).astype('uint8')
         #cv2.imshow('mask',mask*255)
 
-        _,mask_object_transformed,_,_, _, _ = sti.applyHomography(main_view_frame, np.stack((side_view_object_mask,side_view_object_mask,side_view_object_mask), axis=2), main_homography)
+#        _,mask_object_transformed,_,_, _, _ = sti.applyHomography(main_view_frame, np.stack((side_view_object_mask,side_view_object_mask,side_view_object_mask), axis=2), main_homography)
         #cv2.imshow('mask_object_transformed',mask_object_transformed*255)
-        Background_mask = new_mask * (mask_object_transformed == 0).astype('uint8')
+#        Background_mask = new_mask * (mask_object_transformed == 0).astype('uint8')
         #cv2.imshow('Background_mask',Background_mask.astype('uint8')*255)
-        color1 = np.sum(result2[:,:,0] * Background_mask[:,:,0]) / np.sum(Background_mask[:,:,0])
-        color2 = np.sum(result2[:,:,1] * Background_mask[:,:,1]) / np.sum(Background_mask[:,:,1])
-        color3 = np.sum(result2[:,:,2] * Background_mask[:,:,2]) / np.sum(Background_mask[:,:,2])
-        temp = np.ones(mask.shape, np.uint8)
-        temp[:,:,0] = color1
-        temp[:,:,1] = color2
-        temp[:,:,2] = color3
+#        color1 = np.sum(result2[:,:,0] * Background_mask[:,:,0]) / np.sum(Background_mask[:,:,0])
+#        color2 = np.sum(result2[:,:,1] * Background_mask[:,:,1]) / np.sum(Background_mask[:,:,1])
+#        color3 = np.sum(result2[:,:,2] * Background_mask[:,:,2]) / np.sum(Background_mask[:,:,2])
+#        temp = np.ones(mask.shape, np.uint8)
+#        temp[:,:,0] = color1
+#        temp[:,:,1] = color2
+#        temp[:,:,2] = color3
 
-        result2 = Background_mask.astype('uint8') * result2 + (result2 > 0).astype('uint8') * mask_object_transformed * temp
+#        result2 = Background_mask.astype('uint8') * result2 + (result2 > 0).astype('uint8') * mask_object_transformed * temp
         #cv2.imshow('result2',result2)
-        result2 = result2 * np.logical_not(mask) + result2_temp * mask
+#        result2 = result2 * np.logical_not(mask) + result2_temp * mask
         #cv2.imshow('result2_2',result2)
         #cv2.imshow('result2 * np.logical_not(mask)',result2 * np.logical_not(mask))
         #cv2.waitKey(0)
         #mask_temp_temp = (result1 == 0).astype('int')
         #temp = (result2*mask_temp_temp + result1).astype('uint8')
         #############################################################################
-        return result1,result2,mask1,new_mask, shift, trans_matrix
+#        return result1,result2,mask1,new_mask, shift, trans_matrix
 
 
-    return result1,[],[],[],[],[]
+#    return result1,[],[],[],[],[]
+
+def warpObject(side_view_object_mask,tempH,result2,side_frame,background_model,H):
+
+	side_view_object_mask = np.repeat(side_view_object_mask[:,:,np.newaxis],3,axis=2)\
+
+	trans_obj_mask = cv2.warpPerspective(side_view_object_mask,tempH, (result2.shape[1],result2.shape[0]))
+	#trans_obj_mask = np.repeat(trans_obj_mask[:,:,np.newaxis],3,axis=2)
+	trans_obj = cv2.warpPerspective(side_frame,tempH, (result2.shape[1],result2.shape[0]))
+
+	background_fill = cv2.warpPerspective(background_model,H,(result2.shape[1],result2.shape[0]))    
+
+	side_view_object_mask = cv2.warpPerspective(side_view_object_mask,H,(result2.shape[1],result2.shape[0]))    
+
+	result2 = side_view_object_mask*background_fill + (1- side_view_object_mask)*result2
+	result2 = trans_obj_mask*trans_obj + (1 - trans_obj_mask)*result2
+    
+    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
+	#pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
+
+	return result2
 
 
 def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_border,transformed_side_border,shift, N_size = 40, edgeThresh = 50,DRAW_LINES = True):
@@ -1019,7 +1048,7 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 	# edgeThresh: the threshold value for the edge detector. 
 	# DRAW_LINES: a flag used for Visualizing the line alignment process. 
 
-	# This function first detects the two lines l_1, l_2 which make up the prominent edges of the object in image 1 and
+	# This function first detects the two lines l_1, l_2 which make up the prominent edges of the object in image 1
 	# and the two lines \hat{l}_1,\hat{l}_2 which make up the prominent edges of the object in image 2. 
 
 	# The function then detects the points p_1,p_2,p_3, and p_4. where
@@ -1037,10 +1066,10 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 
 	# The function then computes a homography transformation H_{obj} that align the \hat{p}_i to the p_i.
 
-	if (N_size == []):
-		N_size = 20
-	if (edgeThresh == []):
-		edgeThresh = 20
+		if (N_size == []):
+			N_size = 20
+		if (edgeThresh == []):
+			edgeThresh = 20
 	#Function takes the following inputs:
 	#points1: a 2x2 array of the form [x,y;x,y] which has the detected points in image1
 	#image1: The main view destination image
@@ -1048,145 +1077,6 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 	#image2: the secondary view source image
 	#F: the fundamental matrix relating image 1 and image 2. 
 
-
-	if (points1.shape[0] == 2):
-		#Isolate point Neighborhoods
-		sub11 = image1[points1[0,1] - N_size:points1[0,1]+N_size, points1[0,0] - N_size:points1[0,0]+N_size,:]
-
-		#shift11 = np.mat([points1[0,0] - N_size, points1[0,1] - N_size])
-		sub12 = image1[points1[1,1] - N_size:points1[1,1]+N_size, points1[1,0] - N_size:points1[1,0]+N_size,:]
-		#shift12 = np.mat([points1[1,0] - N_size, points1[1,1] - N_size])
-
-		sub21 = image2[points2[0,1] - N_size:points2[0,1]+N_size, points2[0,0] - N_size:points2[0,0]+N_size,:]
-		#shift21 = np.mat([points2[0,0] - N_size, points2[0,1] - N_size])
-		sub22 = image2[points2[1,1] - N_size:points2[1,1]+N_size, points2[1,0] - N_size:points2[1,0]+N_size,:]
-		#shift22 = np.mat([points2[1,0] - N_size, points2[1,1] - N_size])
-
-		#Identify the coordinate shift for sub neighborhoods. 
-		shift11 = points1[0,:] - [N_size,N_size]
-		shift12 = points1[1,:] - [N_size,N_size]
-		shift21 = points2[0,:] - [N_size,N_size]
-		shift22 = points2[1,:] - [N_size,N_size]
-
-
-		#Identify dominant lines in sub images
-		edges1 = cv2.Canny(sub11,edgeThresh,edgeThresh*3)
-		lines1 = cv2.HoughLines(edges1,1,np.pi/180,N_size/2)
-
-		edges2 = cv2.Canny(sub12,edgeThresh,edgeThresh*3)
-		lines2 = cv2.HoughLines(edges2,1,np.pi/180,N_size/2)
-
-		edges3 = cv2.Canny(sub21,edgeThresh,edgeThresh*3)
-		lines3 = cv2.HoughLines(edges3,1,np.pi/180,N_size/2)
-
-		edges4 = cv2.Canny(sub22,edgeThresh,edgeThresh*3)
-		lines4 = cv2.HoughLines(edges4,1,np.pi/180,N_size/2)
-
-		#cv2.imshow("sub11",sub11)
-		#cv2.imshow("sub12",sub12)
-		#cv2.imshow("sub21",sub21)
-		#cv2.imshow("sub22",sub22)
-		#cv2.waitKey(0)
-		# If no lines are found, print error and return identity
-		if (lines1 is None) or (lines2 is None) or (lines3 is None) or (lines4 is None):
-			print "Error: Lines not found"
-			return np.eye(3)
-
-		#Select Lines (Each subimage should only give one line. This is just ensuring they are the right shape to avoid errors.)
-		lines1 = lines1[0]
-		lines2 = lines2[0]
-		lines3 = lines3[0]
-		lines4 = lines4[0]
-
-		#Adjust lines for coordinate shift due to cropping. 
-		#np.cos(np.arctan2(y,x) - theta)*np.sqrt(x^2 + y^2) + rho
-		lines1 = [np.cos(-np.arctan2(shift11[0,1],shift11[0,0]) + lines1[0,1])*np.sqrt(pow(shift11[0,0],2) + pow(shift11[0,1],2)) + lines1[0,0],lines1[0,1]]
-		lines2 = [np.cos(-np.arctan2(shift12[0,1],shift12[0,0]) + lines2[0,1])*np.sqrt(pow(shift12[0,0],2) + pow(shift12[0,1],2)) + lines2[0,0],lines2[0,1]]
-		lines3 = [np.cos(-np.arctan2(shift21[0,1],shift21[0,0]) + lines3[0,1])*np.sqrt(pow(shift21[0,0],2) + pow(shift21[0,1],2)) + lines3[0,0],lines3[0,1]]
-		lines4 = [np.cos(-np.arctan2(shift22[0,1],shift22[0,0]) + lines4[0,1])*np.sqrt(pow(shift22[0,0],2) + pow(shift22[0,1],2)) + lines4[0,0],lines4[0,1]]
-
-
-		#Ensure points lie on a line.
-		points1[0,0], points1[0,1] = correctPoint(points1[0,0],points1[0,1],lines1)
-		points1[1,0], points1[1,1] = correctPoint(points1[1,0],points1[1,1],lines2)
-		points2[0,0], points2[0,1] = correctPoint(points2[0,0],points2[0,1],lines3)
-		points2[1,0], points2[1,1] = correctPoint(points2[1,0],points2[1,1],lines4)
-
-		#points1[0,0], points1[0,1] = setRight(lines1)
-		#points1[1,0], points1[1,1] = setLeft(lines2)
-		#points2[0,0], points2[0,1] = setRight(lines3)
-		#points2[1,0], points2[1,1] = setLeft(lines4)
-
-
-		
-
-	#	print "LINES:",lines1,lines2,lines3,lines4
-		#print points1[0][0],points1[1],points2[0],points2[1], (points1[0,0],points1[0,1])
-		# Perform Epipolar Matching
-		mat21 = epiMatch((points1[0,0],points1[0,1]),lines3, F)
-		mat22 = epiMatch((points1[1,0],points1[0,1]),lines4, F)
-		mat11 = epiMatch((points2[0,0],points2[0,1]),lines1, np.matrix.transpose(F))
-		mat12 = epiMatch((points2[1,0],points2[1,1]),lines2, np.matrix.transpose(F))
-		#print "IS THIS RIGHT: ",(points2[1,0],points2[1,1]), mat12
-
-		#Organize Points for findHomography
-		ptsB = np.zeros((4,2))
-		ptsB[0] = (points1[0,0],points1[0,1])
-		ptsB[1] = (points1[1,0],points1[1,1])
-		#ptsB[2] = mat11
-		#ptsB[3] = mat12
-		ptsB[2] = findOuterEdge(image2,seam,lines1[0,:])
-		ptsB[3] = findOuterEdge(image2,seam,lines2[0,:])
-
-
-		ptsA = np.zeros((4,2))
-		ptsA[0] = mat21
-		ptsA[1] = mat22
-		#ptsA[2] = (points2[0,0],points2[0,1])
-		#ptsA[3] = (points2[1,0],points2[1,1])
-		ptsA[2] = findOuterEdge(image2,seam,lines1[0,:])
-		ptsA[3] = findOuterEdge(image2,seam,lines2[0,:])
-
-		# Display the epipolar feature matches if DRAW_LINES flag. 
-		if DRAW_LINES:
-			tmp_image1 = np.mat([np.copy(image1),np.copy(image1),np.copy(image1)])
-			tmp_image2 = np.mat([np.copy(image2),np.copy(image2),np.copy(image2)])
-
-			drawLines(lines1[0],lines1[1],tmp_image1)
-			drawLines(lines2[0],lines2[1],tmp_image1,(0,255,0))
-			drawLines(lines3[0],lines3[1],tmp_image2)
-			drawLines(lines4[0],lines4[1],tmp_image2,(0,255,0))
-
-			cv2.circle(tmp_image1, mat11, 5, (255,0,0))
-			cv2.circle(tmp_image2, mat21, 5, (0,255,0))
-			cv2.circle(tmp_image1, mat12, 5, (0,0,255))
-			cv2.circle(tmp_image2, mat22, 5, (0,255,255))
-
-			cv2.circle(tmp_image1, (points1[0,0],points1[0,1]), 5, (0,255,0))
-			cv2.circle(tmp_image2, (points2[0,0],points2[0,1]), 5, (255,0,0))
-			cv2.circle(tmp_image1, (points1[1,0],points1[1,1]), 5, (0,255,255))
-			cv2.circle(tmp_image2, (points2[1,0],points2[1,1]), 5, (0,0,255))
-
-			# Find epilines corresponding to points in right image (second image) and
-			# drawing its lines on left image
-			linesA = cv2.computeCorrespondEpilines(ptsA, 2,F)
-			linesB = cv2.computeCorrespondEpilines(ptsB, 1,F)
-			linesA = linesA.reshape(-1,3)
-			linesB = linesB.reshape(-1,3)
-			img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
-
-			#cv2.imshow("image1 (2 edge)",img5)
-			#cv2.imshow("IDK1",img6)
-			#cv2.imshow("image2 (2 edge)",img6)
-			#cv2.imshow("IDK2",img4)
-			#cv2.waitKey(0)
-
-		#print "PTS: ", ptsA,ptsB
-
-		(LineT, status) = cv2.findHomography(ptsA, ptsB)
-
-		return LineT
-	if (points1.shape[0] == 1):
 		#Error checking code. If the point is too close to the edge, this bugs out and causes the program to crash. We shift the window to prevent this from happening. 
 		# This may be a source of innefficiency which may need to be changed later. 
 		if points1[0,1] <= N_size:
@@ -1348,8 +1238,11 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 				ptsB = np.mat([points1,mat2])
 				ptsA = np.mat([mat1,points2])
 				#tmp_image1 = np.repeat(image1[:, :, np.newaxis], 3, axis=2)
-				tmp_image2 = np.repeat(image2[:, :, np.newaxis]/2, 3, axis=2)
-				tmp_image1 = np.copy(100*main_seam).astype('uint8')
+				tmp_image2 = np.repeat(image2[:, :, np.newaxis], 3, axis=2)
+				#tmp_image1 = np.copy(100*main_seam).astype('uint8')
+				tmp_image1 = 50*np.ones((main_seam.shape[0], main_seam.shape[1],3)).astype('uint8')
+				tmp_image1[0:image1.shape[0],0:image1.shape[1],:] = np.repeat(image1[:,:,np.newaxis],3,axis=2).astype('uint8')
+
 
 				#print tmp_image1.shape
 
@@ -1366,35 +1259,38 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 				#cv2.circle(tmp_image1, points1, 5, (0,255,0))
 				#cv2.circle(tmp_image2, points2, 5, (255,0,0))
 
-				cv2.circle(tmp_image1, (main_view_pts[0,0],main_view_pts[0,1]), 5, (255,0,0))
-				cv2.circle(tmp_image1, (main_view_pts[1,0],main_view_pts[1,1]), 5, (0,255,0))
-				cv2.circle(tmp_image1, (main_view_pts[2,0],main_view_pts[2,1]), 5, (0,0,255))
-				cv2.circle(tmp_image1, (main_view_pts[3,0],main_view_pts[3,1]), 5, (255,0,255))
+				cv2.circle(tmp_image1, (main_view_pts[0,0],main_view_pts[0,1]), 7, (255,0,0),3)
+				cv2.circle(tmp_image1, (main_view_pts[1,0],main_view_pts[1,1]), 7, (0,255,0),3)
+				cv2.circle(tmp_image1, (main_view_pts[2,0],main_view_pts[2,1]), 7, (0,0,255),3)
+				cv2.circle(tmp_image1, (main_view_pts[3,0],main_view_pts[3,1]), 7, (255,0,255),3)
 
-				cv2.circle(tmp_image2, (side_view_pts[0,0],side_view_pts[0,1]), 5, (255,0,0))
-				cv2.circle(tmp_image2, (side_view_pts[1,0],side_view_pts[1,1]), 5, (0,255,0))
-				cv2.circle(tmp_image2, (side_view_pts[2,0],side_view_pts[2,1]), 5, (0,0,255))
-				cv2.circle(tmp_image2, (side_view_pts[3,0],side_view_pts[3,1]), 5, (255,0,255))
+				cv2.circle(tmp_image2, (side_view_pts[0,0],side_view_pts[0,1]), 7, (255,0,0),3)
+				cv2.circle(tmp_image2, (side_view_pts[1,0],side_view_pts[1,1]), 7, (0,255,0),3)
+				cv2.circle(tmp_image2, (side_view_pts[2,0],side_view_pts[2,1]), 7, (0,0,255),3)
+				cv2.circle(tmp_image2, (side_view_pts[3,0],side_view_pts[3,1]), 7, (255,0,255),3)
 
 				#print points1,points2
 				print "PtsA: ",ptsA
 				print "PtsB: ",ptsB
-				linesA = cv2.computeCorrespondEpilines(ptsA, 2,F)
-				linesB = cv2.computeCorrespondEpilines(ptsB, 1,F)
-				linesA = linesA.reshape(-1,3)
-				linesB = linesB.reshape(-1,3)
-				img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
+				#linesA = cv2.computeCorrespondEpilines(ptsA, 2,F)
+				#linesB = cv2.computeCorrespondEpilines(ptsB, 1,F)
+				#linesA = linesA.reshape(-1,3)
+				#linesB = linesB.reshape(-1,3)
+				#img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
 
-				cv2.imshow("image1 (1 edge)",img5)
-				cv2.imshow("image2 (1 edge)",img6)
+				cv2.imshow("image1 (2 edge)",tmp_image1)
+				cv2.imshow("image2 (2 edge)",tmp_image2)
 				cv2.waitKey(0)
-				cv2.destroyWindow("image1 (1 edge)")
-				cv2.destroyWindow("image2 (1 edge)")
+				cv2.destroyWindow("image1 (2 edge)")
+				cv2.destroyWindow("image2 (2 edge)")
 
 
 			if lines12:
 				if lines22:
-					(LineT,status) = cv2.findHomography(main_view_pts,side_view_pts)
+					if np.all(lines12 == lines22):
+						LineT = matchLines(points1, mat1, points2, mat2)
+					else:
+						(LineT,status) = cv2.findHomography(side_view_pts,main_view_pts)
 			else:
 				LineT = matchLines(points1, mat1, points2, mat2)
 			
@@ -1407,6 +1303,4 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 			LineT = np.eye(3)
 
 		return LineT
-	else:
-		print "ERROR: Unexpected number of points."
-		return np.zeros((3,3))
+

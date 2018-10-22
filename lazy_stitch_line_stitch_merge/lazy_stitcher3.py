@@ -192,6 +192,9 @@ class lazy_stitcher:
         #kernel_gradient = np.mat([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
         #main_view_edge = cv2.filter2D(main_view_object_mask,-1,kernel_gradient)
         #main_view_edge = (main_view_edge > 0).astype('uint8')
+        #pano1 = result2*(1 - mask1.astype('uint8')) + result1*mask1.astype('uint8')
+        #cv2.imshow("Pre-Correction",pano1)
+
 
 
         ### Perform Object detection and save timing info ###
@@ -204,7 +207,14 @@ class lazy_stitcher:
         file.write("\n")
         file.close()
 
+
+
+
         if obj_detected:
+
+                            #cv2.imshow("Original",side_view_frame)
+                            #cv2.imshow("Object",255*side_view_object_mask.astype('uint8'))
+                            #cv2.imshow("Edge",cv2.Canny(255*side_view_object_mask.astype('uint8'),20,60).astype('uint8') )
                             ### Perform Alignment and save timing info ###
                             file = open("obj_align_timing.txt","a")
                             t = time.time()
@@ -225,13 +235,23 @@ class lazy_stitcher:
                             t = time.time()
                             #tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
                             #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, side_view_background, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
-                            result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
+                            #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
+                            
+                            result2 = la.warpObject(side_view_object_mask,tempH,result2,side_view_frame,side_view_background,self.homography_list[idx])
+                            #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
+
                             warping_time = time.time() - t 
                             print "Object Warping: ", warping_time
                             file.write("Object Warping: ")
                             file.write(str(warping_time))
                             file.write("\n")
                             file.close()
+
+                            #pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
+                            #cv2.imshow("Post-Correction",pano2)
+                            #cv2.waitKey(0)
+                            #cv2.destroyWindow("Pre-Correction")
+                            #cv2.destroyWindow("Post-Correction")
                             
         return result1,result2,mask1,new_mask, shift, trans_matrix
 
