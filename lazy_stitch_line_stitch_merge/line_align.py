@@ -347,7 +347,7 @@ def loadnpz(filename):
 	return dst,K,R,t,F
 
 def lineDetect(image, edgeThresh = 20,N_size = 200 ):
-	# DEBUG: Sometimes detects lines incorrectly. 
+	# DEBUG: Sometimes detects lines incorrectly and has divide by zero errors for vertical lines.  
 	# LineDetect detects whether there is a single prominent line in the image or 2. If there are 2, then 
 	# the function will return the equation for each. Needs to be debugged, sometimes will only detect one 
 	# line even though two are present. 
@@ -711,6 +711,7 @@ def pairLines(lines1,lines2,H,main_view_seam):
 	mat1 = [0,0]
 	mat2 = [0,0]
 
+	
 	# Transform line to line segment
 	y1 = lines2[0][0]/np.sin(lines2[0][1]) # x = 0
 	y2 = -np.cos(lines2[0][1])/np.sin(lines2[0][1]) + y1 # x = 1
@@ -754,6 +755,13 @@ def pairLines(lines1,lines2,H,main_view_seam):
 	main_view_line2_pt = np.nonzero(mask4*main_view_seam)
 	side_view_line1_pt = np.nonzero(mask1*main_view_seam)
 	side_view_line2_pt = np.nonzero(mask2*main_view_seam)
+
+	if len(main_view_line1_pt[0]) == 0 or len(main_view_line2_pt[0]) == 0:
+		print "ERROR: Line does not intersect main view"
+		return lines1[0],lines2[0],lines1[1],lines2[1]
+	if len(side_view_line1_pt[0]) == 0 or len(side_view_line2_pt[0]) == 0:
+		print "ERROR: Line does not intersect side view"
+		return lines1[0],lines2[0],lines1[1],lines2[1]
 
 	main_view_line1_pt = [main_view_line1_pt[1][0],main_view_line1_pt[0][0]]
 	main_view_line2_pt = [main_view_line2_pt[1][0],main_view_line2_pt[0][0]]
@@ -1007,27 +1015,34 @@ def surgSeg(image, model,N_size = 20, edgeThresh = 20):
 #    return result1,[],[],[],[],[]
 
 def warpObject(side_view_object_mask,tempH,result2,side_frame,background_model,H):
+	if (tempH is None):
+		print "Error: No foreground homography"
+		return result2
 
-	side_view_object_mask = np.repeat(side_view_object_mask[:,:,np.newaxis],3,axis=2)\
+	side_view_object_mask = np.repeat(side_view_object_mask[:,:,np.newaxis],3,axis=2) #.astype('uint8')
 
-	trans_obj_mask = cv2.warpPerspective(side_view_object_mask,tempH, (result2.shape[1],result2.shape[0]))
-	#trans_obj_mask = np.repeat(trans_obj_mask[:,:,np.newaxis],3,axis=2)
-	trans_obj = cv2.warpPerspective(side_frame,tempH, (result2.shape[1],result2.shape[0]))
+	if (side_view_object_mask.shape[0] > 0) and (side_view_object_mask.shape[1] > 0 ):
 
-	background_fill = cv2.warpPerspective(background_model,H,(result2.shape[1],result2.shape[0]))    
+		trans_obj_mask = cv2.warpPerspective(side_view_object_mask,tempH, (result2.shape[1],result2.shape[0]))
+		#trans_obj_mask = np.repeat(trans_obj_mask[:,:,np.newaxis],3,axis=2)
+		trans_obj = cv2.warpPerspective(side_frame,tempH, (result2.shape[1],result2.shape[0]))
 
-	side_view_object_mask = cv2.warpPerspective(side_view_object_mask,H,(result2.shape[1],result2.shape[0]))    
+		background_fill = cv2.warpPerspective(background_model,H,(result2.shape[1],result2.shape[0]))    
 
-	result2 = side_view_object_mask*background_fill + (1- side_view_object_mask)*result2
-	result2 = trans_obj_mask*trans_obj + (1 - trans_obj_mask)*result2
+		side_view_object_mask = cv2.warpPerspective(side_view_object_mask,H,(result2.shape[1],result2.shape[0]))    
+
+		result2 = side_view_object_mask*background_fill + (1- side_view_object_mask)*result2
+		#cv2.imshow("Bacground Filled",result2)
+		result2 = trans_obj_mask*trans_obj + (1 - trans_obj_mask)*result2
     
-    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
-	#pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
+	    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
+		#pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
+
 
 	return result2
 
 
-def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_border,transformed_side_border,shift, N_size = 40, edgeThresh = 50,DRAW_LINES = True):
+def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_border,transformed_side_border,shift,H, N_size = 40, edgeThresh = 50,DRAW_LINES = False):
 	# lineAlign performs epipolar line alignment on the detected object. 
 	# the Function takes the following inputs:
 	# points1: a 1x2 or 2x2 matrix of the form [x,y] which denotes the approximate location of the intersection of
@@ -1155,6 +1170,8 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 		if lines22:
 			lines22 = [np.cos(-np.arctan2(shift2[0,1],shift2[0,0]) + lines22[1])*np.sqrt(pow(shift2[0,0],2) + pow(shift2[0,1],2)) + lines22[0],lines22[1]]
 
+		lines11,lines22,lines12,lines21 = pairLines([lines11,lines12],[lines21,lines22],H,main_seam)
+
 		print "Lines 1: ",lines11,lines12
 		print "Lines 2: ",lines21,lines22
 
@@ -1220,12 +1237,12 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 		print "DONE!"
 
 		# Perform Feature Matching
-		points1 = (points[0,0],points[0,1])
-		points2 = lineEdge(lines21,side_seam,side_border)
+		points1 = (main_view_pts[0,0],main_view_pts[0,1])
+		points2 = (side_view_pts[0,0],side_view_pts[0,1])
 		#points2 = (points2[0,0],points2[0,1])
-		mat1 = epiMatch(points1,lines12, F)
-		mat2 = lineEdge(lines11,main_seam,transformed_side_border)
-		points1 = (points1[0] + shift[0],points1[1] + shift[1])
+		mat1 = (main_view_pts[1,0],main_view_pts[1,1])
+		mat2 = (side_view_pts[1,0],side_view_pts[1,1])
+		#points1 = (points1[0] + shift[0],points1[1] + shift[1])
 		#mat2 = points2
 		#print "Points1: ", points1
 		#print "Points2: ",points2
@@ -1295,9 +1312,9 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 				LineT = matchLines(points1, mat1, points2, mat2)
 			
 
-			print "Proposed PtsB: ",np.dot(LineT,np.transpose(np.mat([[main_view_pts[0,0],main_view_pts[0,1],1],[main_view_pts[1,0],main_view_pts[1,1],1],[main_view_pts[2,0],main_view_pts[2,1],1],[main_view_pts[3,0],main_view_pts[3,1],1]])))
-			print "Actual Pts B: ",side_view_pts
-			print "LineT: ",LineT
+			#print "Proposed PtsB: ",np.dot(LineT,np.transpose(np.mat([[main_view_pts[0,0],main_view_pts[0,1],1],[main_view_pts[1,0],main_view_pts[1,1],1],[main_view_pts[2,0],main_view_pts[2,1],1],[main_view_pts[3,0],main_view_pts[3,1],1]])))
+			#print "Actual Pts B: ",side_view_pts
+			#print "LineT: ",LineT
 
 		else:
 			LineT = np.eye(3)

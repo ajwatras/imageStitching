@@ -192,7 +192,9 @@ class lazy_stitcher:
         #kernel_gradient = np.mat([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
         #main_view_edge = cv2.filter2D(main_view_object_mask,-1,kernel_gradient)
         #main_view_edge = (main_view_edge > 0).astype('uint8')
-        #pano1 = result2*(1 - mask1.astype('uint8')) + result1*mask1.astype('uint8')
+        pano1 = result2*(1 - mask1.astype('uint8')) + result1*mask1.astype('uint8')
+        #cv2.imshow("Main",main_view_frame)
+        #cv2.imshow("Side",side_view_frame)
         #cv2.imshow("Pre-Correction",pano1)
 
 
@@ -222,7 +224,7 @@ class lazy_stitcher:
                             side_view_main_mask = la.mapCoveredSide(self.homography_list[idx],main_view_frame,side_view_frame)
                             main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_view_frame, side_view_frame, mask1,mask2_original,self.homography_list[idx])
                             #tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
-                            tempH = la.lineAlign(pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift)
+                            tempH = la.lineAlign(pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift,self.homography_list[idx])
                             align_time = time.time() - t 
                             print "Object_Alignment: ", align_time
                             file.write("Object Alignment: ")
