@@ -209,6 +209,9 @@ class lazy_stitcher:
         file.write("\n")
         file.close()
 
+        #if np.mat(side_view_object_mask).size > 0:
+        #    cv2.imshow("side mask "+str(idx),255*side_view_object_mask.astype('uint8'))
+
 
 
 
@@ -224,7 +227,7 @@ class lazy_stitcher:
                             side_view_main_mask = la.mapCoveredSide(self.homography_list[idx],main_view_frame,side_view_frame)
                             main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_view_frame, side_view_frame, mask1,mask2_original,self.homography_list[idx])
                             #tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
-                            tempH = la.lineAlign(pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift,self.homography_list[idx])
+                            tempH = la.lineAlign(idx,pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift,self.homography_list[idx])
                             align_time = time.time() - t 
                             print "Object_Alignment: ", align_time
                             file.write("Object Alignment: ")
@@ -239,7 +242,7 @@ class lazy_stitcher:
                             #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, side_view_background, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
                             #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
                             
-                            result2 = la.warpObject(side_view_object_mask,tempH,result2,side_view_frame,side_view_background,self.homography_list[idx])
+                            result2 = la.warpObject(idx,side_view_object_mask,tempH,result2,side_view_frame,side_view_background,self.homography_list[idx],shift)
                             #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
 
                             warping_time = time.time() - t 

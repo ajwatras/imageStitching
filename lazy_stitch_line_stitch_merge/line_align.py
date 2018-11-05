@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from ulti import kmean
 from ulti import find_pairs
+import stitcher2
 
 def calcF(image1,image2,label=0, ratio=.75):
 	# Calculates the fundamental matrix between two cameras using matched feature points. This will give bad results if all of the detected 
@@ -135,11 +136,14 @@ def drawLines(rho,theta,image,color=(0,0,255),width=2):
 #It doesn't appear to be functioning correctly, hopefully that's on the code 
 # and not on the line transform, but if you run into issues with this, it might be 
 # worth debugging. 
+	if np.isnan(rho) or np.isnan(theta):
+		return
 
 	a = np.cos(theta)
 	b = np.sin(theta)
 	x0 = a*rho
 	y0 = b*rho
+	print "X0,b", x0,b,rho
 	x1 = int(x0 + 1000*(-b))
 	y1 = int(y0 + 1000*(a))
 	x2 = int(x0 - 1000*(-b))
@@ -675,7 +679,7 @@ def modelBackground(caps, CAL_LENGTH = 10):
 		output.append([])	
 		ret, frames[k] = caps[k].read()
 
-	print "Press P to start esimating background, press q to quit."
+	print "Press P to start estimating background, press q to quit."
 	while ret:
 		for k in range(0,n):
 			ret,frames[k] = caps[k].read()
@@ -1014,7 +1018,11 @@ def surgSeg(image, model,N_size = 20, edgeThresh = 20):
 
 #    return result1,[],[],[],[],[]
 
-def warpObject(side_view_object_mask,tempH,result2,side_frame,background_model,H):
+def warpObject(idx,side_view_object_mask,tempH,result2,side_frame,background_model,H,coord_shift):
+	# Applies the transformation computed by the alignment step to the detected foreground
+	# object and blends it with the orignal frame using the background model to fill in the gap.
+	stitch = stitcher2.Stitcher()
+
 	if (tempH is None):
 		print "Error: No foreground homography"
 		return result2
@@ -1027,13 +1035,29 @@ def warpObject(side_view_object_mask,tempH,result2,side_frame,background_model,H
 		#trans_obj_mask = np.repeat(trans_obj_mask[:,:,np.newaxis],3,axis=2)
 		trans_obj = cv2.warpPerspective(side_frame,tempH, (result2.shape[1],result2.shape[0]))
 
+		# This does not apply correctly for frame 3
+		background_model = np.pad(background_model,((coord_shift[0],0),(coord_shift[1],0),(0,0)),'constant',constant_values = 0)
 		background_fill = cv2.warpPerspective(background_model,H,(result2.shape[1],result2.shape[0]))    
+		#_,background_fill,_,_,_,_ = stitch.applyHomography(side_frame,side_frame,H)
 
+		if idx == 2:
+			cv2.imshow("pre-transform", 255*side_view_object_mask.astype('uint8'))
+
+		# This line does not behave appropriately when used on side_view frame 3.
+		side_view_object_mask = np.pad(side_view_object_mask,((coord_shift[0],0),(coord_shift[1],0),(0,0)),'constant',constant_values = 0)
 		side_view_object_mask = cv2.warpPerspective(side_view_object_mask,H,(result2.shape[1],result2.shape[0]))    
+		#_,side_view_object_mask,_,_,_,_ = stitch.applyHomography(side_view_object_mask,side_view_object_mask,H)
+
 
 		result2 = side_view_object_mask*background_fill + (1- side_view_object_mask)*result2
-		#cv2.imshow("Bacground Filled",result2)
+		#if idx == 2:
+		#	cv2.imshow("Background Filled"+str(idx),result2)
 		result2 = trans_obj_mask*trans_obj + (1 - trans_obj_mask)*result2
+
+		#if idx == 2:
+		#	cv2.imshow("obj mask "+str(idx),255*side_view_object_mask.astype('uint8'))
+		#	cv2.imshow('back fill '+str(idx),background_fill)
+			#cv2.imshow("result2 "+str(idx),result2)
     
 	    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
 		#pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
@@ -1042,7 +1066,7 @@ def warpObject(side_view_object_mask,tempH,result2,side_frame,background_model,H
 	return result2
 
 
-def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_border,transformed_side_border,shift,H, N_size = 40, edgeThresh = 50,DRAW_LINES = False):
+def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side_border,transformed_side_border,shift,H, N_size = 40, edgeThresh = 70,DRAW_LINES = False):
 	# lineAlign performs epipolar line alignment on the detected object. 
 	# the Function takes the following inputs:
 	# points1: a 1x2 or 2x2 matrix of the form [x,y] which denotes the approximate location of the intersection of
@@ -1146,12 +1170,12 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 		sub2 = np.repeat(sub2[:,:,np.newaxis],3,axis=2)
 
 		#print lines1
-		drawLines(lines11[0],lines11[1],sub1)
-		drawLines(lines21[0],lines21[1],sub2)
-		if lines12:
-			drawLines(lines12[0],lines12[1],sub1)
-		if lines22:
-			drawLines(lines22[0],lines22[1],sub2)
+		#drawLines(lines11[0],lines11[1],sub1)
+		#drawLines(lines21[0],lines21[1],sub2)
+		#if lines12:
+		#	drawLines(lines12[0],lines12[1],sub1)
+		#if lines22:
+		#	drawLines(lines22[0],lines22[1],sub2)
 		#cv2.imshow("line1",sub1)
 		#cv2.imshow("line2",sub2)
 		#cv2.waitKey(0)
@@ -1201,13 +1225,14 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 
 		side_view_pts[0,:] = epiMatch((main_view_pts[0,0],main_view_pts[0,1]),lines21,F)
 		side_view_pts[1,:] = epiMatch((main_view_pts[1,0],main_view_pts[1,1]),lines22,F)
-		#side_view_pts[0,:] = lineEdge(lines21,side_seam,1 - side_border)
-		#side_view_pts[1,:] = lineEdge(lines22,side_seam,1 - side_border)
 		side_view_pts[2,:] = lineEdge(lines21,side_seam,side_border)
 		side_view_pts[3,:] = lineEdge(lines22,side_seam,side_border)
 
 		main_view_pts = main_view_pts.astype('int')
 		side_view_pts = side_view_pts.astype('int')
+
+		if (main_view_pts[2,:] == (-10,-10)).all() or (main_view_pts[3,:] == (-10,-10)).all() or (side_view_pts[2,:] == (-10,-10)).all() or (side_view_pts[3,:] == (-10,-10)).all():
+			return H
 
 		print "Shift: ",shift
 		print "Points: ",points
@@ -1295,11 +1320,11 @@ def lineAlign(points1, image1,points2, image2, F, main_seam, side_seam, side_bor
 				#linesB = linesB.reshape(-1,3)
 				#img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
 
-				cv2.imshow("image1 (2 edge)",tmp_image1)
-				cv2.imshow("image2 (2 edge)",tmp_image2)
-				cv2.waitKey(0)
-				cv2.destroyWindow("image1 (2 edge)")
-				cv2.destroyWindow("image2 (2 edge)")
+				cv2.imshow("image1 (2 edge) "+str(idx),tmp_image1)
+				cv2.imshow("image2 (2 edge) "+str(idx),tmp_image2)
+				#cv2.waitKey(0)
+				#cv2.destroyWindow("image1 (2 edge)")
+				#cv2.destroyWindow("image2 (2 edge)")
 
 
 			if lines12:
