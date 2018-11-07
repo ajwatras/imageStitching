@@ -23,6 +23,10 @@ print filepath+'m.avi'
 #cap_main = cv2.VideoCapture(1)
 #cap_side = [cv2.VideoCapture(2), cv2.VideoCapture(3), cv2.VideoCapture(4)]
 
+#Clear timing info
+open('obj_align_timing.txt','w').close()
+open('obj_det_timing.txt','w').close()
+open('obj_warp_timing.txt','w').close()
 
 _, main_view_frame = cap_main.read()
 _, side_view_frame_1 = cap_side[0].read()

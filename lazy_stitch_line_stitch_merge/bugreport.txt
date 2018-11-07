@@ -1,0 +1,15 @@
+Patch 1.0.1
+KNOWN BUGS
+Bug 1: Side view frame 2 does not correctly remove foreground object.
+Bug 2: Side view frame may detect incorrect point correspondences when the coordinate system needs to be shifted. 
+*Bug 3: There is no error correction for the failure case of line detection. (Line = 0,0)
+*Bug 4: When lineEdge returns a failure case, it is treated as a successful case. (Should be corrected.)
+*Bug 5: Epipolar matching may cause point correspondences from outside of the image to be used
+
+KNOWN ISSUES
+Issue 1: Alignment takes too much time and must be sped up. (Determined that PairLines takes an inordinate amount of time.)
+Issue 2: If object has not been detected in side view, alignment will not occur even if object is detected in other views. 
+Issue 3: Alignment errors are too frequent. 
+Issue 4: Alignment does not vary smoothly from frame to frame.
+Issue 5: PairLines code takes too long and must be sped up. 
+Issue 6: LineDetect seems to be selecting bad lines

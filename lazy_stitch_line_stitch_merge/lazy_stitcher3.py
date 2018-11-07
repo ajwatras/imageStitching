@@ -225,7 +225,7 @@ class lazy_stitcher:
                             t = time.time()
                             # Detect Main View location in side view
                             side_view_main_mask = la.mapCoveredSide(self.homography_list[idx],main_view_frame,side_view_frame)
-                            main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_view_frame, side_view_frame, mask1,mask2_original,self.homography_list[idx])
+                            main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_view_frame, side_view_frame, mask1,mask2_original,self.homography_list[idx],shift)
                             #tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
                             tempH = la.lineAlign(idx,pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift,self.homography_list[idx])
                             align_time = time.time() - t 
