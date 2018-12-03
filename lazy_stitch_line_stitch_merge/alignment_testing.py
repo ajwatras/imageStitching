@@ -54,7 +54,8 @@ cv2.destroyWindow("pano")
 # generate main_view edge
 main_view_edge = stitch.mapMainView(H,main_frame,side_frame)
 side_view_edge = stitch.mapSeams(H,main_frame,side_frame)
-
+print "Shift: ",shift
+#shift = [shift[1],shift[0]]
 # generate object masks
 H_list = [H]
 M_edge_list = [main_view_edge]

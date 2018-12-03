@@ -1,10 +1,13 @@
 Patch 1.0.1
-KNOWN BUGS
-Bug 1: Side view frame 2 does not correctly remove foreground object.
-Bug 2: Side view frame may detect incorrect point correspondences when the coordinate system needs to be shifted. 
+KNOWN BUGS (* indicates fixed)
+*Bug 1: Side view frame 2 does not correctly remove foreground object.
+*Bug 2: Side view frame may detect incorrect point correspondences when the coordinate system needs to be shifted. 
 *Bug 3: There is no error correction for the failure case of line detection. (Line = 0,0)
 *Bug 4: When lineEdge returns a failure case, it is treated as a successful case. (Should be corrected.)
 *Bug 5: Epipolar matching may cause point correspondences from outside of the image to be used
+*Bug 6: The algorithm is incorrectly applying lineEdge in frame 2. 
+*Bug 7: When the algorithm can not find the lineEdge and there is a coordinate shift in H, the code does not behave properly. 
+*Bug 8: Line-Edge intersection is not correctly being handled in image 1 due to the way the mask is being warped.
 
 KNOWN ISSUES
 Issue 1: Alignment takes too much time and must be sped up. (Determined that PairLines takes an inordinate amount of time.)
@@ -13,3 +16,10 @@ Issue 3: Alignment errors are too frequent.
 Issue 4: Alignment does not vary smoothly from frame to frame.
 Issue 5: PairLines code takes too long and must be sped up. 
 Issue 6: LineDetect seems to be selecting bad lines
+Issue 7: Our method is not robust when edge lines are near parallel to epipolar lines.
+
+FIXED ISSUE
+Fix: Applied all background warps before all foreground warps so that corrected objects won't get stuck behind background.
+Fix: Applied Dilation to seam mask so that the difference between image homography and point homography won't be a problem. 
+Fix: Applied background filling before background warping so that object segmentation is handled correctly. 
+

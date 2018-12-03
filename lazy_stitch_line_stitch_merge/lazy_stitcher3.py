@@ -131,6 +131,12 @@ class lazy_stitcher:
         self.buffer_current_idx.append(False)
         self.diff_buffer[len(side_view_frames)][:,:,int(self.buffer_current_idx[len(side_view_frames)])] = main_view_cal_image[:,:,1];
 
+        ##############################################
+        self.background_models = []
+        self.intensity_weights = [[]] * (len(side_view_frames) + 1)
+
+        ##############################################
+
 
     def read_next_frame(self, main_view_frame, side_view_frames):
         intensity_diff_threshold = 20;
@@ -158,16 +164,17 @@ class lazy_stitcher:
         return side_view_has_motion, seam_has_motion
 
     def stitch(self, main_view_frame, side_view_frames,models):
+        transformed_side_obj = [[]] * len(side_view_frames)
         sti = stitcher.Stitcher();
         out_pos = self.main_view_upleft_coord
         side_view_has_motion, seam_has_motion = self.read_next_frame(main_view_frame, side_view_frames)
         print side_view_has_motion, seam_has_motion
         for i in range(len(side_view_frames)):
             if side_view_has_motion[i]:
-                (_, transformed_side_view, _, side_mask, line_shift, _) = self.line_stitch(main_view_frame, side_view_frames[i], i,models[0],models[i+1])
+                (_, transformed_side_bg,transformed_side_obj[i], _, side_mask, line_shift, _) = self.line_stitch(main_view_frame, side_view_frames[i], i,models[0],models[i+1])
                 # Comment when updating to line_align_3
-                temp_result_window = self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_view.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_view.shape[1], :]
-                self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_view.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_view.shape[1], :] = transformed_side_view * self.transformed_mask_side_view[i] + temp_result_window * np.logical_not(self.transformed_mask_side_view[i])
+                temp_result_window = self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_bg.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_bg.shape[1], :]
+                self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_bg.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_bg.shape[1], :] = transformed_side_bg * self.transformed_mask_side_view[i] + temp_result_window * np.logical_not(self.transformed_mask_side_view[i])
 
                 ## Uncomment when updating to line_align_3
                 #temp_shift = [0,0]
@@ -176,6 +183,19 @@ class lazy_stitcher:
                 #self.final_pano = la.placeFrame(self.final_pano, transformed_side_view, side_mask, temp_shift )
                 #if True: #seam_has_motion[i]:
                     #self.line_stitch(main_view_frame, side_view_frames[i], i)
+            else:
+                result1,result2,mask1,mask2_original, shift, trans_matrix = sti.applyHomography(main_view_frame,side_view_frames[i],self.homography_list[i])
+                temp_result_window = self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :]
+                self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :] = result2 * self.transformed_mask_side_view[i] + temp_result_window * np.logical_not(self.transformed_mask_side_view[i])
+
+
+        for i in range(len(side_view_frames)):
+            if side_view_has_motion[i]:
+                if len(transformed_side_obj[i]) > 0:
+                    temp_result_window = self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_obj[i].shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_obj[i].shape[1], :]
+                    obj_mask = (transformed_side_obj[i] > 0).astype('uint8')
+                    self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_obj[i].shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_obj[i].shape[1], :] = transformed_side_obj[i] * obj_mask + temp_result_window * (1- obj_mask)
+
         self.final_pano[out_pos[0]:out_pos[0]+self.main_view_image_shape[0], out_pos[1]:out_pos[1]+self.main_view_image_shape[1],:] = main_view_frame
 
         return self.final_pano, main_view_frame, side_view_frames
@@ -192,7 +212,7 @@ class lazy_stitcher:
         #kernel_gradient = np.mat([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
         #main_view_edge = cv2.filter2D(main_view_object_mask,-1,kernel_gradient)
         #main_view_edge = (main_view_edge > 0).astype('uint8')
-        pano1 = result2*(1 - mask1.astype('uint8')) + result1*mask1.astype('uint8')
+        #pano1 = result2*(1 - mask1.astype('uint8')) + result1*mask1.astype('uint8')
         #cv2.imshow("Main",main_view_frame)
         #cv2.imshow("Side",side_view_frame)
         #cv2.imshow("Pre-Correction",pano1)
@@ -214,7 +234,9 @@ class lazy_stitcher:
 
 
 
-
+        
+        bg_image = result2
+        obj_image = []
         if obj_detected:
 
                             #cv2.imshow("Original",side_view_frame)
@@ -225,15 +247,19 @@ class lazy_stitcher:
                             t = time.time()
                             # Detect Main View location in side view
                             side_view_main_mask = la.mapCoveredSide(self.homography_list[idx],main_view_frame,side_view_frame)
-                            main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_view_frame, side_view_frame, mask1,mask2_original,self.homography_list[idx],shift)
+                            main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_view_frame, side_view_frame, mask1,new_mask,self.homography_list[idx],shift)
                             #tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
-                            tempH = la.lineAlign(idx,pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift,self.homography_list[idx])
+                            tempH,post_obj_mask = la.lineAlign(idx,pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift,self.homography_list[idx])
                             align_time = time.time() - t 
                             print "Object_Alignment: ", align_time
                             file.write("Object Alignment: ")
                             file.write(str(align_time))
                             file.write("\n")
                             file.close()
+
+                            #if len(post_obj_mask) > 0:
+                            #    cv2.imshow("Mask",post_obj_mask)
+                            #    cv2.waitKey(0)
 
                             ### Perform warping and save timing info ###
                             file = open("obj_warp_timing.txt","a")
@@ -242,7 +268,7 @@ class lazy_stitcher:
                             #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, side_view_background, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
                             #result1,result2,mask1,new_mask, shift, trans_matrix = la.warpObject(main_view_frame, side_view_frame, side_view_object_mask, tempH, self.homography_list[idx], sti,result1,mask1,result2,shift, new_mask, trans_matrix)
                             
-                            result2 = la.warpObject(idx,side_view_object_mask,tempH,result2,side_view_frame,side_view_background,self.homography_list[idx],shift)
+                            bg_image,obj_image = la.warpObject(idx,side_view_object_mask,post_obj_mask,tempH,result2,side_view_frame,side_view_background,self.homography_list[idx],shift)
                             #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
 
                             warping_time = time.time() - t 
@@ -253,12 +279,13 @@ class lazy_stitcher:
                             file.close()
 
                             #pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
-                            #cv2.imshow("Post-Correction",pano2)
+                            #if len(obj_image) > 0:
+                            #    cv2.imshow("Object: "+str(idx),obj_image)
                             #cv2.waitKey(0)
                             #cv2.destroyWindow("Pre-Correction")
                             #cv2.destroyWindow("Post-Correction")
                             
-        return result1,result2,mask1,new_mask, shift, trans_matrix
+        return result1,bg_image,obj_image,mask1,new_mask, shift, trans_matrix
 
 
 if __name__ == "__main__":
