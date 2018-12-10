@@ -1,6 +1,6 @@
-Average Detection Time: .02244863088341829085
-Average Detection FPS: 44.54614649745304711524
-Average Alignment Time: .19977091061487522603
-Average Alignment FPS: 5.00573380239444419989
-Average Warping Time: 
-Average Warping FPS: 
+Average Detection Time: .01501880515189384920
+Average Detection FPS: 66.58319286297561913840
+Average Alignment Time: .09484791698226240963
+Average Alignment FPS: 10.54319411344595852627
+Average Warping Time: .03655224248587493975
+Average Warping FPS: 27.35810259483901287945

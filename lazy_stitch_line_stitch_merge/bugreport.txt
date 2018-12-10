@@ -11,7 +11,7 @@ KNOWN BUGS (* indicates fixed)
 
 KNOWN ISSUES
 Issue 1: Alignment takes too much time and must be sped up. (Determined that PairLines takes an inordinate amount of time.)
-Issue 2: If object has not been detected in side view, alignment will not occur even if object is detected in other views. 
+*Issue 2: If object has not been detected in side view, alignment will not occur even if object is detected in other views. 
 Issue 3: Alignment errors are too frequent. 
 Issue 4: Alignment does not vary smoothly from frame to frame.
 Issue 5: PairLines code takes too long and must be sped up. 
@@ -23,3 +23,11 @@ Fix: Applied all background warps before all foreground warps so that corrected 
 Fix: Applied Dilation to seam mask so that the difference between image homography and point homography won't be a problem. 
 Fix: Applied background filling before background warping so that object segmentation is handled correctly. 
 
+TASKS:
+*Task 1: Use initial image model to perform stitching on all subsequent frames.
+Task 2: Perform Intensity Normalization upon all frames as they are read. 
+Task 3: Fill Blind Spots that occur at the corner of the image where no camera has vision
+Task 4: Detect which camera contains the object tip and bring that camera to the top of the image stack
+Task 5: Use the results from task 4 to automatically change the viewpoint of the mosaic to that of the camera which contains the object tip.
+Task 6: Apply view morphing techniques to interpolate between the camera views, allowing for smooth transitions from viewpoints and greater
+		viewpoint choices.
