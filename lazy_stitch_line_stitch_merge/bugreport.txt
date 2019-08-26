@@ -27,16 +27,27 @@ TASKS:
 *Task 1: Use initial image model to perform stitching on all subsequent frames.
 	- Maximum frame rate Approximately 10 fps.
 	- Requires additional testing to ensure robustness to video conditions.
+<<<<<<< HEAD
 *Task 2: Perform Intensity Normalization upon all frames as they are read. 
 	-Both additive and multiplicative correction seem to not function well enough, We need true blending or color based blending.
 *Task 3: Fill Blind Spots that occur at the corner of the image where no camera has vision
+=======
+Task 2: Perform Intensity Normalization upon all frames as they are read. 
+	-Both additive and multiplicative correction seem to not function well enough, We need true blending or color based blending.
+Task 3: Fill Blind Spots that occur at the corner of the image where no camera has vision
+	-Incompatible with current alignment code. Need to adjust.
+	-Adjusted, but doesn't look great without proper blending. Also, slows down runtime some (amount TBD)
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 Task 4: Detect which camera contains the object tip and bring that camera to the top of the image stack.
 Task 5: Use the results from task 4 to automatically change the viewpoint of the mosaic to that of the camera which contains the object tip.
 Task 6: Apply view morphing techniques to interpolate between the camera views, allowing for smooth transitions from viewpoints and greater
 		viewpoint choices.
 Task 7: Switch from mask based to geometry based approach for seam location and lineEdge
 Task 8: Centralize line alignment code away from general stitching code so that it can be migrated to new stitching framework.
+<<<<<<< HEAD
 Task 9: Re-do edge intersection so that it grabs outer edge of square image
 Task 10: Perform Object Tracking on object. 
+=======
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
 

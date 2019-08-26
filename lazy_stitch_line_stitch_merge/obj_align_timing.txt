@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Object Alignment: 0.264972925186
 Object Alignment: 0.1229429245
 Object Alignment: 0.165312051773
@@ -413,3 +414,31 @@ Object Alignment: 0.132984161377
 Object Alignment: 0.132336854935
 Object Alignment: 0.133417844772
 Object Alignment: 0.134053945541
+=======
+Object Alignment: 0.266800880432
+Object Alignment: 0.119645833969
+Object Alignment: 0.135431051254
+Object Alignment: 0.134516000748
+Object Alignment: 0.125608921051
+Object Alignment: 0.100607872009
+Object Alignment: 0.0997459888458
+Object Alignment: 0.0987439155579
+Object Alignment: 0.100082159042
+Object Alignment: 0.0982339382172
+Object Alignment: 0.0987458229065
+Object Alignment: 0.0991921424866
+Object Alignment: 0.100587844849
+Object Alignment: 0.0977649688721
+Object Alignment: 0.100558042526
+Object Alignment: 0.0960068702698
+Object Alignment: 0.103518009186
+Object Alignment: 0.103951931
+Object Alignment: 0.0990660190582
+Object Alignment: 0.100968122482
+Object Alignment: 0.0942511558533
+Object Alignment: 0.0979421138763
+Object Alignment: 0.0974068641663
+Object Alignment: 0.103923082352
+Object Alignment: 0.104766845703
+Object Alignment: 0.105875015259
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e

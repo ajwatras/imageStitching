@@ -20,6 +20,7 @@ import time
 
 # If reading from file
 filepath = '../data/pi_writer/'         #If reading from file, put video file location here. 
+<<<<<<< HEAD
 #cap_main = cv2.VideoCapture(filepath+'output1.avi')
 #cap_side = [cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
 caps = [cv2.VideoCapture(filepath+'output1.avi'),cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
@@ -29,6 +30,11 @@ caps = [cv2.VideoCapture(filepath+'output1.avi'),cv2.VideoCapture(filepath+'outp
 
 
 
+=======
+cap_main = cv2.VideoCapture(filepath+'output1.avi')
+cap_side = [cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
+
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 # If reading from webcam
 #print filepath+'m.avi' 
 #cap_main = cv2.VideoCapture(1)
@@ -53,8 +59,12 @@ open('frame_timing.txt','w').close()
 
 
 # Calibrate lazy stitcher (See lazy_stitcher3.py)
+<<<<<<< HEAD
 #a = la.lazy_stitcher(cap_main,cap_side)
 a = la.lazy_stitcher(caps)
+=======
+a = la.lazy_stitcher(cap_main,cap_side)
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
 # Initialize Output Video Writer 
 # For Real Time Recording, use Kazam software instead to capture video with variable frame rates.
@@ -66,6 +76,7 @@ out = cv2.VideoWriter('./pano.avi',fourcc, 20.0, (467,454))
 # The large bulk of our runtime is spent converting video streams into a single video panorama. This contains the implementation of
 # *Paper Location TBD*.
 
+<<<<<<< HEAD
 #side_view_frames = [[]] * len(cap_side)
 ## Read Initial Frames (Reading new frames done at end of loop to ensure proper termination if video feed ends)
 #ret,main_view_frame = cap_main.read()
@@ -78,11 +89,20 @@ for i in range(len(caps)):
     ret,frames[i] = caps[i].read()
 
 print "Frame Length 1: ",len(frames)
+=======
+side_view_frames = [[]] * len(cap_side)
+## Read Initial Frames (Reading new frames done at end of loop to ensure proper termination if video feed ends)
+ret,main_view_frame = cap_main.read()
+for i in range(len(cap_side)):
+    _,side_view_frames[i] = cap_side[i].read()
+
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 ## Loop through each frame
 while ret:
     t = time.time()
 
     ## Correct for intensity discrepancy (See *Paper Location TBD*)
+<<<<<<< HEAD
     #frame_list = [[]] * (len(cap_side) + 1)
     #frame_list[0] = main_view_frame
     #for i in range(len(cap_side)):
@@ -94,6 +114,18 @@ while ret:
     ## Apply stitching (See lazy_stitcher3.py)
     #pano = a.stitch(main_view_frame, side_view_frames,a.background_models)
     pano = a.stitch(frames,a.background_models)
+=======
+    frame_list = [[]] * (len(cap_side) + 1)
+    frame_list[0] = main_view_frame
+    for i in range(len(cap_side)):
+        frame_list[i+1] = side_view_frames[i]
+    #Apply Correction
+    main_view_frame,side_view_frames = a.correctIntensity(main_view_frame,side_view_frames)
+
+
+    ## Apply stitching (See lazy_stitcher3.py)
+    pano = a.stitch(main_view_frame, side_view_frames,a.background_models)
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
     ## Fill in Background with average color (See *Paper Location TBD*)
     #hole_mask = (pano == 0).astype('uint8')
@@ -115,6 +147,7 @@ while ret:
     out.write(pano)
 
     #Check Termination Key
+<<<<<<< HEAD
     rep = cv2.waitKey(10)
 
     ## Read next frames
@@ -145,3 +178,13 @@ while ret:
         print "Changing Main View to 5"
         a.changeMainView(4,frames)
 ################################################### End Streaming ##############################################################################################
+=======
+    if cv2.waitKey(1) == ord('q'):
+        exit(0)
+
+    ## Read next frames
+    ret,main_view_frame = cap_main.read()
+    for i in range(len(cap_side)):
+        _,side_view_frames[i] = cap_side[i].read()
+################################################### End Streaming ##############################################################################################3
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e

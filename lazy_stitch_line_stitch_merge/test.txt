@@ -66094,6 +66094,7 @@ Line Detection 3: 0.0
 Point Correction: 0.000149011611938
 Point Choosing: 0.0684170722961
 Transformation Calculation: 0.000155210494995
+<<<<<<< HEAD
 Line Detection 1: 0.0784630775452
 Line Detection 2: 0.000302076339722
 Line Detection 3: 0.104317903519
@@ -99862,3 +99863,5 @@ Line Detection 3: 0.129502773285
 Point Correction: 0.00122308731079
 Point Choosing: 0.0537178516388
 Transformation Calculation: 0.000173091888428
+=======
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e

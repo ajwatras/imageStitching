@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Object Warping: 0.0558309555054
 Object Warping: 0.0478410720825
 Object Warping: 0.0458478927612
@@ -413,3 +414,31 @@ Object Warping: 0.0364809036255
 Object Warping: 0.0371270179749
 Object Warping: 0.039204120636
 Object Warping: 0.0381879806519
+=======
+Object Warping: 0.054762840271
+Object Warping: 0.0407538414001
+Object Warping: 0.0440979003906
+Object Warping: 0.0476858615875
+Object Warping: 0.0469748973846
+Object Warping: 0.0377700328827
+Object Warping: 0.0378630161285
+Object Warping: 0.0374529361725
+Object Warping: 0.037428855896
+Object Warping: 0.0375838279724
+Object Warping: 0.0374488830566
+Object Warping: 0.0383920669556
+Object Warping: 0.0377631187439
+Object Warping: 0.037682056427
+Object Warping: 0.0371599197388
+Object Warping: 0.0379109382629
+Object Warping: 0.0375950336456
+Object Warping: 0.0379519462585
+Object Warping: 0.0380539894104
+Object Warping: 0.0379528999329
+Object Warping: 0.0371150970459
+Object Warping: 0.0376739501953
+Object Warping: 0.0380687713623
+Object Warping: 0.0375080108643
+Object Warping: 0.0371441841125
+Object Warping: 0.0383830070496
+>>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
