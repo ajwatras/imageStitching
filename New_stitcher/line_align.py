@@ -4,6 +4,13 @@ from ulti import kmean
 from ulti import find_pairs
 import stitcher2
 import time
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
+from shapely.geometry import LineString
+from shapely.geometry import LinearRing
+from shapely.geometry import MultiPoint
+from shapely.geometry import Point
+#import shapely
 
 def calcF(image1,image2,label=0, ratio=.75):
 	# Calculates the fundamental matrix between two cameras using matched feature points. This will give bad results if all of the detected 
@@ -168,10 +175,10 @@ def drawLines(rho,theta,image,color=(0,0,255),width=2):
 	x0 = a*rho
 	y0 = b*rho
 	#print "X0,b", x0,b,rho
-	x1 = int(x0 + 10000*(-b))
-	y1 = int(y0 + 10000*(a))
-	x2 = int(x0 - 10000*(-b))
-	y2 = int(y0 - 10000*(a))
+	x1 = int(x0 + 1000*(-b))
+	y1 = int(y0 + 1000*(a))
+	x2 = int(x0 - 1000*(-b))
+	y2 = int(y0 - 1000*(a))
     
 	#print (x1,y1)
 	#print (x2,y2)
@@ -218,6 +225,37 @@ def epiMatch(point, line, F, D = 1):
 	#print "ERROR FROM LINES: ", err1, err2
 
 	return (int(x),int(y2))
+
+def drawShape(shape,img,color = (0,255,0)):
+	x_vals = []
+	y_vals = []
+	if shape.type == 'LineString':
+			for point in list(shape.coords):
+				x_vals.append(point[0])
+				y_vals.append(point[1])
+				if len(x_vals) > 1:
+					start_point = (int(x_vals[-2]),int(y_vals[-2]))
+					end_point = (int(x_vals[-1]),int(y_vals[-1]))
+					#print start_point,end_point
+					cv2.line(img, start_point,end_point,color)
+	else:
+		for section in shape:
+			x_vals = []
+			y_vals = []
+			if section.type == 'LineString':
+				for point in list(section.coords):
+					x_vals.append(point[0])
+					y_vals.append(point[1])
+					if len(x_vals) > 1:
+						start_point = (int(x_vals[-2]),int(y_vals[-2]))
+						end_point = (int(x_vals[-1]),int(y_vals[-1]))
+						cv2.line(img, start_point,end_point,(0,255,0))
+
+			if section.type == 'MultiPoint':
+				print "Error: Points, not Line"
+			else:
+				print section.type
+				print "Error: Don't know what type this is"
 
 def findOuterEdge(image,seam,line):
 	# TESTING: Code for finding the intersection of LINE with the outer edge of the IMAGE.
@@ -271,6 +309,33 @@ def findOuterEdge(image,seam,line):
 	
 	# return edge point
 	return point[0,:]
+
+def findSeams(main_corners,side_corners):
+	# Using the coordinates of the main view and side view corners, finds the line segment showing where
+	# the edge of the main view overlaps with the side view in the transformed coordinate system. 
+	side_poly = Polygon([(side_corners[0,0],side_corners[1,0]),(side_corners[0,1],side_corners[1,1]),(side_corners[0,2],side_corners[1,2]),(side_corners[0,3],side_corners[1,3])])
+	main_lines = LinearRing([(main_corners[0,0],main_corners[1,0]),(main_corners[0,1],main_corners[1,1]),(main_corners[0,2],main_corners[1,2]),(main_corners[0,3],main_corners[1,3])])
+	seam_lines = main_lines.intersection(side_poly)
+	seam = []
+	
+	if seam_lines.type == "LineString":
+		for i in range(len(seam_lines.coords)):
+			seam.append(seam_lines.coords[i])
+	else:
+		for i in range(len(seam_lines)):
+			temp_line = seam_lines.geoms[i].coords
+			if i == 0:
+				seam.append(temp_line[0])
+
+			seam.append(temp_line[1])
+			if np.all(temp_line[0] != seam_lines.geoms[i-1].coords[1]):
+				print "ERROR: Line segments did not connect"
+				print temp_line[0]
+				print seam_lines.geoms[i-1].coords[1]
+	#print seam_line
+	#print seam
+	return seam # May just want to return seam_lines instead
+
 def genBorderMasks(main_frame,side_frame, main_mask,side_mask,H,shift,edgeThresh = 1):
 	# generate initial masks
 	side_border = np.zeros(side_frame.shape)
@@ -286,92 +351,100 @@ def genBorderMasks(main_frame,side_frame, main_mask,side_mask,H,shift,edgeThresh
 
 	return main_seam, side_seam, side_border, transformed_side_border
 
-def genMainMask(main_view_frame,main_view_background,crossing_edges_main_view_list):
-	main_view_object_mask = identifyFG(main_view_frame, main_view_background).astype('uint8')
-	main_view_edge = cv2.Canny(main_view_object_mask, 50, 150)
-	main_view_object_mask = (main_view_object_mask/255).astype('uint8')
-	kernel_gradient = np.mat([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
-	main_view_edge = cv2.filter2D(main_view_object_mask,-1,kernel_gradient)
-	main_view_edge = (main_view_edge > 0).astype('uint8')
-
-	pts = np.nonzero(main_view_edge * crossing_edges_main_view_list[:,:,0])
-	pts = np.asarray(pts)
-	if pts.shape[1] >= 2:
-		clusters_main_view, cluster_err = kmean(pts, 2)
-		pts1 = np.mat([[clusters_main_view[1,0], clusters_main_view[0,0]], [clusters_main_view[1,1], clusters_main_view[0,1]]])
-		return True,pts1,main_view_object_mask
-
-	return False, [], []
-
-def genObjMask(idx,main_view_frame, main_view_background, side_view_frame,side_view_background, crossing_edges_main_view_list, crossing_edges_side_views_list, homography_list ):
+def genObjMask(idx,main_view_frame, main_view_background, side_view_frame,side_view_background, seam,coord_shift,detect_pad = 5):
 	# genObjMask detects a moving object which crosses the seam line between the main view and the side view. It returns a sub image containing the object,
 	# and a point declaring the location of the 0.0 pixel of the mask in the original image.
 
-    main_view_object_mask = identifyFG(main_view_frame, main_view_background).astype('uint8')
-    main_view_edge = cv2.Canny(main_view_object_mask, 50, 150)
-    main_view_object_mask = (main_view_object_mask/255).astype('uint8')
-    kernel_gradient = np.mat([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
-    main_view_edge = cv2.filter2D(main_view_object_mask,-1,kernel_gradient)
-    main_view_edge = (main_view_edge > 0).astype('uint8')
 
-    side_view_object_mask = identifyFG(side_view_frame, side_view_background).astype('uint8')
-    side_view_edge = cv2.Canny(side_view_object_mask,50,150)
-    side_view_object_mask = (side_view_object_mask/255).astype('uint8')
-    side_view_edge = cv2.filter2D(side_view_object_mask,-1,kernel_gradient)
-    side_view_edge = (side_view_edge > 0).astype('uint8')
+	#print "Detecting Main View Object..."
+	main_view_object_mask = identifyFG(main_view_frame, main_view_background).astype('uint8')
+	object_locations = np.nonzero(main_view_object_mask)
+	if len(object_locations[0]) == 0:
+		print "No difference from previous frame"
+		return False, [],[],[],[]
+
+	bound_box = [np.min(object_locations[0])-detect_pad,np.max(object_locations[0])+ detect_pad,np.min(object_locations[1])-detect_pad,np.max(object_locations[1])+detect_pad]
+	bound_rect = Polygon([(bound_box[2],bound_box[0]),(bound_box[2],bound_box[1]),(bound_box[3],bound_box[1]),(bound_box[3],bound_box[0])])
+	#print "Bound Box: ", bound_rect
+	#print "Seam: ", seam
+
+
+	if not seam.intersects(bound_rect):
+		print "No object overlap"
+		return False,[],[],[],[]
 
     # DISPLAY DETECTED OBJECTS
-    #cv2.imshow("Side View Object"+str(idx),side_view_object_mask*255)
-    #cv2.imshow("side View mask"+str(idx), np.logical_or(self.crossing_edges_side_views_list[idx], side_view_object_mask).astype('uint8')*255 ) 
-    #cv2.imwrite("side_view_object"+str(idx)+".jpg",side_view_object_mask*255)
-    #cv2.imwrite("side_view_mask"+str(idx)+".jpg",np.logical_or(self.crossing_edges_side_views_list[idx], side_view_object_mask).astype('uint8')*255 )
-    #cv2.waitKey(10)
+    #tmp_img = 255*np.repeat(main_view_object_mask[:,:,np.newaxis],3,axis=2).astype('uint8')
+	#print "tmp_img shape: ", tmp_img.shape
+	#drawShape(seam,tmp_img)
+	#drawShape(seam,bounding_rect)
+	#cv2.imshow("Detected Object, tmp_img)
 
-    pts = np.nonzero(main_view_edge * crossing_edges_main_view_list[idx])
-    pts = np.asarray(pts)
+	# Choose main view points. 
+	tmp = seam.intersection(bound_rect)
+	pts = [[],[]]
+	for pt in list(tmp.coords):
+		print pt
+		pts[0].append(pt[0])
+		pts[1].append(pt[1])
+    
 
-    if pts.shape[1] >= 2:
-            print "Object detected in main view"
-            clusters_main_view, cluster_err = kmean(pts, 2)
-            #if cluster_err <= 10:
-            if True:    
-                side_view_object_mask = identifyFG(side_view_frame, side_view_background).astype('uint8')
-                side_view_edge = cv2.Canny(side_view_object_mask,50,150)
-                side_view_object_mask = (side_view_object_mask/255).astype('uint8')
-                side_view_edge = cv2.filter2D(side_view_object_mask,-1,kernel_gradient)
-                side_view_edge = (side_view_edge > 0).astype('uint8')  
+	pts = np.asarray(pts)
+	#print "Pts", pts
+	#print "Pts Shape: ",pts.shape
+	if pts.shape[1] >= 2:
+	            print "Object detected in main view"
+	            clusters_main_view, cluster_err = kmean(pts, 2)
+	            #if cluster_err <= 10:
+	            if True:    
+					side_view_object_mask = identifyFG(side_view_frame, side_view_background).astype('uint8')
+					object_locations = np.nonzero(side_view_object_mask)
+					
+					if len(object_locations[0]) == 0:
+						print "No object in Side Frame."
+						return False,[],[],[],[]
+					bound_box = [np.min(object_locations[0])-detect_pad,np.max(object_locations[0])+ detect_pad,np.min(object_locations[1])-detect_pad,np.max(object_locations[1])+detect_pad]
+					bound_rect = Polygon([(bound_box[2],bound_box[0]),(bound_box[2],bound_box[1]),(bound_box[3],bound_box[1]),(bound_box[3],bound_box[0])])
+
+					if not seam.intersects(bound_rect):
+						print "Side View does not overlap"
+						return False,[],[],[],[]
                 
-                #cv2.imshow("side View mask"+str(idx), side_view_object_mask*255 )              
-                #cv2.imshow("Side View Frame " +str(idx), side_view_frame)
-                #cv2.waitKey(10)
-                #print np.nonzero(side_view_edge)
 
-                pts = np.nonzero(side_view_edge * crossing_edges_side_views_list[idx])
-                pts = np.asarray(pts)
-                if pts.shape[1] >= 2:
-                    print "Object Detected in side view"
-                    clusters_side_view, cluster_err = kmean(pts, 2)
-                    #if cluster_err <= 10:
-                    if True:
-                        dist_main = np.sum(np.square(clusters_main_view[:, 0] - clusters_main_view[:, 1]))
-                        dist_side = np.sum(np.square(clusters_side_view[:, 0] - clusters_side_view[:, 1]))
-                        print dist_main, dist_side
-                        if True:
-                        #if dist_main >= 100 and dist_main <= 5000 and dist_side >= 100 and dist_side <= 5000:
+					pts = [[],[]]
+					for pt in list(tmp.coords):
+						print pt
+						pts[0].append(pt[0])
+						pts[1].append(pt[1])
+    
+					pts = np.asarray(pts)
 
-                            clusters_side_view = find_pairs(clusters_main_view, clusters_side_view, homography_list[idx])
+					#pts = np.nonzero(side_view_edge * crossing_edges_side_views_list[idx])
+					#pts = np.asarray(pts)
+					if pts.shape[1] >= 2:
+						print "Object Detected in side view"
+						clusters_side_view, cluster_err = kmean(pts, 2)
+	                    #if cluster_err <= 10:
+						if True:
+							dist_main = np.sum(np.square(clusters_main_view[:, 0] - clusters_main_view[:, 1]))
+							dist_side = np.sum(np.square(clusters_side_view[:, 0] - clusters_side_view[:, 1]))
+							print dist_main, dist_side
+							if True:
+                        	#if dist_main >= 100 and dist_main <= 5000 and dist_side >= 100 and dist_side <= 5000:
 
-                            ##############################
-                            pts1 = np.mat([[clusters_main_view[1,0], clusters_main_view[0,0]], [clusters_main_view[1,1], clusters_main_view[0,1]]])
-                            pts2 = np.mat([[clusters_side_view[1,0], clusters_side_view[0,0]], [clusters_side_view[1,1], clusters_side_view[0,1]]])
-                            pts1 = np.mat([pts1[0,0], pts1[0,1]])
-                            pts2 = np.mat([pts2[0,0], pts2[0,1]])
+								clusters_side_view = find_pairs(clusters_main_view, clusters_side_view, np.eye(3))
 
-                            return True,pts1,pts2,main_view_object_mask,side_view_object_mask
+                            	##############################
+								pts1 = np.mat([[clusters_main_view[1,0], clusters_main_view[0,0]], [clusters_main_view[1,1], clusters_main_view[0,1]]])
+								pts2 = np.mat([[clusters_side_view[1,0], clusters_side_view[0,0]], [clusters_side_view[1,1], clusters_side_view[0,1]]])
+								pts1 = np.mat([pts1[0,0], pts1[0,1]])
+								pts2 = np.mat([pts2[0,0], pts2[0,1]])
+
+								return True,pts1,pts2,main_view_object_mask,side_view_object_mask
 
 
 
-    return False, [], [], [], []
+	return False, [], [], [], []
 
 
 def identifyFG(frame, model,thresh = 40):
@@ -590,24 +663,21 @@ def lineEdge(idx,line, frame_mask, border_mask):
 	line_mask = np.zeros(frame_mask.shape)
 	drawLines(line[0],line[1],line_mask,(1,1,1),1)
 
-	#kernel = np.ones((5,5),np.uint8)
-	#frame_mask[:,:,0] = cv2.dilate(frame_mask[:,:,0],kernel,iterations=1)
-
 	possible_points = np.nonzero(line_mask[:,:,0]*border_mask[:,:,0]*(1-frame_mask[:,:,0]))
 
-	#if idx == 0:
+	if idx == 2:
 	#temp = np.nonzero(line_mask[:,:,0]*border_mask[:,:,0])
 	#print "line,border: ",temp
 	#print "frame_mask: ", frame_mask[temp[0][0],temp[1][0],0]
-		#temp_display = np.zeros(line_mask.shape)
-		#temp_display[:,:,0] = line_mask[:,:,0]
-		#temp_display[:,:,1] = border_mask[:,:,0]*(1-frame_mask[:,:,0])
-		#temp_display[:,:,2] = (1- frame_mask[:,:,0])
+		temp_display = np.zeros(line_mask.shape)
+		temp_display[:,:,0] = line_mask[:,:,0]
+		temp_display[:,:,1] = border_mask[:,:,0]
+		temp_display[:,:,2] = (1- frame_mask[:,:,0])
 	#R = np.zeros([256,256,3])
 	#R[:,:,1] = 255
 	#cv2.imshow("R",R)
-		#cv2.imshow("temp display",temp_display)
-		#cv2.waitKey(0)
+		cv2.imshow("temp display",temp_display)
+		cv2.waitKey(0)
 	#cv2.destroyWindow("temp display")
 
 	if(len(possible_points[0]) > 1):
@@ -1079,35 +1149,29 @@ def surgSeg(image, model,N_size = 20, edgeThresh = 20):
 
 #    return result1,[],[],[],[],[]
 
-def warpObject(idx,side_view_object_mask,trans_obj_mask,tempH,result2,side_frame,background_model,H,coord_shift):
+def warpObject(idx,side_view_object_mask,tempH,result2,side_frame,background_model,H,coord_shift):
 	# Applies the transformation computed by the alignment step to the detected foreground
 	# object and blends it with the orignal frame using the background model to fill in the gap.
 	stitch = stitcher2.Stitcher()
 
 	if (tempH is None):
 		print "Error: No foreground homography"
-		return result2,[]
+		return result2
 
-	#side_view_object_mask = np.repeat(side_view_object_mask[:,:,np.newaxis],3,axis=2) #.astype('uint8')
+	side_view_object_mask = np.repeat(side_view_object_mask[:,:,np.newaxis],3,axis=2) #.astype('uint8')
 
 	if (side_view_object_mask.shape[0] > 0) and (side_view_object_mask.shape[1] > 0 ):
 		print tempH
 		if (len(side_view_object_mask.shape) == 2):
 			side_view_object_mask = np.repeat(side_view_object_mask[:,:,np.newaxis],3,axis=2)
 
-		#trans_obj_mask = cv2.warpPerspective(side_view_object_mask,tempH, (result2.shape[1],result2.shape[0]))
-		#trans_obj_mask = side_view_object_mask
+		trans_obj_mask = cv2.warpPerspective(side_view_object_mask,tempH, (result2.shape[1],result2.shape[0]))
 		#trans_obj_mask = np.repeat(trans_obj_mask[:,:,np.newaxis],3,axis=2)
 		trans_obj = cv2.warpPerspective(side_frame,tempH, (result2.shape[1],result2.shape[0]))
 
 		# This does not apply correctly for frame 3
-		#background_model = np.pad(background_model,((coord_shift[0],0),(coord_shift[1],0),(0,0)),'constant',constant_values = 0)
-
-		background_fill = side_frame*(1 - side_view_object_mask) + background_model* side_view_object_mask
-		trans = np.eye(3)
-		trans[0,2] = coord_shift[0]
-		trans[1,2] = coord_shift[1]
-		background_fill = cv2.warpPerspective(background_fill,np.dot(trans,H),(result2.shape[1],result2.shape[0]))    
+		background_model = np.pad(background_model,((coord_shift[0],0),(coord_shift[1],0),(0,0)),'constant',constant_values = 0)
+		background_fill = cv2.warpPerspective(background_model,H,(result2.shape[1],result2.shape[0]))    
 		#_,background_fill,_,_,_,_ = stitch.applyHomography(side_frame,side_frame,H)
 
 		if idx == 2:
@@ -1124,11 +1188,10 @@ def warpObject(idx,side_view_object_mask,trans_obj_mask,tempH,result2,side_frame
 		#trans_obj = np.pad(trans_obj,((coord_shift[1],0),(coord_shift[1],0),(0,0)),'constant',constant_values = 0)
 		#trans_obj = trans_obj[0:n[0],0:n[1],0:n[2]]
 		
-		result2 = background_fill
+		result2 = side_view_object_mask*background_fill + (1- side_view_object_mask)*result2
 		#if idx == 2:
 		#	cv2.imshow("Background Filled"+str(idx),result2)
 		result2 = trans_obj_mask*trans_obj + (1 - trans_obj_mask)*result2
-		trans_obj = trans_obj_mask*trans_obj
 
 		if idx == 2:
 			cv2.imshow("obj mask "+str(idx),255*side_view_object_mask.astype('uint8'))
@@ -1140,187 +1203,8 @@ def warpObject(idx,side_view_object_mask,trans_obj_mask,tempH,result2,side_frame
 	    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
 		#pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
 
-	print background_fill.shape
-	print trans_obj.shape
-	return background_fill, trans_obj
 
-def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transformed_side_border,shift,N_size = 40, edgeThresh = 70,DRAW_LINES = True):
-	# For Timing info
-	file = open("test.txt",'a')
-
-	# Avoid error cases
-	if points1[0,1] <= N_size:
-		points1[0,1] = N_size
-	if points1[0,0] <= N_size:
-		points1[0,0] = N_size
-
-	out_obj_mask = []
-
-
-	## Line Detection
-	t = time.time()
-	#Isolate Point Neighborhoods
-	sub1 = image1[points1[0,1] - N_size:points1[0,1]+N_size, points1[0,0] - N_size:points1[0,0]+N_size]
-
-	#Identify the coordinate shift for sub neighborhoods. 
-	shift1 = shift + points1[0,:] - [N_size,N_size]
-	points1 = points1 + shift
-
-	# Detect dominant lines
-	print sub1.shape
-	lines11, lines12 = lineDetect(sub1,edgeThresh,N_size)
-	line_time = time.time() - t
-
-
-	## Coordinate Shifting
-	t = time.time()
-	# If no lines are found, print error and return identity
-	if (lines11 is None):
-		print "Error: Lines not found", lines1
-		return np.zeros((3,3)),out_obj_mask
-
-	sub1 = np.repeat(sub1[:,:,np.newaxis],3,axis=2)
-	lines11 = [np.cos(-np.arctan2(shift1[0,1],shift1[0,0]) + lines11[1])*np.sqrt(pow(shift1[0,0],2) + pow(shift1[0,1],2)) + lines11[0],lines11[1]]
-	if lines12:
-		lines12 = [np.cos(-np.arctan2(shift1[0,1],shift1[0,0]) + lines12[1])*np.sqrt(pow(shift1[0,0],2) + pow(shift1[0,1],2)) + lines12[0],lines12[1]]
-	line2_time = time.time() - t
-
-
-	## Line Pairing
-	t = time.time()
-	#lines11,lines22,lines12,lines21 = pairLines([lines11,lines12],[lines21,lines22],H,main_seam)
-	line3_time = time.time() - t
-
-	print "Lines 1: ",lines11,lines12
-
-
-	## Ensure Point lies on line
-	t = time.time()
-	points = np.zeros((2,2))
-	points[0,0], points[0,1] = correctPoint(points1[0,0],points1[0,1],lines11)
-	if lines12:
-		print "Adjusting for lines12"
-		points[1,0],points[1,1] = correctPoint(points1[0,0],points1[0,1],lines12)
-	points = np.round(points).astype('int')
-	correction_time = time.time() - t
-
-
-	## Choose Main View Points
-	t = time.time()
-	main_view_pts =  np.zeros((4,2))
-	main_view_pts[0,:] = points[0,:] #+ np.mat([shift[0],shift[1]])
-	main_view_pts[1,:] = points[1,:] #+ np.mat([shift[0],shift[1]])
-	main_view_pts[3,:] = lineEdge(idx,lines11,main_seam,transformed_side_border) #+ np.mat([shift[0],shift[1]])
-	main_view_pts[2,:] = lineEdge(idx,lines12,main_seam,transformed_side_border) #+ np.mat([shift[0],shift[1]])
-	main_view_pts = main_view_pts.astype('int')
-	point_time = time.time() - t
-
-	print "Shift: ",shift
-	print "Points: ",points
-	print "Main View Points: ",main_view_pts
-	print "Side View Points: ",side_view_pts
-	print "Main Seam Shape: ",main_seam.shape
-	print "DONE!"
-
-
-	## 
-	pts = main_view_pts.reshape((-1,1,2))
-	out_obj_mask = np.zeros((main_seam.shape[0],main_seam.shape[1],3))
-
-	print pts.shape, pts.dtype
-	print out_obj_mask.shape
-	cv2.fillPoly(out_obj_mask,[pts],(1,1,1))
-
-	# Perform Feature Matching
-	points1 = (main_view_pts[0,0],main_view_pts[0,1])
-	points2 = (side_view_pts[0,0],side_view_pts[0,1])
-	mat1 = (main_view_pts[1,0],main_view_pts[1,1])
-	mat2 = (side_view_pts[1,0],side_view_pts[1,1])
-
-
-	## Visualize Results
-	if DRAW_LINES:
-				ptsB = np.mat([points1,mat2])
-				ptsA = np.mat([mat1,points2])
-				#tmp_image1 = np.repeat(image1[:, :, np.newaxis], 3, axis=2)
-				#tmp_image2 = np.repeat(image2[:, :, np.newaxis], 3, axis=2)
-				tmp_image2 = np.ones(image2.shape).astype('uint8')
-				#tmp_image1 = np.copy(100*main_seam).astype('uint8')
-				tmp_image1 = 50*np.ones((main_seam.shape[0], main_seam.shape[1],3)).astype('uint8')
-				tmp_image1[0:image1.shape[0],0:image1.shape[1],:] = np.repeat(image1[:,:,np.newaxis],3,axis=2).astype('uint8')
-				#print tmp_image1.shape
-
-				tmp_image1 = np.pad(tmp_image1,((shift[1],0),(shift[0],0),(0,0)),'constant',constant_values = 0)
-
-
-
-				drawLines(lines11[0],lines11[1],tmp_image1)
-				#drawLines(lines21[0],lines21[1],tmp_image2)
-				if lines12:
-					drawLines(lines12[0],lines12[1],tmp_image1)
-				#if lines22:
-				#	drawLines(lines22[0],lines22[1],tmp_image2)
-
-
-				
-				#cv2.circle(tmp_image1, mat2, 5, (255,0,0))
-				#cv2.circle(tmp_image2, mat1, 5, (0,255,0))
-				#cv2.circle(tmp_image1, points1, 5, (0,255,0))
-				#cv2.circle(tmp_image2, points2, 5, (255,0,0))
-
-				cv2.circle(tmp_image1, (main_view_pts[0,0],main_view_pts[0,1]), 7, (255,0,0),3)
-				cv2.circle(tmp_image1, (main_view_pts[1,0],main_view_pts[1,1]), 7, (0,255,0),3)
-				cv2.circle(tmp_image1, (main_view_pts[2,0],main_view_pts[2,1]), 7, (0,0,255),3)
-				cv2.circle(tmp_image1, (main_view_pts[3,0],main_view_pts[3,1]), 7, (255,0,255),3)
-
-				cv2.circle(tmp_image2, (side_view_pts[0,0],side_view_pts[0,1]), 7, (255,0,0),3)
-				cv2.circle(tmp_image2, (side_view_pts[1,0],side_view_pts[1,1]), 7, (0,255,0),3)
-				cv2.circle(tmp_image2, (side_view_pts[2,0],side_view_pts[2,1]), 7, (0,0,255),3)
-				cv2.circle(tmp_image2, (side_view_pts[3,0],side_view_pts[3,1]), 7, (255,0,255),3)
-
-				#print points1,points2
-				print "PtsA: ",ptsA
-				print "PtsB: ",ptsB
-				#linesA = cv2.computeCorrespondEpilines(ptsA, 2,F)
-				#linesB = cv2.computeCorrespondEpilines(ptsB, 1,F)
-				#linesA = linesA.reshape(-1,3)
-				#linesB = linesB.reshape(-1,3)
-				#img5,img6 = drawEpilines(tmp_image1,tmp_image2,linesA,linesB,ptsB,ptsA)
-				print "tmp Image Shape: ",tmp_image2.shape
-				cv2.imshow("image1 (2 edge) ",tmp_image1)
-				cv2.imshow("image2 (2 edge) ",tmp_image2)
-				#cv2.waitKey(0)
-				#cv2.destroyWindow("image1 (2 edge)")
-				#cv2.destroyWindow("image2 (2 edge)")
-
-
-	t = time.time()
-	if (main_view_pts[2,:] == (-10,-10)).all() or (main_view_pts[3,:] == (-10,-10)).all() or (side_view_pts[2,:] == (-10,-10)).all() or (side_view_pts[3,:] == (-10,-10)).all():
-		print "ERROR: Unable to detect line edge intersection",
-		print "Main view points: ", main_view_pts
-		print "Side view points: ",side_view_pts
-		shift_mat = np.eye(3)
-		shift_mat[0,2] = shift[0]
-		shift_mat[1,2] = shift[1]
-		return np.eye(3), out_obj_mask
-
-	
-	(LineT,status) = cv2.findHomography(side_view_pts,main_view_pts)
-	trans_time = time.time() - t
-
-	# Print timing info
-	file.write("Line Detection 1: " + str(line_time) + "\n")
-	file.write("Line Detection 2: " + str(line2_time) + "\n")
-	file.write("Line Detection 3: " + str(line3_time) + "\n")
-	file.write("Point Correction: " + str(correction_time) + "\n")
-	file.write("Point Choosing: " + str(point_time) + "\n")
-	file.write("Transformation Calculation: " + str(trans_time) + "\n")
-
-	file.close()
-	#print "Proposed PtsB: ",np.dot(LineT,np.transpose(np.mat([[main_view_pts[0,0],main_view_pts[0,1],1],[main_view_pts[1,0],main_view_pts[1,1],1],[main_view_pts[2,0],main_view_pts[2,1],1],[main_view_pts[3,0],main_view_pts[3,1],1]])))
-	#print "Actual Pts B: ",side_view_pts
-	print "LineT: ",LineT
-	return LineT,out_obj_mask
+	return result2
 
 
 def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side_border,transformed_side_border,shift,H, N_size = 40, edgeThresh = 70,DRAW_LINES = False):
@@ -1361,7 +1245,7 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 	# \hat{p}_4 = p_4
 		file = open("test.txt",'a')
 
-		if idx == 4:
+		if idx == 2:
 			DRAW_LINES = True
 		# The function then computes a homography transformation H_{obj} that align the \hat{p}_i to the p_i.
 
@@ -1383,8 +1267,6 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 			points2[0,0] = N_size
 		#End Error checking segment. 
 
-		out_obj_mask = []
-
 		t = time.time()
 		#Isolate point Neighborhoods
 		sub1 = image1[points1[0,1] - N_size:points1[0,1]+N_size, points1[0,0] - N_size:points1[0,0]+N_size]
@@ -1392,7 +1274,7 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 
 		#Identify the coordinate shift for sub neighborhoods. 
 		shift1 = shift + points1[0,:] - [N_size,N_size]
-		shift2 = points2[0,:] - [N_size,N_size]
+		shift2 =points2[0,:] - [N_size,N_size]
 		points1 = points1 + shift
 		points2 = points2 + shift
 
@@ -1406,7 +1288,7 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 		# If no lines are found, print error and return identity
 		if (lines11 is None) or (lines21 is None):
 			print "Error: Lines not found", lines1, lines2
-			return np.zeros((3,3)),out_obj_mask,[]
+			return np.zeros((3,3))
 
 		sub1 = np.repeat(sub1[:,:,np.newaxis],3,axis=2)
 		sub2 = np.repeat(sub2[:,:,np.newaxis],3,axis=2)
@@ -1429,15 +1311,13 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 		t = time.time()
 		#Ensure points lie on a line.
 		#print points1, correctPoint(points1[0,0],points1[0,1],lines1)
-		points = np.zeros((4,2))
+		points = np.zeros((2,2))
 		print "Points: ",points
 		points[0,0], points[0,1] = correctPoint(points1[0,0],points1[0,1],lines11)
-		points[2,0],points[2,1] = correctPoint(points2[0,0],points2[0,1],lines21)
 		#points[0,0], points[0,1] = correctPoint(lines11,transformed_side_seam)
 		if lines12:
 			print "Adjusting for lines12"
 			points[1,0],points[1,1] = correctPoint(points1[0,0],points1[0,1],lines12)
-			points[3,0],points[3,1] = correctPoint(points2[0,0],points2[0,1],lines12)
 			#points[1,0], points[1,1] = correctPoint(lines12,transformed_side_seam)
 			#x,y = correctPoint(points1[0,0],points1[0,1],lines12)
 			#print"XY: ", x,y
@@ -1454,18 +1334,13 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 
 		main_view_pts[0,:] = points[0,:] #+ np.mat([shift[0],shift[1]])
 		main_view_pts[1,:] = points[1,:] #+ np.mat([shift[0],shift[1]])
-		main_view_pts[3,:] = lineEdge(idx,lines11,main_seam,transformed_side_border) #+ np.mat([shift[0],shift[1]])
-		main_view_pts[2,:] = lineEdge(idx,lines12,main_seam,transformed_side_border) #+ np.mat([shift[0],shift[1]])
+		main_view_pts[2,:] = lineEdge(idx,lines11,main_seam,transformed_side_border) #+ np.mat([shift[0],shift[1]])
+		main_view_pts[3,:] = lineEdge(idx,lines12,main_seam,transformed_side_border) #+ np.mat([shift[0],shift[1]])
 
 		side_view_pts[0,:] = epiMatch((main_view_pts[0,0],main_view_pts[0,1]),lines21,F)
 		side_view_pts[1,:] = epiMatch((main_view_pts[1,0],main_view_pts[1,1]),lines22,F)
-		
-		#side_view_pts[0,:] = lineEdge(idx,lines21,1 - side_seam,side_border)
-		#side_view_pts[1,:] = lineEdge(idx,lines22,1 - side_seam,side_border)
-		#side_view_pts[0,:] = points[2,:]
-		#side_view_pts[1,:] = points[3,:]
-		side_view_pts[3,:] = lineEdge(idx,lines21,side_seam,side_border)
-		side_view_pts[2,:] = lineEdge(idx,lines22,side_seam,side_border)
+		side_view_pts[2,:] = lineEdge(idx,lines21,side_seam,side_border)
+		side_view_pts[3,:] = lineEdge(idx,lines22,side_seam,side_border)
 
 		main_view_pts = main_view_pts.astype('int')
 		side_view_pts = side_view_pts.astype('int')
@@ -1531,13 +1406,6 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 		print "Main View Points: ",main_view_pts
 		print "Side View Points: ",side_view_pts
 		print "DONE!"
-
-		# Place object Mask Here
-		pts = main_view_pts.reshape((-1,1,2))
-		out_obj_mask = np.zeros((main_seam.shape[0],main_seam.shape[1],3))
-		print pts.shape,pts.dtype
-		print out_obj_mask.shape
-		cv2.fillPoly(out_obj_mask,[pts],(1,1,1))
 
 		# Perform Feature Matching
 		points1 = (main_view_pts[0,0],main_view_pts[0,1])
@@ -1607,7 +1475,7 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 			shift_mat = np.eye(3)
 			shift_mat[0,2] = shift[0]
 			shift_mat[1,2] = shift[1]
-			return np.dot(shift_mat,H), out_obj_mask,side_view_pts
+			return np.dot(shift_mat,H)
 
 		if lines12:
 			if lines22:
@@ -1632,5 +1500,5 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 		#print "Proposed PtsB: ",np.dot(LineT,np.transpose(np.mat([[main_view_pts[0,0],main_view_pts[0,1],1],[main_view_pts[1,0],main_view_pts[1,1],1],[main_view_pts[2,0],main_view_pts[2,1],1],[main_view_pts[3,0],main_view_pts[3,1],1]])))
 		#print "Actual Pts B: ",side_view_pts
 		print "LineT: ",LineT
-		return LineT,out_obj_mask,side_view_pts
+		return LineT
 

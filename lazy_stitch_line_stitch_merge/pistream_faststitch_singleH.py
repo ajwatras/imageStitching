@@ -50,14 +50,12 @@ open('read_frame_timing.txt','w').close()
 open('bg_subtract_timing.txt','w').close()
 open('check_seam_timing.txt','w').close()
 open('Det_edge_line_timing.txt','w').close()
-open('match_lines_timing.txt','w').close()
+open('Match_lines_timing.txt','w').close()
 open('det_feat_timing.txt','w').close()
 open('comp_H_timing.txt','w').close()
 open('apply_H_timing.txt','w').close()
 open('blend_timing.txt','w').close()
 
-# For test purposes we use timing_test.txt
-open('test_time.txt','w').close()
 
 ############################### Set Running Parameters #########################################################################
 # Set runtime flags in order to  turn on or off certain functionality. DO_LINE_ALINE turns on parallax correction. 
@@ -151,12 +149,7 @@ while ret:
     t = time.time()
     for i in range(len(caps)):
         ret,frames[i] = caps[i].read()
-    read_time = time.time() - t
-    read_file = open('read_frame_timing.txt','a')
-    read_file.write("Frame Reading time : ")
-    read_file.write(str(read_time))
-    read_file.write('\n')
-
+        read_time = time.time() - t
 
 
     if rep == ord('q'):

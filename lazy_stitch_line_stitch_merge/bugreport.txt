@@ -1,0 +1,42 @@
+Patch 1.0.1
+KNOWN BUGS (* indicates fixed)
+*Bug 1: Side view frame 2 does not correctly remove foreground object.
+*Bug 2: Side view frame may detect incorrect point correspondences when the coordinate system needs to be shifted. 
+*Bug 3: There is no error correction for the failure case of line detection. (Line = 0,0)
+*Bug 4: When lineEdge returns a failure case, it is treated as a successful case. (Should be corrected.)
+*Bug 5: Epipolar matching may cause point correspondences from outside of the image to be used
+*Bug 6: The algorithm is incorrectly applying lineEdge in frame 2. 
+*Bug 7: When the algorithm can not find the lineEdge and there is a coordinate shift in H, the code does not behave properly. 
+*Bug 8: Line-Edge intersection is not correctly being handled in image 1 due to the way the mask is being warped.
+
+KNOWN ISSUES
+Issue 1: Alignment takes too much time and must be sped up. (Determined that PairLines takes an inordinate amount of time.)
+*Issue 2: If object has not been detected in side view, alignment will not occur even if object is detected in other views. 
+Issue 3: Alignment errors are too frequent. 
+Issue 4: Alignment does not vary smoothly from frame to frame.
+Issue 5: PairLines code takes too long and must be sped up. 
+Issue 6: LineDetect seems to be selecting bad lines
+Issue 7: Our method is not robust when edge lines are near parallel to epipolar lines.
+
+FIXED ISSUE
+Fix: Applied all background warps before all foreground warps so that corrected objects won't get stuck behind background.
+Fix: Applied Dilation to seam mask so that the difference between image homography and point homography won't be a problem. 
+Fix: Applied background filling before background warping so that object segmentation is handled correctly. 
+
+TASKS:
+*Task 1: Use initial image model to perform stitching on all subsequent frames.
+	- Maximum frame rate Approximately 10 fps.
+	- Requires additional testing to ensure robustness to video conditions.
+*Task 2: Perform Intensity Normalization upon all frames as they are read. 
+	-Both additive and multiplicative correction seem to not function well enough, We need true blending or color based blending.
+*Task 3: Fill Blind Spots that occur at the corner of the image where no camera has vision
+Task 4: Detect which camera contains the object tip and bring that camera to the top of the image stack.
+Task 5: Use the results from task 4 to automatically change the viewpoint of the mosaic to that of the camera which contains the object tip.
+Task 6: Apply view morphing techniques to interpolate between the camera views, allowing for smooth transitions from viewpoints and greater
+		viewpoint choices.
+Task 7: Switch from mask based to geometry based approach for seam location and lineEdge
+Task 8: Centralize line alignment code away from general stitching code so that it can be migrated to new stitching framework.
+Task 9: Re-do edge intersection so that it grabs outer edge of square image
+Task 10: Perform Object Tracking on object. 
+
+

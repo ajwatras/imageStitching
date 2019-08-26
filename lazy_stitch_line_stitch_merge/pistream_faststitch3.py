@@ -1,9 +1,16 @@
 import cv2
 import urllib
 import numpy as np
-import lazy_stitcher3 as lazy_stitcher
-import line_align as la
+import line_align4 as la
+import time
 
+################################## Set Input Video Locations ##################################################################
+# Video can be read from a variety of different locations. OpenCV by default handles USB webcams, but reading from video files 
+# can be useful for testing purposes, and the EasyVis prototype uses ethernet for video streaming (See *Paper Location TBD*).
+# Set the approppriate video source below. 
+
+
+# If reading from streaming video
 #cap1 = cv2.VideoCapture('http://10.42.0.101:8010/?action=stream')
 #cap2 = cv2.VideoCapture('http://10.42.0.102:8020/?action=stream')
 #cap3 = cv2.VideoCapture('http://10.42.0.103:8030/?action=stream')
@@ -11,54 +18,130 @@ import line_align as la
 #cap_main = cap1
 #cap_side = [cap2,cap3,cap4]
 
-filepath = '../data/pi_writer/'
-cap_main = cv2.VideoCapture(filepath+'output1.avi')
-cap_side = [cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
+# If reading from file
+filepath = '../data/pi_writer/'         #If reading from file, put video file location here. 
+#cap_main = cv2.VideoCapture(filepath+'output1.avi')
+#cap_side = [cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
+caps = [cv2.VideoCapture(filepath+'output1.avi'),cv2.VideoCapture(filepath+'output2.avi'), cv2.VideoCapture(filepath+'output3.avi'), cv2.VideoCapture(filepath+'output4.avi')]
 
-#filepath = '../data/Line_Align/test2/'
-#cap_main = cv2.VideoCapture(filepath+'m.avi')
-#cap_side = [cv2.VideoCapture(filepath+'s1.avi'), cv2.VideoCapture(filepath+'s2.avi'), cv2.VideoCapture(filepath+'s3.avi'),cv2.VideoCapture(filepath+'s4.avi')]
+#filepath = './AlignmentTraining/'         #If reading from file, put video file location here. 
+#caps = [cv2.VideoCapture(filepath+'m.avi'),cv2.VideoCapture(filepath+'s1.avi'), cv2.VideoCapture(filepath+'s2.avi'), cv2.VideoCapture(filepath+'s3.avi'),cv2.VideoCapture(filepath+'s4.avi')]
 
-print filepath+'m.avi' 
+
+
+# If reading from webcam
+#print filepath+'m.avi' 
 #cap_main = cv2.VideoCapture(1)
 #cap_side = [cv2.VideoCapture(2), cv2.VideoCapture(3), cv2.VideoCapture(4)]
 
+################################ Reset Timing Info #############################################################################
+# In order to benchmark the line alignment code, we divide the streaming phase of the algorithm into three major steps: Detection
+# Alignment, and Warping. The "timing_compile.sh" script in the parent directory can be used to get average runtimes for these
+# steps, but we want to ensure that we only include the latest code run in our averaging, so we reset that here. 
 
-_, main_view_frame = cap_main.read()
-_, side_view_frame_1 = cap_side[0].read()
-_, side_view_frame_2 = cap_side[1].read()
-_, side_view_frame_3 = cap_side[2].read()
-#_, side_view_frame_4 = cap_side[3].read()
+#Clear timing info
+open('obj_align_timing.txt','w').close()
+open('obj_det_timing.txt','w').close()
+open('obj_warp_timing.txt','w').close()
+open('frame_timing.txt','w').close()
 
-print main_view_frame.shape
-print side_view_frame_1.shape
-print side_view_frame_2.shape
-print side_view_frame_3.shape
-
-a = lazy_stitcher.lazy_stitcher(main_view_frame, [side_view_frame_1, side_view_frame_2, side_view_frame_3])
-#a = lazy_stitcher.lazy_stitcher(main_view_frame, [side_view_frame_1, side_view_frame_2, side_view_frame_3,side_view_frame_4])
-
-#caps = [cap_main,cap_side[0],cap_side[1],cap_side[2],cap_side[3]]
-caps = [cap_main,cap_side[0],cap_side[1],cap_side[2]]
-ret, models = la.modelBackground(caps,1)
+############################### Perform Calibration ############################################################################
+# In order to speed up runtime during video streaming, we use a calibration phase to pre-compute many different values. This is 
+# different from traditional camera calibration as it does not seek to identify the same parameters (camera pose, etc. ). However
+# it serves a similar purpose in allowing us to shortcut computation later on. To read more about the calibration phase, see
+# *Paper Location TBD*
 
 
+# Calibrate lazy stitcher (See lazy_stitcher3.py)
+#a = la.lazy_stitcher(cap_main,cap_side)
+a = la.lazy_stitcher(caps)
+
+# Initialize Output Video Writer 
+# For Real Time Recording, use Kazam software instead to capture video with variable frame rates.
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 out = cv2.VideoWriter('./pano.avi',fourcc, 20.0, (467,454))
 
-while True:
-    _, main_view_frame = cap_main.read()
-    _, side_view_frame_1 = cap_side[0].read()
-    _, side_view_frame_2 = cap_side[1].read()
-    _, side_view_frame_3 = cap_side[2].read()
 
-    pano, main_view_frame, side_view_frames = a.stitch(main_view_frame, [side_view_frame_1, side_view_frame_2, side_view_frame_3],models)
-    #pano, main_view_frame, side_view_frames = a.stitch(main_view_frame, [side_view_frame_1, side_view_frame_2, side_view_frame_3, side_view_frame_4],models)
+################################ Begin Streaming Phase #############################################################################
+# The large bulk of our runtime is spent converting video streams into a single video panorama. This contains the implementation of
+# *Paper Location TBD*.
+
+#side_view_frames = [[]] * len(cap_side)
+## Read Initial Frames (Reading new frames done at end of loop to ensure proper termination if video feed ends)
+#ret,main_view_frame = cap_main.read()
+#for i in range(len(cap_side)):
+#    _,side_view_frames[i] = cap_side[i].read()
+
+frames = [[]] * len(caps)
+for i in range(len(caps)):
+    print i
+    ret,frames[i] = caps[i].read()
+
+print "Frame Length 1: ",len(frames)
+## Loop through each frame
+while ret:
+    t = time.time()
+
+    ## Correct for intensity discrepancy (See *Paper Location TBD*)
+    #frame_list = [[]] * (len(cap_side) + 1)
+    #frame_list[0] = main_view_frame
+    #for i in range(len(cap_side)):
+    #    frame_list[i+1] = side_view_frames[i]
+    #Apply Correction
+    #main_view_frame,side_view_frames = a.correctIntensity(main_view_frame,side_view_frames)
+
+
+    ## Apply stitching (See lazy_stitcher3.py)
+    #pano = a.stitch(main_view_frame, side_view_frames,a.background_models)
+    pano = a.stitch(frames,a.background_models)
+
+    ## Fill in Background with average color (See *Paper Location TBD*)
+    #hole_mask = (pano == 0).astype('uint8')
+    #pano[:,:,0] = hole_mask[:,:,0]*a.max_weight[0] + pano[:,:,0]
+    #pano[:,:,1] = hole_mask[:,:,1]*a.max_weight[1] + pano[:,:,1]
+    #pano[:,:,2] = hole_mask[:,:,2]*a.max_weight[2] + pano[:,:,2]
+
+    ## Adjust image size to more manageable window size
     pano = cv2.resize(pano,None,fx=0.5, fy=0.5, interpolation = cv2.INTER_CUBIC)
+
+    ##Display Output
     cv2.imshow('pano',pano)
-    print "write size"
-    print pano.shape
+    
+    print "Frame Time: ",time.time() - t
+
+    
+    ## Write frame to file
+    print "Write size:" ,pano.shape
     out.write(pano)
 
-    if cv2.waitKey(1) == ord('q'):
-        exit(0)
+    #Check Termination Key
+    rep = cv2.waitKey(10)
+
+    ## Read next frames
+    #ret,main_view_frame = cap_main.read()
+    #for i in range(len(cap_side)):
+    #    _,side_view_frames[i] = cap_side[i].read()
+    print "Frame Length: ",len(frames)
+    for i in range(len(caps)):
+        ret,frames[i] = caps[i].read()
+
+    if rep == ord('q'):
+       ret = False
+    if rep == ord('r'):
+        stitcher = a.calibrate(frames_q)
+    if rep == ord('1'):
+        print "Changing Main View to 1"
+        a.changeMainView(0,frames)
+    if rep == ord('2'):
+        print "Changing Main View to 2"
+        a.changeMainView(1,frames)
+    if rep == ord('3'):
+        print "Changing Main View to 3"
+        a.changeMainView(2,frames)
+    if rep == ord('4'):
+        print "Changing Main View to 4"
+        a.changeMainView(3,frames)
+    if rep == ord('5'):
+        print "Changing Main View to 5"
+        a.changeMainView(4,frames)
+################################################### End Streaming ##############################################################################################

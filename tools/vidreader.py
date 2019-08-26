@@ -3,7 +3,7 @@ import numpy as np
 
 
 #vidcap = cv2.VideoCapture("/dev/stdin")
-vidcap = cv2.VideoCapture(0)
+vidcap = cv2.VideoCapture(1)
 
 
 success, frame = vidcap.read()

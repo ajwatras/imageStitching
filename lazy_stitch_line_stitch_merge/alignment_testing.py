@@ -11,13 +11,16 @@ background_model = 100*np.ones((480,640,3)).astype('uint8')
 
 # Identify Homography relationship
 corners = np.mat([[0,0],[0,side_frame.shape[1]],[side_frame.shape[0],0],[side_frame.shape[0],side_frame.shape[1]]])
-new_corners = np.mat([[100,100],[100,side_frame.shape[1]+100],[side_frame.shape[0]+100,100],[100+side_frame.shape[0],100+side_frame.shape[1]]])
+#new_corners = np.mat([[150,-100],[150,side_frame.shape[1]-100],[side_frame.shape[0]+150,-100],[150+side_frame.shape[0],-100+side_frame.shape[1]]])
+new_corners = np.mat([[-150,100],[-150,side_frame.shape[1]+100],[side_frame.shape[0]-150,100],[-150+side_frame.shape[0],100+side_frame.shape[1]]])
+#new_corners = np.mat([[100,100],[100,side_frame.shape[1]+100],[side_frame.shape[0]+100,100],[100+side_frame.shape[0],100+side_frame.shape[1]]])
+
 H,h_mask = cv2.findHomography(corners,new_corners)
 H2 = np.mat([[0,1,200],[1,0,200],[0,0,1]])
 
 # Identify desired object line
-line1 = (-250,-np.pi/1.9)
-line2 = (-200,-np.pi/2.4)
+line1 = (-200,-np.pi)
+line2 = (-200,-np.pi)
 #line2 = (50,np.pi/2)
 
 # Generate F
@@ -44,11 +47,15 @@ pano = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
 #cv2.destroyWindow("mask1")
 #cv2.destroyWindow("mask2")
 #cv2.destroyWindow("mask3")
+cv2.imshow("pano",pano)
+cv2.waitKey(0)
+cv2.destroyWindow("pano")
 
 # generate main_view edge
 main_view_edge = stitch.mapMainView(H,main_frame,side_frame)
 side_view_edge = stitch.mapSeams(H,main_frame,side_frame)
-
+print "Shift: ",shift
+#shift = [shift[1],shift[0]]
 # generate object masks
 H_list = [H]
 M_edge_list = [main_view_edge]
@@ -63,17 +70,16 @@ if obj_detected:
     t = time.time()
     # Detect Main View location in side view
     #side_view_main_mask = la.mapCoveredSide(H,main_frame,side_frame)
-    main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_frame, side_frame, mask1,mask2,H)            
-    tempH = la.lineAlign(pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,fundamental_matrices_list[0],main_seam, side_seam, side_border,transformed_side_border,shift)
+    main_seam, side_seam, side_border,transformed_side_border = la.genBorderMasks(main_frame, side_frame, mask1,mask2,H,shift)            
+    tempH = la.lineAlign(0,pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,fundamental_matrices_list[0],main_seam, side_seam, side_border,transformed_side_border,shift,H)
     align_time = time.time() - t 
     #print "Object_Alignment: ", align_time
-    #print "tempH: ",tempH
+    print "tempH: ",tempH
     
     ### Perform warping and save timing info ###
     t = time.time()
-
-    result2 = la.warpObject(side_view_object_mask,tempH,result2,side_frame,background_model,H)
-    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,np.linalg.inv(tempH))
+    result2 = la.warpObject(0,side_view_object_mask,tempH,result2,side_frame,background_model,H,shift)
+    #result1,result2,mask1,new_mask,shift,trans_mat = stitch.applyHomography(main_frame,side_frame,tempH)
     pano2 = result2*(1 - mask1.astype('uint8'))+result1*mask1.astype('uint8')
     #cv2.imshow("result1",result1)
     #cv2.imshow("result2",result2)

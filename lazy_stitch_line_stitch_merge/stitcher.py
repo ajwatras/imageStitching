@@ -287,7 +287,7 @@ class Stitcher:
 		print "No valid Homography \n"
 		return None
 
-	def mapMainView(selt, H, main_view,side_view,it = 20):
+	def mapMainView(self, H, main_view,side_view,it = 20):
 		kernel = np.ones([3,3])
 		corners = np.mat([[0,0,1],[side_view.shape[1],0,1],[side_view.shape[1],side_view.shape[0],1],[0,side_view.shape[0],1]]).T
 		transformed_corners = np.dot(H,corners).astype('int')
@@ -340,7 +340,7 @@ class Stitcher:
                 #print H, corners
 		img_bounds = np.dot(H,corners)
 		
-                x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
+		x_bound = np.divide(img_bounds[0,:],img_bounds[2,:])
 		y_bound = np.divide(img_bounds[1,:],img_bounds[2,:])
 		x_shift = 0
 		y_shift = 0
