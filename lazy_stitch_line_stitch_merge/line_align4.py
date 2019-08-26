@@ -12,15 +12,10 @@ class lazy_stitcher:
     # Lazy Stitcher serves to perform all operations required for video stitching, and panorama generation. It includes functions for running calibration
     # and stitching on video frames, as well as storing parameters that will be used from frame to frame so that they don't need to be re-computed. 
 
-<<<<<<< HEAD
+
     def __init__(self, caps):
         ############################ Parameters computed during calibration #################################################################################
         self.num_side_cams = len(caps) - 1                              # The number of cameras, excluding the main view camera
-=======
-    def __init__(self, main_view_cap, side_view_caps):
-        ############################ Parameters computed during calibration #################################################################################
-        self.num_side_cams = len(side_view_caps)                        # The number of cameras, excluding the main view camera
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
         self.main_view_image_shape = []                                 # The shape of the incoming frames from the main view
         self.side_view_image_shape = []                                 # The shapes of the incoming frames from the side views
         self.homography_list =[]                                        # For each side view, the 3x3 H matrix used to align them
@@ -35,7 +30,7 @@ class lazy_stitcher:
         self.crossing_edges_side_views_list = []                        # For each side view, a mask showing the border points where that side view will overlap the main view (Used in genObjMask)
         self.diff_buffer = [];                                          # For each side view, stores the last frame to detect whether the new frame shows any movement.
         self.buffer_current_idx = [];                                   ### ATTENTION: Used in read_next_frame for motion detection, unsure of purpose
-<<<<<<< HEAD
+
         self.background_models = [[]] * (self.num_side_cams + 1)                                     # For each side view, an image whose pixel values are estimates of the pure background image for that camera
         self.intensity_weights = [[]] * (self.num_side_cams + 1)        # For each camera, stores the relative shift in intensity needed to normalize intensities
         self.max_weight = [[]] * 3                                      # The average pixel value for the background after normalization. 
@@ -51,12 +46,6 @@ class lazy_stitcher:
         self.alt_view_seams = [[]] * (self.num_side_cams + 1)           #
         self.alt_main_view_crossing = [[]] * (self.num_side_cams + 1)   #
         self.alt_side_view_crossing = [[]] * (self.num_side_cams + 1)   #
-=======
-        self.background_models = []                                     # For each side view, an image whose pixel values are estimates of the pure background image for that camera
-        self.intensity_weights = [[]] * (self.num_side_cams + 1)        # For each camera, stores the relative shift in intensity needed to normalize intensities
-        self.max_weight = [[]] * 3                                      # The average pixel value for the background after normalization. 
-        self.pano_finished = False                                      # A flag for determining whether final_pano has been constructed yet.
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
         ############################ Parameters computed during first self.stitch ##############################################################################
         self.pano_mask = []                                             # A binary image where 1 denotes the outer boundaries of the side views in the final mosaic
         self.main_mask = []                                             # A binary image where 1 denotes a location where the main view is located in the final mosaic
@@ -64,7 +53,6 @@ class lazy_stitcher:
         ########################### Parameters computed once object is detected ################################################################################
         self.object_texture = []                                        # An image containing the object we wish to align
         self.object_loc = []                                            # A quadrilateral showing where the object is located in object_texture
-<<<<<<< HEAD
         self.object_edge_intersect = [False] * 4                        # A set of four boolean values depicting whether the object intersected each of the four edges. 
         self.main_view_tracking_pts = [[]] * 4                          # A set of four points which can be used to define the main view lines of the object
         self.line1 = []                                                 # A line [rho, theta] detailing one edge of the surgical tool
@@ -84,36 +72,20 @@ class lazy_stitcher:
         # Performs the calibration step of our visualization system (See *Paper location TBD*). 
         side_view_caps = list(caps)
         main_view_cap =  side_view_caps.pop(self.view_idx)
-=======
-
-
-
-        ## Run Calibration
-        self.calibrate(main_view_cap,side_view_caps)
-
-    def calibrate(self, main_view_cap,side_view_caps):
-        # Performs the calibration step of our visualization system (See *Paper location TBD*). 
-
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
         # Loads default stitcher from stitcher.py
         sti = stitcher.Stitcher();
 
         ##################################################### Read Calibration Frames ####################################################################
-<<<<<<< HEAD
+
         # read incoming frames and store total number of cameras
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
         ret, main_view_frame = main_view_cap.read()
         side_view_frames = [[]] * self.num_side_cams
         for i in range(self.num_side_cams):
             _, side_view_frames[i] = side_view_caps[i].read()        
 
         ##################################################### Store image Shapes ##########################################################################
-<<<<<<< HEAD
-        # Store the dimensions of the video coming from each of the cameras.
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
+        # Store the dimensions of the video coming from each of the cameras
         main_view_cal_image = main_view_frame
         self.main_view_image_shape = main_view_cal_image.shape
 
@@ -136,7 +108,6 @@ class lazy_stitcher:
 
         ############################################## Coordinate shifts and Pano Shape #########################################################################
         # This is a wall of text and should be documented / Optimized / checked for legacy variables.
-<<<<<<< HEAD
         seams_main_view_list = [];                                              #
         transformed_image_shapes_list = [];                                     # Saves the shape of our post transform images for each homography
         trans_matrices_list = [];                                               # Each trans_matrix is the combination of the homography with the coordinate transformation.
@@ -154,53 +125,29 @@ class lazy_stitcher:
             seams_main_view_list.append(seam[shift[1]:shift[1]+self.main_view_image_shape[0], shift[0]:shift[0]+self.main_view_image_shape[1]])
             
             #
-=======
-        seams_main_view_list = [];
-        transformed_image_shapes_list = [];
-        trans_matrices_list = [];
-        shift_list = [];
-        pano = np.zeros((5000, 5000, 3), np.uint8)
-        out_pos = np.array([2500-self.main_view_image_shape[0]/2,2500-self.main_view_image_shape[1]/2]).astype('int')
-        for i in range(len(side_view_frames)):
-            (transformed_main_view, transformed_side_view, mask_main_view, mask_side_view, shift, trans_matrix) = sti.applyHomography(np.ones(self.main_view_image_shape, np.uint8), (i + 2) * np.ones(self.side_view_image_shape[i], np.uint8), self.homography_list[i])
-            seam = sti.locateSeam(mask_main_view[:,:,0], mask_side_view[:,:,0])
-
-            seams_main_view_list.append(seam[shift[1]:shift[1]+self.main_view_image_shape[0], shift[0]:shift[0]+self.main_view_image_shape[1]])
-            
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
             transformed_image_shapes_list.append(transformed_main_view.shape)
             trans_matrices_list.append(trans_matrix)
             shift_list.append(shift)
 
-<<<<<<< HEAD
             #Place side view in panorama
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
             temp_result = (transformed_side_view * np.logical_not(mask_main_view) + transformed_main_view).astype('uint8')
             temp_result_window = pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_main_view.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_main_view.shape[1], :]
             pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_main_view.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_main_view.shape[1], :] = temp_result * mask_side_view + temp_result_window * np.logical_not(mask_side_view)
 
-<<<<<<< HEAD
         # Place main view in panorama
         pano[out_pos[0]:out_pos[0]+self.main_view_image_shape[0], out_pos[1]:out_pos[1]+self.main_view_image_shape[1],:] = np.ones(self.main_view_image_shape, np.uint8)
 
 
         # determine the necessary size for our backgroung panorama.
-=======
-        pano[out_pos[0]:out_pos[0]+self.main_view_image_shape[0], out_pos[1]:out_pos[1]+self.main_view_image_shape[1],:] = np.ones(self.main_view_image_shape, np.uint8)
-
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
         pts = np.nonzero(pano)
         pts = np.asarray(pts)
         left_most = np.min(pts[1,:])-1
         right_most = np.max(pts[1,:])+1
         up_most = np.min(pts[0,:])-1
         down_most = np.max(pts[0,:])+1
-<<<<<<< HEAD
 
         
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
+
         self.main_view_upleft_coord = [out_pos[0] - up_most, out_pos[1] - left_most]                                    #The location of the main view (0,0) in the final coord system
         self.final_pano = np.zeros((pano[up_most:down_most, left_most:right_most, :]).shape, np.uint8)                  #The empty canvas that will be used for the final panorama.
 
@@ -276,7 +223,6 @@ class lazy_stitcher:
 
         #print "Intensity Weights: ", self.intensity_weights
 
-<<<<<<< HEAD
         ################################# Compute blending weights ######################################################################################################
         #blending_window = 25
 
@@ -396,10 +342,6 @@ class lazy_stitcher:
         self.seam = self.alt_view_seams[new_main_view_idx]
         self.coord_shift_list = self.alt_view_shift[new_main_view_idx]
 
-=======
-        ##########################################################################################################################################
-
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     def correctIntensity(self,main_view_frame,side_view_frames,calibration_type = 0):
         # Corrects for the fact that the translation between light intensity and pixel values may vary between cameras
         # INPUTS:
@@ -434,7 +376,6 @@ class lazy_stitcher:
 
         return main_view_frame, side_view_frames
 
-<<<<<<< HEAD
     def quantizeAlignmentError(self, side_idx, main_view, side_view):
         # Estimate line parameters
         main_view_top_line,main_view_bot_line,a,b = trackObject2(main_view, self.background_models[0],[0,0],[0,0])
@@ -461,8 +402,6 @@ class lazy_stitcher:
         
         return
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
     def read_next_frame(self, main_view_frame, side_view_frames):
         # Checks whether there has been sufficient motion between subsequent frames 
@@ -482,10 +421,7 @@ class lazy_stitcher:
                 self.diff_buffer[i][:,:,int(self.buffer_current_idx[i])] = side_view_frames[i][:,:,1];
 
         seam_has_motion = [];
-<<<<<<< HEAD
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
         motion_detect = (np.absolute(self.diff_buffer[len(side_view_frames)][:,:,int(self.buffer_current_idx[len(side_view_frames)])] - main_view_frame[:,:,1]) >= intensity_diff_threshold).astype('uint8') * self.seam
         self.buffer_current_idx[len(side_view_frames)] = not self.buffer_current_idx[len(side_view_frames)]
         self.diff_buffer[len(side_view_frames)][:,:,int(self.buffer_current_idx[len(side_view_frames)])] = main_view_frame[:,:,1];
@@ -495,11 +431,7 @@ class lazy_stitcher:
         return side_view_has_motion, seam_has_motion
 
 
-<<<<<<< HEAD
     def stitch(self,frames,models):
-=======
-    def stitch(self,main_view_frame,side_view_frames,models):
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
         # uses incoming frames to update final panorama. 
         # INPUTS: 
         #     main_view_frame - A mat object containing the frame from the main view camera, must be in format 'uint8'
@@ -512,25 +444,18 @@ class lazy_stitcher:
         sti = stitcher.Stitcher()                                           # To apply transformation
         out_pano = np.copy(self.final_pano)                                 # Canvas
 
-<<<<<<< HEAD
         side_view_frames = list(frames)
         main_view_frame =  side_view_frames.pop(self.view_idx)
 
 
         ################################### If background hasn't been drawn yet #############################################################################################################
-=======
-        # If background hasn't been drawn yet.
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
         if not self.pano_finished:
             self.pano_finished = True                                                                                               # Mark that background is being drawn
             self.main_mask = np.zeros(self.final_pano.shape,dtype = 'uint8')                                                        # Initialize mask of main view location
             self.main_seam = np.zeros(self.final_pano.shape,dtype = 'uint8')                                                        # Initialize mask for main view overlap with side views
-<<<<<<< HEAD
 
             # Correct intensity
             main_view_frame,side_view_frames = self.correctIntensity(main_view_frame,side_view_frames)
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
             
             # Generate main view mask
             self.main_mask[out_pos[0]:out_pos[0]+main_view_frame.shape[0],out_pos[1]:out_pos[1]+main_view_frame.shape[1]] = 1
@@ -539,7 +464,6 @@ class lazy_stitcher:
             for i in range(len(side_view_frames)):
                 result1,result2,mask1,mask2_original, shift, trans_matrix = sti.applyHomography(main_view_frame,side_view_frames[i],self.homography_list[i])
                 
-<<<<<<< HEAD
 
                 #Place transformed background on canvas
                 print "result2",result2.shape
@@ -552,12 +476,6 @@ class lazy_stitcher:
                 temp_result_window = self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :]
                 self.final_pano [out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :] = result2 * self.transformed_mask_side_view[i] + temp_result_window * np.logical_not(self.transformed_mask_side_view[i])
                 #self.final_pano [out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :] = result2 * mask2_original + temp_result_window * np.logical_not(mask2_original)
-=======
-                #Place transformed background on canvas
-                temp_result_window = self.final_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :]
-                self.final_pano [out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :] = result2 * self.transformed_mask_side_view[i] + temp_result_window * np.logical_not(self.transformed_mask_side_view[i])
-                
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
                 # Set main_seam = 1 for any nonzero pixels in the transformed side view.
                 self.main_seam[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :] = np.maximum((result2 > 0).astype('uint8'),self.main_seam[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+result2.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+result2.shape[1], :])
 
@@ -574,17 +492,14 @@ class lazy_stitcher:
 
             # Apply Edge detector to identify side view borders
             self.pano_mask = np.maximum(cv2.Canny(self.pano_mask,100,200)*(1-self.main_mask[:,:,0]),outer_edge)
-<<<<<<< HEAD
             #self.pano_mask = outer_edge
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
             self.main_seam = self.main_seam * self.main_mask
             
             kernel = np.ones((5,5),np.uint8)
             self.main_seam[:,:,0] = cv2.dilate(self.main_seam[:,:,0],kernel,iterations=1)
 
 
-<<<<<<< HEAD
+
             # Perform background fill with average background color
             self.final_pano[:,:,0] = self.final_pano[:,:,0] + self.max_weight[0] * (self.final_pano[:,:,0] == 0).astype('uint8')
             self.final_pano[:,:,1] = self.final_pano[:,:,1] + self.max_weight[1] * (self.final_pano[:,:,1] == 0).astype('uint8')
@@ -594,11 +509,6 @@ class lazy_stitcher:
         ###################################################################################################################################################################
         else:
             ####################################### If Object has been modeled ############################################################################################ 
-=======
-        # If background has been drawn. 
-        else:
-            # If Object has been modeled. 
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
             if (len(self.object_loc) > 2):
                  ### Perform Object detection and save timing info ###
                 t = time.time()  # Begin timing for object detection
@@ -611,11 +521,7 @@ class lazy_stitcher:
                 outer_edge[:,outer_edge.shape[1]-1] = 1
 
                 # detect motion in main view
-<<<<<<< HEAD
                 obj_detected,pts1,main_view_object_mask = genMainMask(main_view_frame,models[self.view_idx],self.main_seam[out_pos[0]:out_pos[0]+main_view_frame.shape[0],out_pos[1]:out_pos[1]+main_view_frame.shape[1]]*outer_edge)
-=======
-                obj_detected,pts1,main_view_object_mask = genMainMask(main_view_frame,models[0],self.main_seam[out_pos[0]:out_pos[0]+main_view_frame.shape[0],out_pos[1]:out_pos[1]+main_view_frame.shape[1]]*outer_edge)
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
                 detect_time = time.time() - t
                 print "Object Detection: ", detect_time
@@ -631,7 +537,6 @@ class lazy_stitcher:
                     t = time.time()
 
                     # Compute aligning transformation for object.
-<<<<<<< HEAD
                     # Track Lines
                     #self.line1,self.line2,self.line1_tracking_pts,self.line2_tracking_pts = trackObject(main_view_frame,self.background_models[0],self.line1,self.line1_tracking_pts,self.line2,self.line2_tracking_pts)
                     self.line1,self.line2,a = trackObject2(main_view_frame,self.background_models[self.view_idx],self.line1,self.line2, pts1,self.final_pano.shape,self.main_view_upleft_coord)
@@ -661,9 +566,6 @@ class lazy_stitcher:
                     #cv2.imshow("mask1", post_obj_mask1)
                     #cv2.imshow("mask",post_obj_mask)
                     #cv2.waitKey(0)
-=======
-                    tempH,post_obj_mask = lineAlignWithModel(0,pts1.astype('int'),255*main_view_object_mask,self.object_loc,self.object_texture,self.main_seam,self.pano_mask,[out_pos[1],out_pos[0]])
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
                     align_time = time.time() - t 
                     print "Object_Alignment: ", align_time
@@ -678,7 +580,6 @@ class lazy_stitcher:
                     t = time.time()
 
                     # Apply transformation to object and blend
-<<<<<<< HEAD
                     t2 = time.time()
                     trans_obj = cv2.warpPerspective(self.object_texture,tempH,(out_pano.shape[1],out_pano.shape[0]))
                     H_warp_time = time.time() - t2
@@ -698,10 +599,6 @@ class lazy_stitcher:
                     file.write("Blending Time: ")
                     file.write(str(blend_time))
                     file.write("\n")
-=======
-                    trans_obj = cv2.warpPerspective(self.object_texture,tempH,(out_pano.shape[1],out_pano.shape[0]))
-                    out_pano = trans_obj * post_obj_mask + out_pano * (1-post_obj_mask)
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
                     warping_time = time.time() - t 
                     print "Object Warping: ", warping_time
@@ -712,11 +609,7 @@ class lazy_stitcher:
                     file.write("\n")
                     file.close()
 
-<<<<<<< HEAD
             ################################# If object hasn't been modeled ###########################################################################################################
-=======
-            # If object hasn't been modeled.
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
             else:
 
                 transformed_side_obj = [[]] * len(side_view_frames)
@@ -726,15 +619,11 @@ class lazy_stitcher:
                 for i in range(len(side_view_frames)):
                     if side_view_has_motion[i]:
                         # Perform object alignment
-<<<<<<< HEAD
                         if i < self.view_idx:
                             (_, transformed_side_bg,transformed_side_obj[i], _, side_mask, line_shift, _) = self.line_stitch(main_view_frame, side_view_frames[i], i,models[self.view_idx],models[i])
 
                         else:
                             (_, transformed_side_bg,transformed_side_obj[i], _, side_mask, line_shift, _) = self.line_stitch(main_view_frame, side_view_frames[i], i,models[self.view_idx],models[i+1])
-=======
-                        (_, transformed_side_bg,transformed_side_obj[i], _, side_mask, line_shift, _) = self.line_stitch(main_view_frame, side_view_frames[i], i,models[0],models[i+1])
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
                         #Place side view background in pano
                         temp_result_window = out_pano[out_pos[0]-self.coord_shift_list[i][0]:out_pos[0]-self.coord_shift_list[i][0]+transformed_side_bg.shape[0], out_pos[1]-self.coord_shift_list[i][1]:out_pos[1]-self.coord_shift_list[i][1]+transformed_side_bg.shape[1], :]
@@ -760,7 +649,6 @@ class lazy_stitcher:
         # Place Main View 
         out_pano[out_pos[0]:out_pos[0]+self.main_view_image_shape[0], out_pos[1]:out_pos[1]+self.main_view_image_shape[1],:] = main_view_frame
 
-<<<<<<< HEAD
         # Update background model
         #for i in range(self.num_side_cams+1):
         #    self.background_models[i] = (.99*self.background_models[i] + .01*frames[i]).astype('uint8')
@@ -841,10 +729,6 @@ class lazy_stitcher:
         return out_pano
 
 
-=======
-
-        return out_pano.astype('uint8')
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
     def line_stitch(self, main_view_frame, side_view_frame, idx,main_view_background,side_view_background):
         # 
@@ -891,14 +775,9 @@ class lazy_stitcher:
                             file = open("obj_align_timing.txt","a")
                             t = time.time()
 
-<<<<<<< HEAD
                             self.line1,self.line2,self.line1_tracking_pts,self.line2_tracking_pts = trackObject(main_view_frame,self.background_models[self.view_idx],self.line1,self.line1_tracking_pts,self.line2,self.line2_tracking_pts)
                             main_seam, side_seam, side_border,transformed_side_border = genBorderMasks(main_view_frame, side_view_frame, mask1,new_mask,self.homography_list[idx],shift)
                             tempH,post_obj_mask = lineAlignWithModel(idx,pts1,255*main_view_object_mask,self.object_loc,main_seam,transformed_side_border,shift,self.homography_list[idx],self.line1,self.line2)
-=======
-                            main_seam, side_seam, side_border,transformed_side_border = genBorderMasks(main_view_frame, side_view_frame, mask1,new_mask,self.homography_list[idx],shift)
-                            tempH,post_obj_mask = lineAlignWithModel(idx,pts1,255*main_view_object_mask,self.object_loc,main_seam,transformed_side_border,shift,self.homography_list[idx])
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
                             print "Object Location: ",self.object_loc
                             print "Object Texture: ",len(self.object_texture)
                             align_time = time.time() - t 
@@ -917,11 +796,7 @@ class lazy_stitcher:
                             side_view_main_mask = mapCoveredSide(self.homography_list[idx],main_view_frame,side_view_frame)
                             main_seam, side_seam, side_border,transformed_side_border = genBorderMasks(main_view_frame, side_view_frame, mask1,new_mask,self.homography_list[idx],shift)
                             #tempH = la.lineAlign(pts1,main_view_frame,pts2,side_view_frame,self.fundamental_matrices_list[idx])
-<<<<<<< HEAD
                             tempH,post_obj_mask,self.object_loc,self.line1_tracking_pts,self.line2_tracking_pts,self.line1,self.line2 = lineAlign(idx,pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift,self.homography_list[idx])
-=======
-                            tempH,post_obj_mask,self.object_loc = lineAlign(idx,pts1,255*main_view_object_mask,pts2,255*side_view_object_mask,self.fundamental_matrices_list[idx],main_seam, side_seam, side_border,transformed_side_border,shift,self.homography_list[idx])
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
                             self.object_texture = side_view_frame
 
                             align_time = time.time() - t 
@@ -945,7 +820,6 @@ class lazy_stitcher:
                             
         return result1,bg_image,obj_image,mask1,new_mask, shift, trans_matrix
 
-<<<<<<< HEAD
 #####################################################################3 Other Calibration Code ######################################################################################################
 
 
@@ -1030,17 +904,12 @@ def computePanoShift(H_list,main_view_frame,main_view_image_shape,side_view_fram
 
         return main_view_upleft_coord, shift_list,transformed_mask_side_view,crossing_edges_main_view_list,crossing_edges_side_views_list,seam,final_pano
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
 
 ###################################################################### Line Alignment Code #########################################################################################################
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 def calcF(image1,image2,label=0, ratio=.75):
     # Calculates the fundamental matrix between two cameras using matched feature points. This will give bad results if all of the detected 
     # feature points are coplanar. This script is also currently 
@@ -1116,7 +985,6 @@ def checkLine(line, n):
 
     return True
 
-<<<<<<< HEAD
 def computeTrackingPoints(line1,line2,main_view_object_mask,shift,threshold = 5,line_gap = 5):
     # Compute and store the points used by our tracking algorithm.
     object_side_loc = [False,False,False,False]
@@ -1245,8 +1113,6 @@ def computeTrackingPoints(line1,line2,main_view_object_mask,shift,threshold = 5,
 
 
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 def correctPoint(x, y, line):
 #Adjust the point so that it lies on the desired line. This is used so that
 #Neighborhoods only need to be approximate. 
@@ -1263,11 +1129,8 @@ def correctPoint(x, y, line):
     print "CorrectPoint: ", x,y,rho,theta
     return x,y
 
-<<<<<<< HEAD
 def detectTip(image):
     return
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
 
 def detectAndDescribe(image):
@@ -1425,7 +1288,6 @@ def findOuterEdge(image,seam,line):
     
     # return edge point
     return point[0,:]
-<<<<<<< HEAD
 
 
 def findOuterPts(point,vec,window):
@@ -1476,8 +1338,6 @@ def findOuterPts(point,vec,window):
     return [-1,-1]
 
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 def genBorderMasks(main_frame,side_frame, main_mask,side_mask,H,shift,edgeThresh = 1):
     # generate initial masks
     side_border = np.zeros(side_frame.shape)
@@ -1494,7 +1354,6 @@ def genBorderMasks(main_frame,side_frame, main_mask,side_mask,H,shift,edgeThresh
     return main_seam, side_seam, side_border, transformed_side_border
 
 def genMainMask(main_view_frame,main_view_background,crossing_edges_main_view_list):
-<<<<<<< HEAD
 
     t = time.time()
     # Generate main view foreground mask
@@ -1505,29 +1364,19 @@ def genMainMask(main_view_frame,main_view_background,crossing_edges_main_view_li
     print diff_frame_time
     
     t = time.time()
-=======
-    main_view_object_mask = identifyFG(main_view_frame, main_view_background).astype('uint8')
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     main_view_edge = cv2.Canny(main_view_object_mask, 50, 150)
     main_view_object_mask = (main_view_object_mask/255).astype('uint8')
     kernel_gradient = np.mat([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
     main_view_edge = cv2.filter2D(main_view_object_mask,-1,kernel_gradient)
-<<<<<<< HEAD
     #main_view_edge = (main_view_edge > 0).astype('uint8')
     main_view_edge = (main_view_edge > 0).astype('bool')
     pts = np.nonzero(np.logical_and(main_view_object_mask,crossing_edges_main_view_list[:,:,0].astype('bool')))
 
     #pts = np.nonzero(main_view_object_mask * crossing_edges_main_view_list[:,:,0])
-=======
-    main_view_edge = (main_view_edge > 0).astype('uint8')
-
-    pts = np.nonzero(main_view_edge * crossing_edges_main_view_list[:,:,0])
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     pts = np.asarray(pts)
     if pts.shape[1] >= 2:
         clusters_main_view, cluster_err = kmean(pts, 2)
         pts1 = np.mat([[clusters_main_view[1,0], clusters_main_view[0,0]], [clusters_main_view[1,1], clusters_main_view[0,1]]])
-<<<<<<< HEAD
         file = open("check_seam_timing.txt",'a')
         file.write("Check Seam Overlap Timing: ")
         file.write(str(time.time() - t))
@@ -1540,10 +1389,6 @@ def genMainMask(main_view_frame,main_view_background,crossing_edges_main_view_li
     file.write(str(time.time() - t))
     file.write('\n')
 
-=======
-        return True,pts1,main_view_object_mask
-
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     return False, [], []
 
 def genObjMask(idx,main_view_frame, main_view_background, side_view_frame,side_view_background, crossing_edges_main_view_list, crossing_edges_side_views_list, homography_list ):
@@ -1616,7 +1461,6 @@ def genObjMask(idx,main_view_frame, main_view_background, side_view_frame,side_v
 
     return False, [], [], [], []
 
-<<<<<<< HEAD
 def genTrackerPoints(line1,line2,obj_edge_mask,seam_mask,thresh = 1, line_resolution = 10):
     line1_points = [[],[]]
     line2_points = [[],[]]
@@ -1687,8 +1531,6 @@ def genTrackerPoints(line1,line2,obj_edge_mask,seam_mask,thresh = 1, line_resolu
     return [line1_border_point,line1_second_point,line2_border_point,line2_second_point]
 
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
 def identifyFG(frame, model,thresh = 40):
     #Uses the model from modelBackground to separate foreground objects from background objects
@@ -1898,12 +1740,9 @@ def lineEdge(idx,line, frame_mask, border_mask):
     # line=(rho,theta) stores the line information 
     # frame_mask shows a mask of the frame, with a mask denoting where the other image will be located
 
-<<<<<<< HEAD
     frame_mask = frame_mask.astype('bool')
     border_mask = border_mask.astype('bool')
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     if (len(frame_mask.shape) == 2):
         frame_mask = np.repeat(frame_mask[:,:,np.newaxis],3,axis=2)
     if (len(border_mask.shape) == 2):
@@ -1912,7 +1751,6 @@ def lineEdge(idx,line, frame_mask, border_mask):
     line_mask = np.zeros(frame_mask.shape)
     drawLines(line[0],line[1],line_mask,(1,1,1),1)
 
-<<<<<<< HEAD
     line_mask = line_mask.astype('bool')
 
     #kernel = np.ones((5,5),np.uint8)
@@ -1920,27 +1758,6 @@ def lineEdge(idx,line, frame_mask, border_mask):
 
     possible_points = np.nonzero(np.logical_and(line_mask[:,:,0].astype('bool'),np.logical_and(border_mask[:,:,0].astype('bool'),np.logical_not(frame_mask[:,:,0]))))
     #possible_points = np.nonzero(line_mask[:,:,0]*border_mask[:,:,0]*(1-frame_mask[:,:,0]))
-=======
-    #kernel = np.ones((5,5),np.uint8)
-    #frame_mask[:,:,0] = cv2.dilate(frame_mask[:,:,0],kernel,iterations=1)
-
-    possible_points = np.nonzero(line_mask[:,:,0]*border_mask[:,:,0]*(1-frame_mask[:,:,0]))
-
-    #if idx == 0:
-    #temp = np.nonzero(line_mask[:,:,0]*border_mask[:,:,0])
-    #print "line,border: ",temp
-    #print "frame_mask: ", frame_mask[temp[0][0],temp[1][0],0]
-        #temp_display = np.zeros(line_mask.shape)
-        #temp_display[:,:,0] = line_mask[:,:,0]
-        #temp_display[:,:,1] = border_mask[:,:,0]*(1-frame_mask[:,:,0])
-        #temp_display[:,:,2] = (1- frame_mask[:,:,0])
-    #R = np.zeros([256,256,3])
-    #R[:,:,1] = 255
-    #cv2.imshow("R",R)
-        #cv2.imshow("temp display",temp_display)
-        #cv2.waitKey(0)
-    #cv2.destroyWindow("temp display")
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
     if(len(possible_points[0]) > 1):
         if (max(possible_points[0]) - min(possible_points[0]) > 6) or (max(possible_points[0]) - min(possible_points[0]) > 6): 
@@ -1956,11 +1773,9 @@ def lineEdge(idx,line, frame_mask, border_mask):
 
     return point
 
-<<<<<<< HEAD
+
     
 
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
 def lineSelect(image, edgeThresh, N_size):
 # Computes the line corresponding to the most prominent edge in the image.
@@ -2087,19 +1902,12 @@ def modelBackground(caps, CAL_LENGTH = 10):
             return False, []
 
         if cv2.waitKey(10) == ord('p'):
-<<<<<<< HEAD
             for i in range(0,n):
                 cv2.destroyWindow("frame "+str(i))
             #cv2.destroyWindow("frame 0")
             #cv2.destroyWindow("frame 1")
             #cv2.destroyWindow("frame 2")
             #cv2.destroyWindow("frame 3")
-=======
-            cv2.destroyWindow("frame 0")
-            cv2.destroyWindow("frame 1")
-            cv2.destroyWindow("frame 2")
-            cv2.destroyWindow("frame 3")
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
             cv2.waitKey(1)
 
             break
@@ -2348,7 +2156,7 @@ def surgSeg(image, model,N_size = 20, edgeThresh = 20):
 
     return mask
 
-<<<<<<< HEAD
+
 def trackObject(frame,model,line1,previous_line1_points,line2,previous_line2_points,padding = 5,threshold=40):
     # utilize the information about where the object was in the previous frame to 
     # compute the lines in the current frame. 
@@ -2758,84 +2566,6 @@ def findScanlineEdge(scanline):
 
     return min_pt,max_pt
 
-=======
-#def warpObject(main_view_frame, side_view_frame, side_view_object_mask, tempH, main_homography, sti, result1, mask1, result2, shift, new_mask, trans_matrix):
-    
-
-#    corners = np.mat([[0, side_view_frame.shape[1], 0, side_view_frame.shape[1]], [0, 0, side_view_frame.shape[0], side_view_frame.shape[0]], [1, 1, 1, 1]])
-#    transformed_corners = np.dot(tempH, corners)
-#    bound = np.zeros((2, 4), np.float)
-#    bound[0,0] = transformed_corners[0,0] / transformed_corners[2,0]
-#    bound[1,0] = transformed_corners[1,0] / transformed_corners[2,0]
-#    bound[0,1] = transformed_corners[0,1] / transformed_corners[2,1]
-#    bound[1,1] = transformed_corners[1,1] / transformed_corners[2,1]
-#    bound[0,2] = transformed_corners[0,2] / transformed_corners[2,2]
-#    bound[1,2] = transformed_corners[1,2] / transformed_corners[2,2]
-#    bound[0,3] = transformed_corners[0,3] / transformed_corners[2,3]
-#    bound[1,3] = transformed_corners[1,3] / transformed_corners[2,3]
-
-#    if (np.max(bound[0,:]) - np.min(bound[0,:])) <= 2500 and (np.max(bound[1,:]) - np.min(bound[1,:])) < 2500 and (tempH is not np.zeros((3,3))):
-        #############################################################################
-#        result1_temp,result2_temp,_,mask2_temp, shift_temp, _ = sti.applyHomography(main_view_frame, side_view_frame, tempH)
-#        mask_temp_temp = (result1_temp == 0).astype('int')
-#        result2_temp_shape = result2_temp.shape
-
-#        OUTPUT_SIZE = [3000,3000,3]
-#        out_pos = np.array([OUTPUT_SIZE[0]/2-500,OUTPUT_SIZE[1]/2-500]).astype('int')
-#        pano = np.zeros(OUTPUT_SIZE, np.uint8)
-
-#        window = pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:]
-
-#        if window.shape[0] != mask2_temp.shape[0] or window.shape[1] != mask2_temp.shape[1]:
-#            return result1,result2,mask1,new_mask, shift, trans_matrix
-
-#        print out_pos, shift_temp, result1.shape
-
-#        pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp.shape[1],:] = 0+result2_temp
-#        result2_temp = 0+pano[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
-        #cv2.imshow('pano_2', result2_temp)
-        #cv2.waitKey(0)
-#        _,mask,_,_, _, _ = sti.applyHomography(main_view_frame, np.stack((side_view_object_mask,side_view_object_mask,side_view_object_mask), axis=2), tempH)
-
-#        pano_mask = np.zeros(OUTPUT_SIZE, np.uint8)
-#        pano_mask[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+result2_temp_shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+result2_temp_shape[1],:] = 0+mask
-#        mask = 0+pano_mask[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
-
-#        pano[out_pos[0]-shift_temp[1]:out_pos[0]-shift_temp[1]+mask2_temp.shape[0],out_pos[1]-shift_temp[0]:out_pos[1]-shift_temp[0]+mask2_temp.shape[1],:] = 0+mask2_temp
-#        mask2_temp = 0+pano[out_pos[0]-shift[1]:out_pos[0]-shift[1]+result1.shape[0],out_pos[1]-shift[0]:out_pos[1]-shift[0]+result1.shape[1],:]
-
-
-#        mask = mask.astype('uint8') * mask2_temp
-        #mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel_opening_closing)
-#        mask = mask * (result2 > 0).astype('uint8')
-        #cv2.imshow('mask',mask*255)
-
-#        _,mask_object_transformed,_,_, _, _ = sti.applyHomography(main_view_frame, np.stack((side_view_object_mask,side_view_object_mask,side_view_object_mask), axis=2), main_homography)
-        #cv2.imshow('mask_object_transformed',mask_object_transformed*255)
-#        Background_mask = new_mask * (mask_object_transformed == 0).astype('uint8')
-        #cv2.imshow('Background_mask',Background_mask.astype('uint8')*255)
-#        color1 = np.sum(result2[:,:,0] * Background_mask[:,:,0]) / np.sum(Background_mask[:,:,0])
-#        color2 = np.sum(result2[:,:,1] * Background_mask[:,:,1]) / np.sum(Background_mask[:,:,1])
-#        color3 = np.sum(result2[:,:,2] * Background_mask[:,:,2]) / np.sum(Background_mask[:,:,2])
-#        temp = np.ones(mask.shape, np.uint8)
-#        temp[:,:,0] = color1
-#        temp[:,:,1] = color2
-#        temp[:,:,2] = color3
-
-#        result2 = Background_mask.astype('uint8') * result2 + (result2 > 0).astype('uint8') * mask_object_transformed * temp
-        #cv2.imshow('result2',result2)
-#        result2 = result2 * np.logical_not(mask) + result2_temp * mask
-        #cv2.imshow('result2_2',result2)
-        #cv2.imshow('result2 * np.logical_not(mask)',result2 * np.logical_not(mask))
-        #cv2.waitKey(0)
-        #mask_temp_temp = (result1 == 0).astype('int')
-        #temp = (result2*mask_temp_temp + result1).astype('uint8')
-        #############################################################################
-#        return result1,result2,mask1,new_mask, shift, trans_matrix
-
-
-#    return result1,[],[],[],[],[]
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
 def warpObject(idx,side_view_object_mask,trans_obj_mask,tempH,result2,side_frame,background_model,H,coord_shift):
     # Applies the transformation computed by the alignment step to the detected foreground
@@ -2888,11 +2618,8 @@ def warpObject(idx,side_view_object_mask,trans_obj_mask,tempH,result2,side_frame
         result2 = trans_obj_mask*trans_obj + (1 - trans_obj_mask)*result2
         trans_obj = trans_obj_mask*trans_obj
 
-<<<<<<< HEAD
+
         if idx == 7:
-=======
-        if idx == 2:
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
             cv2.imshow("obj mask "+str(idx),255*side_view_object_mask.astype('uint8'))
             cv2.imshow('back fill '+str(idx),background_fill)
             cv2.imshow("result2 "+str(idx),result2)
@@ -2906,14 +2633,8 @@ def warpObject(idx,side_view_object_mask,trans_obj_mask,tempH,result2,side_frame
     print trans_obj.shape
     return background_fill, trans_obj
 
-<<<<<<< HEAD
-def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transformed_side_border,shift,lines11,lines12,N_size = 40, edgeThresh = 70,DRAW_LINES = False):
-=======
-def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transformed_side_border,shift,N_size = 40, edgeThresh = 70,DRAW_LINES = True):
-    # For Timing info
-    file = open("test.txt",'a')
 
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
+def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transformed_side_border,shift,lines11,lines12,N_size = 40, edgeThresh = 70,DRAW_LINES = False):
     # Avoid error cases
     if points1[0,1] <= N_size:
         points1[0,1] = N_size
@@ -2922,17 +2643,12 @@ def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transfo
 
     out_obj_mask = []
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     ## Line Detection
     t = time.time()
     #Isolate Point Neighborhoods
     sub1 = image1[points1[0,1] - N_size:points1[0,1]+N_size, points1[0,0] - N_size:points1[0,0]+N_size]
 
     #Identify the coordinate shift for sub neighborhoods. 
-<<<<<<< HEAD
     #shift1 = shift + points1[0,:] - [N_size,N_size]
     shift1 = np.mat(shift)
     points1 = points1 + shift
@@ -2941,14 +2657,6 @@ def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transfo
 
     #print sub1.shape
     #lines11, lines12 = lineDetect(sub1,edgeThresh,N_size)
-=======
-    shift1 = shift + points1[0,:] - [N_size,N_size]
-    points1 = points1 + shift
-
-    # Detect dominant lines
-    print sub1.shape
-    lines11, lines12 = lineDetect(sub1,edgeThresh,N_size)
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     line_time = time.time() - t
 
 
@@ -2976,10 +2684,8 @@ def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transfo
 
     ## Ensure Point lies on line
     t = time.time()
-<<<<<<< HEAD
+
     feat_time = time.time()
-=======
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     points = np.zeros((2,2))
     points[0,0], points[0,1] = correctPoint(points1[0,0],points1[0,1],lines11)
     if lines12:
@@ -3011,19 +2717,12 @@ def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transfo
     pts = main_view_pts.reshape((-1,1,2))
     out_obj_mask = np.zeros((main_seam.shape[0],main_seam.shape[1],3))
 
-<<<<<<< HEAD
     #print pts.shape, pts.dtype
     #print out_obj_mask.shape
     
     cv2.fillPoly(out_obj_mask,[pts],(1,1,1))
 
 
-=======
-    print pts.shape, pts.dtype
-    print out_obj_mask.shape
-    cv2.fillPoly(out_obj_mask,[pts],(1,1,1))
-
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
     # Perform Feature Matching
     points1 = (main_view_pts[0,0],main_view_pts[0,1])
     points2 = (side_view_pts[0,0],side_view_pts[0,1])
@@ -3087,11 +2786,8 @@ def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transfo
                 #cv2.destroyWindow("image2 (2 edge)")
 
 
-<<<<<<< HEAD
 
-=======
-    t = time.time()
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
+
     if (main_view_pts[2,:] == (-10,-10)).all() or (main_view_pts[3,:] == (-10,-10)).all() or (side_view_pts[2,:] == (-10,-10)).all() or (side_view_pts[3,:] == (-10,-10)).all():
         print "ERROR: Unable to detect line edge intersection",
         print "Main view points: ", main_view_pts
@@ -3101,7 +2797,6 @@ def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transfo
         shift_mat[1,2] = shift[1]
         return np.eye(3), out_obj_mask
 
-<<<<<<< HEAD
 
     feat_time = time.time() - feat_time
     file = open("det_feat_timing.txt",'a')
@@ -3127,19 +2822,6 @@ def lineAlignWithModel(idx,points1,image1,side_view_pts,image2,main_seam,transfo
     #file.write("Point Correction: " + str(correction_time) + "\n")
     #file.write("Point Choosing: " + str(point_time) + "\n")
     #file.write("Transformation Calculation: " + str(trans_time) + "\n")
-=======
-    
-    (LineT,status) = cv2.findHomography(side_view_pts,main_view_pts)
-    trans_time = time.time() - t
-
-    # Print timing info
-    file.write("Line Detection 1: " + str(line_time) + "\n")
-    file.write("Line Detection 2: " + str(line2_time) + "\n")
-    file.write("Line Detection 3: " + str(line3_time) + "\n")
-    file.write("Point Correction: " + str(correction_time) + "\n")
-    file.write("Point Choosing: " + str(point_time) + "\n")
-    file.write("Transformation Calculation: " + str(trans_time) + "\n")
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
 
     file.close()
     #print "Proposed PtsB: ",np.dot(LineT,np.transpose(np.mat([[main_view_pts[0,0],main_view_pts[0,1],1],[main_view_pts[1,0],main_view_pts[1,1],1],[main_view_pts[2,0],main_view_pts[2,1],1],[main_view_pts[3,0],main_view_pts[3,1],1]])))
@@ -3253,7 +2935,6 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
         print "Lines 2: ",lines21,lines22
         t = time.time()
         #Ensure points lie on a line.
-<<<<<<< HEAD
         corr_pts1,corr_pts2 = computeTrackingPoints(lines11,lines12,sub1,shift1)
         print "Points1: ", points1, corr_pts1
         print "Points2: ", points2, corr_pts2
@@ -3263,10 +2944,6 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
 
         points = np.zeros((4,2))
 
-=======
-        #print points1, correctPoint(points1[0,0],points1[0,1],lines1)
-        points = np.zeros((4,2))
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
         print "Points: ",points
         points[0,0], points[0,1] = correctPoint(points1[0,0],points1[0,1],lines11)
         points[2,0],points[2,1] = correctPoint(points2[0,0],points2[0,1],lines21)
@@ -3469,8 +3146,4 @@ def lineAlign(idx,points1, image1,points2, image2, F, main_seam, side_seam, side
         #print "Proposed PtsB: ",np.dot(LineT,np.transpose(np.mat([[main_view_pts[0,0],main_view_pts[0,1],1],[main_view_pts[1,0],main_view_pts[1,1],1],[main_view_pts[2,0],main_view_pts[2,1],1],[main_view_pts[3,0],main_view_pts[3,1],1]])))
         #print "Actual Pts B: ",side_view_pts
         print "LineT: ",LineT
-<<<<<<< HEAD
         return LineT,out_obj_mask,side_view_pts,corr_pts1,corr_pts2,lines11,lines12
-=======
-        return LineT,out_obj_mask,side_view_pts
->>>>>>> 169ba9ea076bfe2a3beec567ca42f5bcf19b4a9e
