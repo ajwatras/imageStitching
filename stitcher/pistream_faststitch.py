@@ -10,14 +10,15 @@ import os
 
 # Initialize input video streams
 frames_q = [Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0)]
-#frames_q = [Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0), Queue.LifoQueue(0)]
 
-# Initialize output video streams 
+# Initialize output video streams
 record_frame_q = [Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0)]
-#record_frame_q = [Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0), Queue.Queue(0)]
 
-
+#When the base code is uncommented, records input videos and output video
+#Input videos: 'm.avi', 's1.avi', 's2.avi', 's3.avi', 's4.avi'
+#Ouput videos: 'pano.avi'
 class video_record(threading.Thread):
+    #Inputs: Explicit self, main frame, four side frames, output/panoramic frame
     def __init__(self, frame1, frame2, frame3, frame4, frame5, frame_pano):
         threading.Thread.__init__(self)
         self.shape1 = (frame1.shape[1], frame1.shape[0])
@@ -28,8 +29,7 @@ class video_record(threading.Thread):
         self.shape_pano = (frame_pano.shape[1], frame_pano.shape[0])
         self.is_end = False
 
-
-     # Uncomment to record video.
+    ## Uncomment to record video.
 #    def run(self):
 #        global record_frame_q
 
@@ -40,6 +40,7 @@ class video_record(threading.Thread):
 #        out4 = cv2.VideoWriter('s3.avi',fourcc, 20.0, self.shape4)
 #        out5 = cv2.VideoWriter('s4.avi',fourcc, 20.0, self.shape5)
 #        out_pano = cv2.VideoWriter('pano.avi',fourcc, 20.0, self.shape_pano)
+        #Below line likely needs to be uncommented
 ##       while not self.is_end:
 #            if (not record_frame_q[0].empty()):
 #                out1.write(record_frame_q[0].get())
@@ -61,10 +62,10 @@ class video_record(threading.Thread):
 #        out5.release()
 #        out_pano.release()
 
-
+# Object for reading incoming frames from a video stream.
 class image_grabber(threading.Thread):
-    # Object for reading incoming frames from a video stream. 
 
+    #Inputs: Explicit self, location/filename of video for image grabbing, current frame number
     def __init__(self, cap_address, idx):
         threading.Thread.__init__(self)
         self.cap = cv2.VideoCapture(cap_address)
@@ -88,15 +89,15 @@ class image_grabber(threading.Thread):
 
             time.sleep(0.01)
 
+#Main thread of project begins with calibration, then performs stitching, commands can be found in README
 class Main(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
 
+    #Description: Calibration relies mostly on lazy_stitcher objects calibration
+    #Inputs: Explicit self, global input frames queue
     def calibrate(self, frames_queue):
-        # Calibrate image stitcher and compute resulting Homofraphies and seam lines.
         flag = [0,0,0,0,0]
-
-        # Gather initial frames from all cameras. 
         while (flag[0] + flag[1] + flag[2] + flag[3] + flag[4] < 5):
             print "waiting"
             if (not frames_queue[0].empty()):
@@ -139,12 +140,16 @@ class Main(threading.Thread):
         # Stream video mosaic using calibration parameters.
         global frames_q
 
-        stitcher = self.calibrate(frames_q)                                                                                                                                 
+        #Runs calibration method from above
+        stitcher = self.calibrate(frames_q)
+
+        # Calls recording method
+        # These lines could be commented out instead of the bulk of the function to save the procesing spent calling an empty function
         record_thread = video_record(self.main_view_frame, self.side_view_frame_1, self.side_view_frame_2, self.side_view_frame_3, self.side_view_frame_4, stitcher.final_pano)
         record_thread.start()
 
-        rotate_angle = 0.                                                                                                              # Used for manually rotating view 
-        pre_translation = np.mat([[1,0,-stitcher.final_pano.shape[1]/2], [0,1,-stitcher.final_pano.shape[0]/2], [0,0,1]], np.float)    # 
+        rotate_angle = 0.                                                                                                              # Used for manually rotating view
+        pre_translation = np.mat([[1,0,-stitcher.final_pano.shape[1]/2], [0,1,-stitcher.final_pano.shape[0]/2], [0,0,1]], np.float)    #
         post_translation = np.mat([[1,0,stitcher.final_pano.shape[1]/2], [0,1,stitcher.final_pano.shape[0]/2], [0,0,1]], np.float)     #
 
         # Main streaming loop
@@ -202,11 +207,10 @@ class Main(threading.Thread):
             record_frame_q[4].put(self.side_view_frame_4)                           # Record Camera 5 frame
             record_frame_q[5].put(pano)                                             # Record Panorama frame
 
-            time_end = time.time()                                                  # Note time to display frame
-            print(1/(time_end - time_begin))                                        # Display stitching time
+            time_end = time.time()
+            print(1/(time_end - time_begin))
 
             rep = cv2.waitKey(1)
-
 
             # Check for termination command
             if rep == ord('q'):
@@ -238,20 +242,29 @@ class Main(threading.Thread):
                     rotate_angle = rotate_angle + 10.
 
 
-
-# Location of incoming video stream
+#Location of incoming video stream
 #addr1 = 'http://10.42.0.105:8050/?action=stream'
 #addr2 = 'http://10.42.0.101:8010/?action=stream'
 #addr3 = 'http://10.42.0.104:8040/?action=stream'
 #addr4 = 'http://10.42.0.103:8030/?action=stream'
 #addr5 = 'http://10.42.0.102:8020/?action=stream'
 
-# Uncomment if streaming from video file
+#Example file addresses for Windows (may work on Linux)
+#dirname = os.path.dirname(__file__);
+#print(dirname)
+#addr1 = os.path.join(dirname, 'Sample', 'm.avi')
+#addr2 = os.path.join(dirname, 'Sample', 's1.avi')
+#addr3 = os.path.join(dirname, 'Sample', 's2.avi')
+#addr4 = os.path.join(dirname, 'Sample', 's3.avi')
+#addr5 = os.path.join(dirname, 'Sample', 's4.avi')
+
+#Uncomment if streaming from video file, File addresses for Linux
 addr1 = 'Sample/m.avi'
 addr2 = 'Sample/s1.avi'
 addr3 = 'Sample/s2.avi'
 addr4 = 'Sample/s3.avi'
-addr5 = 'Sample/s3.avi'
+addr5 = 'Sample/s4.avi'
+
 
 grabber0 = image_grabber(addr1, 0)
 grabber1 = image_grabber(addr2, 1)
@@ -269,7 +282,7 @@ grabber4.start()
 
 main.start()
 main.join()                                 # Wait until main terminates
-    
+
 grabber0.join()                             # Wait until grabber0 terminates
 grabber1.join()                             # Wait until grabber1 terminates
 grabber2.join()                             # Wait until grabber2 terminates
